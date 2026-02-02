@@ -248,8 +248,11 @@ export default function ContentSections() {
                 <h3 className="text-2xl font-bold text-slate-800">Настенный модуль</h3>
               </div>
               
-              <div className="w-full h-64 bg-slate-200 rounded-xl shadow-lg mb-6 flex items-center justify-center">
-                <Icon name="Monitor" className="text-slate-400" size={64} />
+              <img 
+                src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/49682fb7-d208-408a-9df4-443eab580edf.jpg"
+                alt="Настенный модуль Sentag"
+                className="w-full h-auto rounded-xl shadow-lg mb-6"
+              />
               </div>
               
               {expandedComponent === 'wall' && (
