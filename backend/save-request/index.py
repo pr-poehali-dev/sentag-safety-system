@@ -13,8 +13,10 @@ def handler(event: dict, context) -> dict:
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
+                'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Accept, Origin, X-Requested-With',
+                'Access-Control-Max-Age': '86400',
+                'Access-Control-Allow-Credentials': 'false'
             },
             'body': '',
             'isBase64Encoded': False
@@ -61,11 +63,14 @@ def handler(event: dict, context) -> dict:
                 body.get('consent', False)
             ))
             request_id = cur.fetchone()[0]
+            print(f"Step 1: Created request_id={request_id}")
             conn.commit()
+            print("Step 1: DB commit successful")
             
             send_telegram_step1(request_id, body)
+            print("Step 1: Telegram notification sent (or skipped)")
             
-            return {
+            response_data = {
                 'statusCode': 200,
                 'headers': {
                     'Content-Type': 'application/json',
@@ -78,6 +83,8 @@ def handler(event: dict, context) -> dict:
                 }),
                 'isBase64Encoded': False
             }
+            print(f"Step 1: Returning response with requestId={request_id}")
+            return response_data
         
         elif step == 2:
             request_id = body.get('requestId')
