@@ -7,7 +7,11 @@ import AboutSection from '@/components/sections/AboutSection';
 import ContactsSection from '@/components/sections/ContactsSection';
 import DocumentsSection from '@/components/sections/DocumentsSection';
 
-export default function ContentSections() {
+interface ContentSectionsProps {
+  scrollToSection?: (id: string) => void;
+}
+
+export default function ContentSections({ scrollToSection }: ContentSectionsProps) {
   const [showDocuments, setShowDocuments] = useState(true);
 
   useEffect(() => {
@@ -24,7 +28,7 @@ export default function ContentSections() {
       <ComponentsSection />
       <RequestFormSection />
       <AboutSection />
-      <ContactsSection />
+      <ContactsSection scrollToSection={scrollToSection} />
       {showDocuments && <DocumentsSection />}
     </>
   );

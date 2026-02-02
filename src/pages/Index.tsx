@@ -12,7 +12,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <Header scrollToSection={scrollToSection} />
       <HeroSection scrollToSection={scrollToSection} />
-      <ContentSections />
+      <ContentSections scrollToSection={scrollToSection} />
       <Footer scrollToSection={scrollToSection} />
     </div>
   );

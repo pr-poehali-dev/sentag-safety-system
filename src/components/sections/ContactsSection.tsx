@@ -2,7 +2,19 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
-export default function ContactsSection() {
+interface ContactsSectionProps {
+  scrollToSection?: (id: string) => void;
+}
+
+export default function ContactsSection({ scrollToSection }: ContactsSectionProps) {
+  const handleCallRequest = () => {
+    if (scrollToSection) {
+      scrollToSection('request');
+    } else {
+      document.getElementById('request')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section id="contacts" className="py-20 bg-gradient-to-b from-slate-50 to-white">
       <div className="container mx-auto px-4">
@@ -28,7 +40,7 @@ export default function ContactsSection() {
             <p className="text-slate-600">
               <a href="tel:+73452568286" className="hover:text-primary transition">+7 (3452) 56-82-86</a>
             </p>
-            <Button variant="link" className="mt-4">
+            <Button variant="link" className="mt-4" onClick={handleCallRequest}>
               Заказать звонок
             </Button>
           </Card>
