@@ -34,8 +34,12 @@ def handler(event: dict, context) -> dict:
         }
     
     try:
-        body = json.loads(event.get('body', '{}'))
+        body_str = event.get('body', '{}')
+        print(f"Received body (first 500 chars): {body_str[:500]}")
+        
+        body = json.loads(body_str)
         step = body.get('step')
+        print(f"Processing step: {step}")
         
         dsn = os.environ.get('DATABASE_URL')
         conn = psycopg2.connect(dsn)
@@ -177,6 +181,10 @@ def handler(event: dict, context) -> dict:
             }
     
     except Exception as e:
+        print(f"Error occurred: {type(e).__name__}: {str(e)}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
+        
         if 'conn' in locals():
             conn.rollback()
         return {
@@ -185,7 +193,7 @@ def handler(event: dict, context) -> dict:
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            'body': json.dumps({'error': str(e)}),
+            'body': json.dumps({'error': str(e), 'type': type(e).__name__}),
             'isBase64Encoded': False
         }
     finally:
