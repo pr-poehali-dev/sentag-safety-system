@@ -23,8 +23,7 @@ export default function RequestFormSection() {
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [requestId, setRequestId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [companyCardFile, setCompanyCardFile] = useState<File | null>(null);
-  const [poolSchemeFile, setPoolSchemeFile] = useState<File | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     phone: '',
     email: '',
@@ -138,8 +137,7 @@ export default function RequestFormSection() {
           deadline: ''
         });
         setRequestId(null);
-        setCompanyCardFile(null);
-        setPoolSchemeFile(null);
+        setUploadedFiles([]);
       } else {
         alert('Ошибка при отправке заявки');
       }
@@ -304,42 +302,71 @@ export default function RequestFormSection() {
             {formStep === 2 && (
               <div className="space-y-6 animate-fade-in">
                 <div>
-                  <Label htmlFor="companyCard">1. Добавьте карточку предприятия</Label>
+                  <Label htmlFor="fileUpload">Добавьте файлы (до 6 файлов, каждый до 20 МБ)</Label>
                   <input
                     type="file"
-                    id="companyCard"
-                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
+                    id="fileUpload"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.dwg"
+                    multiple
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file && file.size <= 10 * 1024 * 1024) {
-                        setCompanyCardFile(file);
-                      } else if (file) {
-                        alert('Размер файла не должен превышать 10 МБ');
-                        e.target.value = '';
+                      const files = Array.from(e.target.files || []);
+                      const validFiles: File[] = [];
+                      
+                      for (const file of files) {
+                        if (uploadedFiles.length + validFiles.length >= 6) {
+                          alert('Максимум 6 файлов на одну заявку');
+                          break;
+                        }
+                        if (file.size > 20 * 1024 * 1024) {
+                          alert(`Файл "${file.name}" превышает 20 МБ`);
+                          continue;
+                        }
+                        validFiles.push(file);
                       }
+                      
+                      setUploadedFiles([...uploadedFiles, ...validFiles]);
+                      e.target.value = '';
                     }}
                     className="hidden"
                   />
                   <label
-                    htmlFor="companyCard"
+                    htmlFor="fileUpload"
                     className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer block"
                   >
                     <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
-                    {companyCardFile ? (
-                      <>
-                        <p className="text-sm text-slate-700 font-medium">{companyCardFile.name}</p>
-                        <p className="text-xs text-slate-400 mt-1">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-sm text-slate-600">Прикрепите файл с карточкой предприятия</p>
-                        <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 10 МБ</p>
-                      </>
-                    )}
+                    <p className="text-sm text-slate-600">Нажмите для добавления файлов</p>
+                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel, DWG до 20 МБ (макс. 6 файлов)</p>
                   </label>
+                  
+                  {uploadedFiles.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <p className="text-sm font-medium text-slate-700">Загружено файлов: {uploadedFiles.length}/6</p>
+                      {uploadedFiles.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <Icon name="FileText" className="text-slate-400" size={20} />
+                            <div>
+                              <p className="text-sm text-slate-700 font-medium">{file.name}</p>
+                              <p className="text-xs text-slate-400">{(file.size / 1024 / 1024).toFixed(2)} МБ</p>
+                            </div>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setUploadedFiles(uploadedFiles.filter((_, i) => i !== index));
+                            }}
+                          >
+                            <Icon name="X" size={16} />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div>
-                  <Label htmlFor="visitorsInfo">2. Укажите, максимальное количество посетителей в день? Есть ли градация, детские зоны, взрослые зоны? Цвета браслетов и их количество?</Label>
+                  <Label htmlFor="visitorsInfo">Укажите максимальное количество посетителей в день? Есть ли градация, детские зоны, взрослые зоны? Цвета браслетов и их количество?</Label>
                   <Textarea 
                     id="visitorsInfo" 
                     placeholder="Например: До 300 посетителей в день. Есть детская зона (глубина 0.8м) и взрослая зона (глубина 2.5м). Браслеты: синие - 100 шт, красные - 50 шт, желтые - 50 шт."
@@ -350,7 +377,7 @@ export default function RequestFormSection() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="poolSize">3. Укажите форму, размеры и глубину бассейна *</Label>
+                  <Label htmlFor="poolSize">Укажите форму, размеры и глубину бассейна *</Label>
                   <Textarea 
                     id="poolSize" 
                     placeholder="Например: Прямоугольная форма, 25м х 12м, глубина от 1.2м до 2.8м"
@@ -361,43 +388,7 @@ export default function RequestFormSection() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="poolScheme">4. Добавьте схему бассейна</Label>
-                  <p className="text-sm text-slate-500 mt-1 mb-2">При наличии укажите на схеме: подводные фонари, водные преграды, волны, аэромассажные зоны, подводные лежаки, гейзеры и др.</p>
-                  <input
-                    type="file"
-                    id="poolScheme"
-                    accept=".pdf,.jpg,.jpeg,.png,.dwg"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file && file.size <= 20 * 1024 * 1024) {
-                        setPoolSchemeFile(file);
-                      } else if (file) {
-                        alert('Размер файла не должен превышать 20 МБ');
-                        e.target.value = '';
-                      }
-                    }}
-                    className="hidden"
-                  />
-                  <label
-                    htmlFor="poolScheme"
-                    className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer block"
-                  >
-                    <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
-                    {poolSchemeFile ? (
-                      <>
-                        <p className="text-sm text-slate-700 font-medium">{poolSchemeFile.name}</p>
-                        <p className="text-xs text-slate-400 mt-1">{(poolSchemeFile.size / 1024 / 1024).toFixed(2)} МБ</p>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-sm text-slate-600">Прикрепите файл со схемой бассейна</p>
-                        <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, DWG до 20 МБ</p>
-                      </>
-                    )}
-                  </label>
-                </div>
-                <div>
-                  <Label htmlFor="deadline">5. Какие сроки поставки интересуют, когда планируется запуск объекта?</Label>
+                  <Label htmlFor="deadline">Какие сроки поставки интересуют, когда планируется запуск объекта?</Label>
                   <Textarea 
                     id="deadline" 
                     placeholder="Например: Поставка до 1 июня 2025, запуск объекта планируется на 15 июня 2025"
