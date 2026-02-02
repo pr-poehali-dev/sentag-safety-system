@@ -9,17 +9,11 @@ export default function Header({ scrollToSection }: HeaderProps) {
   return (
     <header className="fixed top-0 w-full bg-[#f5f5f5] shadow-sm z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2">
           <img 
             src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/cf3bde7a-7217-4c93-8917-b7e2e6a73768.jpg" 
             alt="Sentag" 
-            className="h-12 w-auto"
-          />
-          <div className="w-px h-10 bg-slate-300"></div>
-          <img 
-            src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg" 
-            alt="Меридиан" 
-            className="h-12 w-auto"
+            className="h-12 w-auto mix-blend-darken"
           />
         </div>
         <nav className="hidden md:flex gap-6">
