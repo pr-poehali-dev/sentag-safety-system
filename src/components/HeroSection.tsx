@@ -24,14 +24,14 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
         <p className="text-xl md:text-2xl mb-4 text-blue-100">
           Безопасность вашего бассейна под контролем
         </p>
-        <p className="text-lg md:text-xl mb-8 max-w-4xl mx-auto text-blue-50">
+        <p className="text-lg md:text-xl mb-96 max-w-4xl mx-auto text-blue-50">
           Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" onClick={() => scrollToSection('request')} className="bg-white text-primary hover:bg-blue-50 text-lg px-8 py-6">
+          <Button size="lg" onClick={() => scrollToSection('request')} className="bg-white text-primary hover:bg-blue-50 text-lg px-8 py-6 font-semibold">
             Запросить расчет
           </Button>
-          <Button size="lg" variant="outline" onClick={() => scrollToSection('how-it-works')} className="border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6">
+          <Button size="lg" onClick={() => scrollToSection('how-it-works')} className="bg-white text-primary hover:bg-blue-50 text-lg px-8 py-6 font-semibold">
             Узнать больше
           </Button>
         </div>
