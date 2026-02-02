@@ -53,12 +53,21 @@ def send_otp_email(email: str, otp: str) -> bool:
     msg.attach(MIMEText(html, 'html'))
     
     try:
-        with smtplib.SMTP_SSL(smtp_host, smtp_port) as server:
-            server.login(smtp_user, smtp_password)
-            server.send_message(msg)
+        if smtp_port == 465:
+            server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=10)
+        else:
+            server = smtplib.SMTP(smtp_host, smtp_port, timeout=10)
+            server.starttls()
+        
+        server.login(smtp_user, smtp_password)
+        server.send_message(msg)
+        server.quit()
+        print(f"[DEBUG] Email sent successfully to {to_email}")
         return True
     except Exception as e:
-        print(f"Email send error: {e}")
+        print(f"[DEBUG] Email send error: {e}")
+        import traceback
+        print(f"[DEBUG] Traceback: {traceback.format_exc()}")
         return False
 
 def get_db_connection():
