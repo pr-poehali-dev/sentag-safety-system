@@ -10,12 +10,11 @@ export default function Footer({ scrollToSection }: FooterProps) {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Icon name="Shield" className="text-white" size={24} />
-              </div>
-              <span className="text-2xl font-bold">Sentag</span>
-            </div>
+            <img 
+              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/bbb7b21a-5b12-4b3b-9d56-4f230ba9d0e6.jpg" 
+              alt="Sentag" 
+              className="h-12 w-auto mb-4"
+            />
             <p className="text-slate-400">Безопасность вашего бассейна под контролем</p>
           </div>
           <div>
