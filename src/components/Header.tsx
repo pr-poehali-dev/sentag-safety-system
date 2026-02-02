@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 
@@ -6,6 +7,14 @@ interface HeaderProps {
 }
 
 export default function Header({ scrollToSection }: HeaderProps) {
+  const [showDocuments, setShowDocuments] = useState(true);
+
+  useEffect(() => {
+    const savedState = localStorage.getItem('show_documents_section');
+    if (savedState !== null) {
+      setShowDocuments(savedState === 'true');
+    }
+  }, []);
   return (
     <header className="fixed top-0 w-full bg-[#f5f5f5] shadow-sm z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -30,7 +39,9 @@ export default function Header({ scrollToSection }: HeaderProps) {
           <button onClick={() => scrollToSection('advantages')} className="text-slate-600 hover:text-primary transition">Преимущества</button>
           <button onClick={() => scrollToSection('components')} className="text-slate-600 hover:text-primary transition">Компоненты</button>
           <button onClick={() => scrollToSection('about')} className="text-slate-600 hover:text-primary transition">О компании</button>
-          <button onClick={() => scrollToSection('documents')} className="text-slate-600 hover:text-primary transition">Документы</button>
+          {showDocuments && (
+            <button onClick={() => scrollToSection('documents')} className="text-slate-600 hover:text-primary transition">Документы</button>
+          )}
           <button onClick={() => scrollToSection('contacts')} className="text-slate-600 hover:text-primary transition">Контакты</button>
         </nav>
         <Button onClick={() => scrollToSection('request')} className="hidden md:flex">
