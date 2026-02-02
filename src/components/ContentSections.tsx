@@ -324,9 +324,11 @@ export default function ContentSections() {
                 <h3 className="text-2xl font-bold text-slate-800">Блок ввода-вывода ioLogik</h3>
               </div>
               
-              <div className="w-full h-64 bg-slate-200 rounded-xl shadow-lg mb-6 flex items-center justify-center">
-                <Icon name="Cpu" className="text-slate-400" size={64} />
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/077c0ea4-20b8-4d73-9561-5fae5849a976.jpg"
+                alt="Блок ввода-вывода ioLogik"
+                className="w-full h-auto rounded-xl shadow-lg mb-6"
+              />
               
               {expandedComponent === 'iologik' && (
                 <div className="mb-6 space-y-4 animate-fade-in">
