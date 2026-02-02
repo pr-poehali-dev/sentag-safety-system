@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "name": "Upload file",
+      "method": "POST",
+      "body": {
+        "name": "test.pdf",
+        "type": "application/pdf",
+        "content": "JVBERi0xLjQKJeLjz9MK",
+        "requestId": 1,
+        "category": "test"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "url": "string",
+        "key": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

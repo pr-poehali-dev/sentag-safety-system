@@ -96,6 +96,32 @@ export default function RequestFormSection() {
     });
   };
 
+  const uploadFile = async (file: File, category: string): Promise<string> => {
+    const content = await fileToBase64(file);
+    
+    const response = await fetch('https://functions.poehali.dev/55e8594b-4257-4cbf-a5c4-ef2f2a03342b', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: file.name,
+        type: file.type,
+        content: content,
+        requestId,
+        category
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Ошибка загрузки файла');
+    }
+    
+    return result.url;
+  };
+
   const handleSubmitStep2 = async () => {
     if (!requestId) {
       alert('Ошибка: ID заявки не найден');
@@ -105,51 +131,39 @@ export default function RequestFormSection() {
     setIsSubmitting(true);
     
     try {
-      let companyCardData = null;
-      const poolSchemeData = [];
+      let companyCardUrl = null;
+      const poolSchemeUrls: string[] = [];
       
       if (companyCardFile) {
-        const content = await fileToBase64(companyCardFile);
-        companyCardData = {
-          name: companyCardFile.name,
-          type: companyCardFile.type,
-          content: content
-        };
+        console.log('Загрузка карточки предприятия...');
+        companyCardUrl = await uploadFile(companyCardFile, 'company_card');
+        console.log('Карточка загружена:', companyCardUrl);
       }
       
-      for (const file of poolSchemeFiles) {
-        const content = await fileToBase64(file);
-        poolSchemeData.push({
-          name: file.name,
-          type: file.type,
-          content: content
-        });
+      for (let i = 0; i < poolSchemeFiles.length; i++) {
+        console.log(`Загрузка схемы бассейна ${i + 1}/${poolSchemeFiles.length}...`);
+        const url = await uploadFile(poolSchemeFiles[i], 'pool_scheme');
+        poolSchemeUrls.push(url);
+        console.log(`Схема ${i + 1} загружена:`, url);
       }
       
-      const requestBody = {
-        step: 2,
-        requestId,
-        ...step2Data,
-        companyCardFile: companyCardData,
-        poolSchemeFiles: poolSchemeData
-      };
-      
-      console.log('Sending step 2 request:', {
-        ...requestBody,
-        companyCardFile: companyCardData ? { name: companyCardData.name, type: companyCardData.type, contentLength: companyCardData.content.length } : null,
-        poolSchemeFiles: poolSchemeData.map(f => ({ name: f.name, type: f.type, contentLength: f.content.length }))
-      });
+      console.log('Все файлы загружены, отправка данных формы...');
       
       const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestBody)
+        body: JSON.stringify({
+          step: 2,
+          requestId,
+          ...step2Data,
+          companyCardUrl,
+          poolSchemeUrls
+        })
       });
       
       console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
       
       const result = await response.json();
       console.log('Response body:', result);
