@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 
 interface FooterProps {
@@ -5,6 +6,15 @@ interface FooterProps {
 }
 
 export default function Footer({ scrollToSection }: FooterProps) {
+  const [showDocuments, setShowDocuments] = useState(true);
+
+  useEffect(() => {
+    const savedState = localStorage.getItem('show_documents_section');
+    if (savedState !== null) {
+      setShowDocuments(savedState === 'true');
+    }
+  }, []);
+
   return (
     <footer className="bg-slate-900 text-white py-12">
       <div className="container mx-auto px-4">
@@ -29,7 +39,9 @@ export default function Footer({ scrollToSection }: FooterProps) {
             <h4 className="font-bold mb-4">Компания</h4>
             <ul className="space-y-2 text-slate-400">
               <li><button onClick={() => scrollToSection('about')} className="hover:text-white transition">О нас</button></li>
-              <li><button onClick={() => scrollToSection('documents')} className="hover:text-white transition">Документы</button></li>
+              {showDocuments && (
+                <li><button onClick={() => scrollToSection('documents')} className="hover:text-white transition">Документы</button></li>
+              )}
               <li><button onClick={() => scrollToSection('contacts')} className="hover:text-white transition">Контакты</button></li>
             </ul>
           </div>
