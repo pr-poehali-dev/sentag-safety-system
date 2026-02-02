@@ -153,7 +153,7 @@ export default function ContentSections() {
           <p className="text-center text-xl text-slate-600 mb-16">состоит из 6 основных компонентов</p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: 'Watch', title: 'Браслет', description: 'Водонепроницаемый браслет с датчиками глубины и времени погружения. Настраивается под разные возрастные группы.' },
+              { icon: 'Watch', title: 'Браслет', description: 'Водонепроницаемый браслет с датчиками глубины и времени погружения. Настраивается под разные возрастные группы.', image: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/ed250577-cfb0-4172-9f0d-253ff2699388.jpg' },
               { icon: 'Server', title: 'Блок управления', description: 'Центральный процессор системы, обрабатывающий сигналы от всех браслетов и сенсоров в режиме реального времени.' },
               { icon: 'Monitor', title: 'Настенный модуль', description: 'Дисплей для визуального отображения тревожных сигналов с указанием местоположения в бассейне.' },
               { icon: 'Radio', title: 'Сенсор для чаши бассейна', description: 'Водонепроницаемые приемники сигналов, устанавливаемые по периметру и дну бассейна.' },
@@ -161,9 +161,15 @@ export default function ContentSections() {
               { icon: 'Wrench', title: 'Тестер-программатор браслетов', description: 'Устройство для настройки параметров браслетов и проверки их работоспособности перед выдачей посетителям.' }
             ].map((item, idx) => (
               <Card key={idx} className="p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in" style={{ animationDelay: `${idx * 0.1}s` }}>
-                <div className="w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                  <Icon name={item.icon} className="text-white" size={36} />
-                </div>
+                {item.image ? (
+                  <div className="mb-6 rounded-xl overflow-hidden bg-slate-100">
+                    <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                    <Icon name={item.icon} className="text-white" size={36} />
+                  </div>
+                )}
                 <h3 className="text-2xl font-bold mb-4 text-slate-800">{item.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{item.description}</p>
               </Card>
