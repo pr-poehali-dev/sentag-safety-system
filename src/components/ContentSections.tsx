@@ -206,11 +206,22 @@ export default function ContentSections() {
             </Card>
 
             <Card className="p-8 md:p-12 hover:shadow-2xl transition-all">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                  <Icon name="Server" className="text-white" size={32} />
+              <div className="grid md:grid-cols-2 gap-8 mb-6">
+                <div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
+                      <Icon name="Server" className="text-white" size={32} />
+                    </div>
+                    <h3 className="text-3xl font-bold text-slate-800">Блок управления</h3>
+                  </div>
                 </div>
-                <h3 className="text-3xl font-bold text-slate-800">Блок управления</h3>
+                <div className="flex items-center justify-center">
+                  <img 
+                    src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/fcc91bdc-55fd-4ede-be87-db6857f5b894.jpg" 
+                    alt="Блок управления Sentag" 
+                    className="w-full max-w-sm h-auto object-contain rounded-lg"
+                  />
+                </div>
               </div>
               <div className="prose prose-lg max-w-none text-slate-700">
                 <p>Система Sentag имеет возможность отслеживать случаи опасности утопления в <strong>нескольких бассейнах одновременно</strong>. Блок управления получает сигналы тревоги об опасности утопления от блоков датчиков в бассейнах и сигналы тревоги от кнопок, подключенных к блокам ввода-вывода или блокам датчиков.</p>
