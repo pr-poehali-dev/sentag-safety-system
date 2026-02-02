@@ -142,6 +142,12 @@ export default function RequestFormSection() {
       
       const result = await response.json();
       
+      if (!response.ok) {
+        console.error('Server error:', result);
+        alert(`Ошибка сервера: ${result.error || 'Неизвестная ошибка'}`);
+        return;
+      }
+      
       if (result.success) {
         alert('Заявка успешно отправлена!');
         setFormStep(1);
@@ -164,7 +170,7 @@ export default function RequestFormSection() {
         setCompanyCardFile(null);
         setPoolSchemeFiles([]);
       } else {
-        alert('Ошибка при отправке заявки');
+        alert(`Ошибка при отправке заявки: ${result.error || 'Неизвестная ошибка'}`);
       }
     } catch (error) {
       console.error('Error saving step 2:', error);
