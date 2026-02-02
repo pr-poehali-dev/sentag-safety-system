@@ -13,7 +13,7 @@ export default function Header({ scrollToSection }: HeaderProps) {
           <img 
             src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/cf3bde7a-7217-4c93-8917-b7e2e6a73768.jpg" 
             alt="Sentag" 
-            className="h-12 w-auto"
+            className="h-12 w-auto mix-blend-darken"
           />
         </div>
         <nav className="hidden md:flex gap-6">
