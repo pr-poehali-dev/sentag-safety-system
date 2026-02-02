@@ -152,7 +152,7 @@ export default function RequestFormSection() {
                   <div className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer">
                     <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
                     <p className="text-sm text-slate-600">Прикрепите файл с карточкой предприятия</p>
-                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG до 10 МБ</p>
+                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 10 МБ</p>
                   </div>
                 </div>
                 <div>
