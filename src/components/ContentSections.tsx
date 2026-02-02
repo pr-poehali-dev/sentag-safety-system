@@ -362,9 +362,11 @@ export default function ContentSections() {
                 <h3 className="text-2xl font-bold text-slate-800">Тестер-программатор браслетов</h3>
               </div>
               
-              <div className="w-full h-64 bg-slate-200 rounded-xl shadow-lg mb-6 flex items-center justify-center">
-                <Icon name="Wrench" className="text-slate-400" size={64} />
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/f0c3dc40-6715-466b-a3c0-24432523eb55.jpg"
+                alt="Тестер-программатор браслетов Sentag"
+                className="w-full h-auto rounded-xl shadow-lg mb-6"
+              />
               
               {expandedComponent === 'tester' && (
                 <div className="mb-6 space-y-4 animate-fade-in">
