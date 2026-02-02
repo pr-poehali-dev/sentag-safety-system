@@ -72,40 +72,51 @@ export default function ContentSections() {
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-slate-800">
             Как работает система оповещения опасности утопления?
           </h2>
-          <div className="max-w-4xl mx-auto space-y-8 mt-16">
-            {[
-              {
-                step: '01',
-                icon: 'Watch',
-                title: 'Браслет подает сигнал',
-                description: 'Если посетитель бассейна находится продолжительное время на критической глубине, браслет подает сигнал'
-              },
-              {
-                step: '02',
-                icon: 'Radio',
-                title: 'Передача на сенсоры',
-                description: 'Информация поступает на сенсоры, установленные в бассейне'
-              },
-              {
-                step: '03',
-                icon: 'AlertTriangle',
-                title: 'Тревожное оповещение',
-                description: 'Тревожный сигнал отображается на дисплее настенного модуля, включаются световые и звуковые приборы оповещения'
-              }
-            ].map((item, idx) => (
-              <div key={idx} className="flex gap-6 items-start animate-fade-in" style={{ animationDelay: `${idx * 0.2}s` }}>
-                <div className="flex-shrink-0">
-                  <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center shadow-lg">
-                    <Icon name={item.icon} className="text-white" size={32} />
-                  </div>
+          <div className="max-w-6xl mx-auto mt-16">
+            <div className="grid md:grid-cols-3 gap-8 relative">
+              {[
+                {
+                  step: '01',
+                  icon: 'Watch',
+                  title: 'Браслет подает сигнал',
+                  description: 'Если посетитель бассейна находится продолжительное время на критической глубине, браслет подает сигнал'
+                },
+                {
+                  step: '02',
+                  icon: 'Radio',
+                  title: 'Передача на сенсоры',
+                  description: 'Информация поступает на сенсоры, установленные в бассейне'
+                },
+                {
+                  step: '03',
+                  icon: 'AlertTriangle',
+                  title: 'Тревожное оповещение',
+                  description: 'Тревожный сигнал отображается на дисплее настенного модуля, включаются световые и звуковые приборы оповещения'
+                }
+              ].map((item, idx) => (
+                <div key={idx} className="relative animate-fade-in" style={{ animationDelay: `${idx * 0.15}s` }}>
+                  <Card className="p-8 h-full hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                    <div className="flex flex-col items-center text-center">
+                      <div className="relative mb-6">
+                        <div className="w-24 h-24 bg-gradient-to-br from-primary to-blue-600 rounded-3xl flex items-center justify-center shadow-xl">
+                          <Icon name={item.icon} className="text-white" size={40} />
+                        </div>
+                        <div className="absolute -top-3 -right-3 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-primary">
+                          <span className="text-primary font-bold text-lg">{item.step}</span>
+                        </div>
+                      </div>
+                      <h3 className="text-2xl font-bold mb-4 text-slate-800">{item.title}</h3>
+                      <p className="text-slate-600 text-base leading-relaxed">{item.description}</p>
+                    </div>
+                  </Card>
+                  {idx < 2 && (
+                    <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                      <Icon name="ArrowRight" className="text-primary" size={32} />
+                    </div>
+                  )}
                 </div>
-                <div className="flex-1">
-                  <div className="text-sm font-bold text-primary mb-2">{item.step}</div>
-                  <h3 className="text-2xl font-bold mb-3 text-slate-800">{item.title}</h3>
-                  <p className="text-slate-600 text-lg">{item.description}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
           <div className="mt-16 max-w-3xl mx-auto">
             <Card className="p-8 bg-blue-50 border-blue-200">
