@@ -20,6 +20,7 @@ export default function RequestFormSection() {
   const [formStep, setFormStep] = useState(1);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [showConsentText, setShowConsentText] = useState(false);
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [formData, setFormData] = useState({
     phone: '',
     email: '',
@@ -33,6 +34,30 @@ export default function RequestFormSection() {
 
   const handleFormChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: false });
+    }
+  };
+
+  const validateStep1 = () => {
+    const newErrors: Record<string, boolean> = {};
+    if (!formData.phone.trim()) newErrors.phone = true;
+    if (!formData.email.trim()) newErrors.email = true;
+    if (!formData.company.trim()) newErrors.company = true;
+    if (!formData.role.trim()) newErrors.role = true;
+    if (!formData.fullName.trim()) newErrors.fullName = true;
+    if (!formData.objectName.trim()) newErrors.objectName = true;
+    if (!formData.objectAddress.trim()) newErrors.objectAddress = true;
+    if (!formData.consent) newErrors.consent = true;
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep1()) {
+      setFormStep(2);
+    }
   };
 
   return (
@@ -67,8 +92,9 @@ export default function RequestFormSection() {
                     placeholder="+7 (___) ___-__-__"
                     value={formData.phone}
                     onChange={(e) => handleFormChange('phone', e.target.value)}
-                    className="mt-2"
+                    className={`mt-2 ${errors.phone ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                   />
+                  {errors.phone && <p className="text-sm text-red-500 mt-1">Необходимо заполнить контактный телефон</p>}
                 </div>
                 <div>
                   <Label htmlFor="email">E-mail *</Label>
@@ -78,8 +104,9 @@ export default function RequestFormSection() {
                     placeholder="example@company.ru"
                     value={formData.email}
                     onChange={(e) => handleFormChange('email', e.target.value)}
-                    className="mt-2"
+                    className={`mt-2 ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                   />
+                  {errors.email && <p className="text-sm text-red-500 mt-1">Необходимо заполнить e-mail</p>}
                 </div>
                 <div>
                   <Label htmlFor="company">Наименование предприятия *</Label>
@@ -88,13 +115,14 @@ export default function RequestFormSection() {
                     placeholder="ООО «Название»"
                     value={formData.company}
                     onChange={(e) => handleFormChange('company', e.target.value)}
-                    className="mt-2"
+                    className={`mt-2 ${errors.company ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                   />
+                  {errors.company && <p className="text-sm text-red-500 mt-1">Необходимо заполнить наименование предприятия</p>}
                 </div>
                 <div>
                   <Label htmlFor="role">Кем является *</Label>
                   <Select value={formData.role} onValueChange={(value) => handleFormChange('role', value)}>
-                    <SelectTrigger className="mt-2">
+                    <SelectTrigger className={`mt-2 ${errors.role ? 'border-red-500 focus:ring-red-500' : ''}`}>
                       <SelectValue placeholder="Выберите" />
                     </SelectTrigger>
                     <SelectContent>
@@ -103,6 +131,7 @@ export default function RequestFormSection() {
                       <SelectItem value="design">Проектная организация</SelectItem>
                     </SelectContent>
                   </Select>
+                  {errors.role && <p className="text-sm text-red-500 mt-1">Необходимо выбрать роль</p>}
                 </div>
                 <div>
                   <Label htmlFor="fullName">ФИО, должность *</Label>
@@ -111,8 +140,9 @@ export default function RequestFormSection() {
                     placeholder="Иванов Иван Иванович, Директор"
                     value={formData.fullName}
                     onChange={(e) => handleFormChange('fullName', e.target.value)}
-                    className="mt-2"
+                    className={`mt-2 ${errors.fullName ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                   />
+                  {errors.fullName && <p className="text-sm text-red-500 mt-1">Необходимо заполнить ФИО и должность</p>}
                 </div>
                 <div>
                   <Label htmlFor="objectName">Наименование объекта *</Label>
@@ -121,8 +151,9 @@ export default function RequestFormSection() {
                     placeholder="Бассейн «Название»"
                     value={formData.objectName}
                     onChange={(e) => handleFormChange('objectName', e.target.value)}
-                    className="mt-2"
+                    className={`mt-2 ${errors.objectName ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                   />
+                  {errors.objectName && <p className="text-sm text-red-500 mt-1">Необходимо заполнить наименование объекта</p>}
                 </div>
                 <div>
                   <Label htmlFor="objectAddress">Адрес объекта *</Label>
@@ -131,8 +162,9 @@ export default function RequestFormSection() {
                     placeholder="г. Город, ул. Улица, д. 1"
                     value={formData.objectAddress}
                     onChange={(e) => handleFormChange('objectAddress', e.target.value)}
-                    className="mt-2"
+                    className={`mt-2 ${errors.objectAddress ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                   />
+                  {errors.objectAddress && <p className="text-sm text-red-500 mt-1">Необходимо заполнить адрес объекта</p>}
                 </div>
                 <div>
                   <div className="flex items-start gap-3">
@@ -165,21 +197,12 @@ export default function RequestFormSection() {
                       </p>
                     </div>
                   )}
+                  {errors.consent && <p className="text-sm text-red-500 mt-2">Необходимо дать согласие на обработку данных</p>}
                 </div>
                 <Button 
                   className="w-full" 
                   size="lg"
-                  onClick={() => setFormStep(2)}
-                  disabled={
-                    !formData.phone.trim() || 
-                    !formData.email.trim() || 
-                    !formData.company.trim() || 
-                    !formData.role.trim() || 
-                    !formData.fullName.trim() || 
-                    !formData.objectName.trim() || 
-                    !formData.objectAddress.trim() || 
-                    !formData.consent
-                  }
+                  onClick={handleNextStep}
                 >
                   Далее
                 </Button>
