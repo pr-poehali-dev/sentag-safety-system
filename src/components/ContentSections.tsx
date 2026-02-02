@@ -159,11 +159,22 @@ export default function ContentSections() {
           
           <div className="max-w-6xl mx-auto space-y-16">
             <Card className="p-8 md:p-12 hover:shadow-2xl transition-all">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                  <Icon name="Watch" className="text-white" size={32} />
+              <div className="grid md:grid-cols-2 gap-8 mb-6">
+                <div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
+                      <Icon name="Watch" className="text-white" size={32} />
+                    </div>
+                    <h3 className="text-3xl font-bold text-slate-800">Браслет</h3>
+                  </div>
                 </div>
-                <h3 className="text-3xl font-bold text-slate-800">Браслет</h3>
+                <div className="flex items-center justify-center">
+                  <img 
+                    src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/e9f9e9b6-b24f-4766-aa8c-92cf54c1c80a.jpg" 
+                    alt="Браслет Sentag" 
+                    className="w-full max-w-sm h-auto object-contain rounded-lg"
+                  />
+                </div>
               </div>
               <div className="prose prose-lg max-w-none text-slate-700">
                 <p>Браслет Sentag является <strong>сердцем СООУ</strong>. Он непрерывно контролирует пловца находящегося в воде. Если пловец слишком глубоко и долго пребывает под водой, система срабатывает и оповещает спасателя, что позволяет максимально быстро спасти человека в случае чрезвычайной ситуации.</p>
