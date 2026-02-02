@@ -10,10 +10,11 @@ export default function Header({ scrollToSection }: HeaderProps) {
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <Icon name="Shield" className="text-white" size={24} />
-          </div>
-          <span className="text-2xl font-bold text-slate-800">Sentag</span>
+          <img 
+            src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/cf3bde7a-7217-4c93-8917-b7e2e6a73768.jpg" 
+            alt="Sentag" 
+            className="h-12 w-auto"
+          />
         </div>
         <nav className="hidden md:flex gap-6">
           <button onClick={() => scrollToSection('system')} className="text-slate-600 hover:text-primary transition">О системе</button>
