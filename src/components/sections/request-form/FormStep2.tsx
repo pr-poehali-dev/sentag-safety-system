@@ -168,36 +168,60 @@ export default function FormStep2({
         )}
       </div>
       <div>
-        <Label htmlFor="visitorsInfo">Укажите максимальное количество посетителей в день? Есть ли градация, детские зоны, взрослые зоны? Цвета браслетов и их количество?</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="visitorsInfo">Укажите максимальное количество посетителей в день? Есть ли градация, детские зоны, взрослые зоны? Цвета браслетов и их количество?</Label>
+          <span className="text-xs text-slate-500">{step2Data.visitorsInfo.length}/200</span>
+        </div>
         <Textarea 
           id="visitorsInfo" 
           placeholder="Например: До 300 посетителей в день. Есть детская зона (глубина 0.8м) и взрослая зона (глубина 2.5м). Браслеты: синие - 100 шт, красные - 50 шт, желтые - 50 шт."
           value={step2Data.visitorsInfo}
-          onChange={(e) => onStep2DataChange('visitorsInfo', e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length <= 200) {
+              onStep2DataChange('visitorsInfo', e.target.value);
+            }
+          }}
           className="mt-2"
           rows={5}
+          maxLength={200}
         />
       </div>
       <div>
-        <Label htmlFor="poolSize">Укажите форму, размеры и глубину бассейна *</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="poolSize">Укажите форму, размеры и глубину бассейна *</Label>
+          <span className="text-xs text-slate-500">{step2Data.poolSize.length}/200</span>
+        </div>
         <Textarea 
           id="poolSize" 
           placeholder="Например: Прямоугольная форма, 25м х 12м, глубина от 1.2м до 2.8м"
           value={step2Data.poolSize}
-          onChange={(e) => onStep2DataChange('poolSize', e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length <= 200) {
+              onStep2DataChange('poolSize', e.target.value);
+            }
+          }}
           className="mt-2"
           rows={3}
+          maxLength={200}
         />
       </div>
       <div>
-        <Label htmlFor="deadline">Какие сроки поставки интересуют, когда планируется запуск объекта?</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="deadline">Какие сроки поставки интересуют, когда планируется запуск объекта?</Label>
+          <span className="text-xs text-slate-500">{step2Data.deadline.length}/200</span>
+        </div>
         <Textarea 
           id="deadline" 
           placeholder="Например: Поставка до 1 июня 2025, запуск объекта планируется на 15 июня 2025"
           value={step2Data.deadline}
-          onChange={(e) => onStep2DataChange('deadline', e.target.value)}
+          onChange={(e) => {
+            if (e.target.value.length <= 200) {
+              onStep2DataChange('deadline', e.target.value);
+            }
+          }}
           className="mt-2"
           rows={2}
+          maxLength={200}
         />
       </div>
       {uploadProgress && (
