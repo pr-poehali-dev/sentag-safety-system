@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 interface HeaderProps {
   scrollToSection: (id: string) => void;
@@ -8,6 +9,7 @@ interface HeaderProps {
 
 export default function Header({ scrollToSection }: HeaderProps) {
   const [showDocuments, setShowDocuments] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const savedState = localStorage.getItem('show_documents_section');
@@ -15,25 +17,30 @@ export default function Header({ scrollToSection }: HeaderProps) {
       setShowDocuments(savedState === 'true');
     }
   }, []);
+
+  const handleMobileNavClick = (id: string) => {
+    scrollToSection(id);
+    setMobileMenuOpen(false);
+  };
   return (
     <header className="fixed top-0 w-full bg-[#f5f5f5] shadow-sm z-50">
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-6">
+      <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3 md:gap-6">
           <img 
             src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/cf3bde7a-7217-4c93-8917-b7e2e6a73768.jpg" 
             alt="Sentag" 
-            className="h-12 w-auto"
+            className="h-8 md:h-12 w-auto"
           />
-          <div className="w-px h-10 bg-slate-300"></div>
+          <div className="w-px h-8 md:h-10 bg-slate-300"></div>
           <button onClick={() => scrollToSection('about')} className="cursor-pointer transition hover:opacity-80">
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg" 
               alt="Меридиан" 
-              className="h-12 w-auto"
+              className="h-8 md:h-12 w-auto"
             />
           </button>
         </div>
-        <nav className="hidden md:flex gap-6">
+        <nav className="hidden lg:flex gap-6">
           <button onClick={() => scrollToSection('system')} className="text-slate-600 hover:text-primary transition">О системе</button>
           <button onClick={() => scrollToSection('how-it-works')} className="text-slate-600 hover:text-primary transition">Как работает</button>
           <button onClick={() => scrollToSection('advantages')} className="text-slate-600 hover:text-primary transition">Преимущества</button>
@@ -44,9 +51,33 @@ export default function Header({ scrollToSection }: HeaderProps) {
           )}
           <button onClick={() => scrollToSection('contacts')} className="text-slate-600 hover:text-primary transition">Контакты</button>
         </nav>
-        <Button onClick={() => scrollToSection('request')} className="hidden md:flex">
+        <Button onClick={() => scrollToSection('request')} className="hidden lg:flex">
           Оставить заявку
         </Button>
+        
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+          <SheetTrigger asChild className="lg:hidden">
+            <Button variant="ghost" size="icon">
+              <Icon name="Menu" size={24} />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[280px]">
+            <nav className="flex flex-col gap-4 mt-8">
+              <button onClick={() => handleMobileNavClick('system')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">О системе</button>
+              <button onClick={() => handleMobileNavClick('how-it-works')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Как работает</button>
+              <button onClick={() => handleMobileNavClick('advantages')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Преимущества</button>
+              <button onClick={() => handleMobileNavClick('components')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Компоненты</button>
+              <button onClick={() => handleMobileNavClick('about')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">О компании</button>
+              {showDocuments && (
+                <button onClick={() => handleMobileNavClick('documents')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Документы</button>
+              )}
+              <button onClick={() => handleMobileNavClick('contacts')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Контакты</button>
+              <Button onClick={() => handleMobileNavClick('request')} className="mt-4 w-full">
+                Оставить заявку
+              </Button>
+            </nav>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   );
