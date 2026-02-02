@@ -10,7 +10,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
     <section className="relative min-h-screen flex items-center justify-center text-white overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/10cc27e4-2dba-46d6-90da-7f6f121e50a7.png" 
+          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/952e9eb2-8ecb-4a5b-af1a-6d941ce05946.png" 
           alt="Браслет Sentag" 
           className="w-full h-full object-cover object-center"
         />
