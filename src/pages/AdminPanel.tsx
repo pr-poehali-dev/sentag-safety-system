@@ -2,19 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import UserManagementSection from '@/components/admin/UserManagementSection';
+import SiteSettingsSection from '@/components/admin/SiteSettingsSection';
+import RequestsSection from '@/components/admin/RequestsSection';
+import StatisticsSection from '@/components/admin/StatisticsSection';
 
 const API_URL = 'https://functions.poehali.dev/cfaa29d5-c049-499c-b21d-9d21762b09c1';
 
@@ -55,9 +48,6 @@ export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([]);
   const [requests, setRequests] = useState<RequestForm[]>([]);
   const [loading, setLoading] = useState(true);
-  const [newUserEmail, setNewUserEmail] = useState('');
-  const [newUserRole, setNewUserRole] = useState('user');
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [showDocuments, setShowDocuments] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -130,8 +120,8 @@ export default function AdminPanel() {
     }
   };
 
-  const createUser = async () => {
-    if (!newUserEmail.trim()) {
+  const createUser = async (email: string, role: string) => {
+    if (!email.trim()) {
       toast({ title: 'Ошибка', description: 'Введите email', variant: 'destructive' });
       return;
     }
@@ -146,8 +136,8 @@ export default function AdminPanel() {
         },
         body: JSON.stringify({
           action: 'create_user',
-          new_email: newUserEmail,
-          new_role: newUserRole
+          new_email: email,
+          new_role: role
         })
       });
 
@@ -155,9 +145,6 @@ export default function AdminPanel() {
 
       if (response.ok) {
         toast({ title: 'Успешно', description: 'Пользователь создан' });
-        setNewUserEmail('');
-        setNewUserRole('user');
-        setDialogOpen(false);
         loadUsers();
       } else {
         toast({ title: 'Ошибка', description: data.error || 'Не удалось создать пользователя', variant: 'destructive' });
@@ -291,244 +278,28 @@ export default function AdminPanel() {
 
         {currentUser?.role === 'admin' ? (
           <div className="space-y-8">
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-slate-800">Управление пользователями</h2>
-                  <p className="text-slate-600">Добавляйте и управляйте доступом к админ-панели</p>
-                </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button>
-                      <Icon name="UserPlus" className="mr-2" size={16} />
-                      Добавить пользователя
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Новый пользователь</DialogTitle>
-                      <DialogDescription>
-                        Пользователь получит одноразовый пароль на указанный email
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 mt-4">
-                      <div>
-                        <Label htmlFor="new-email">Email</Label>
-                        <Input
-                          id="new-email"
-                          type="email"
-                          placeholder="user@example.com"
-                          value={newUserEmail}
-                          onChange={(e) => setNewUserEmail(e.target.value)}
-                          className="mt-2"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="new-role">Роль</Label>
-                        <Select value={newUserRole} onValueChange={setNewUserRole}>
-                          <SelectTrigger className="mt-2">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="admin">Администратор</SelectItem>
-                            <SelectItem value="manager">Менеджер</SelectItem>
-                            <SelectItem value="user">Пользователь</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <Button className="w-full" onClick={createUser}>
-                        Создать пользователя
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
+            <UserManagementSection 
+              users={users}
+              currentUser={currentUser}
+              onCreateUser={createUser}
+              onUpdateUser={updateUser}
+            />
 
-              <div className="space-y-4">
-                {users.map((user) => (
-                  <Card key={user.id} className="p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${user.is_active ? 'bg-green-100' : 'bg-slate-100'}`}>
-                        <Icon name="User" className={user.is_active ? 'text-green-600' : 'text-slate-400'} size={20} />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-slate-800">{user.email}</p>
-                        <p className="text-sm text-slate-500">
-                          {user.role === 'admin' ? 'Администратор' : user.role === 'manager' ? 'Менеджер' : 'Пользователь'}
-                          {' • '}
-                          {new Date(user.created_at).toLocaleDateString('ru')}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Select
-                        value={user.role}
-                        onValueChange={(value) => updateUser(user.id, { role: value })}
-                        disabled={user.id === currentUser?.id}
-                      >
-                        <SelectTrigger className="w-40">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="admin">Администратор</SelectItem>
-                          <SelectItem value="manager">Менеджер</SelectItem>
-                          <SelectItem value="user">Пользователь</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Button
-                        variant={user.is_active ? 'outline' : 'default'}
-                        size="sm"
-                        onClick={() => updateUser(user.id, { is_active: !user.is_active })}
-                        disabled={user.id === currentUser?.id}
-                      >
-                        {user.is_active ? 'Деактивировать' : 'Активировать'}
-                      </Button>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </Card>
+            <SiteSettingsSection 
+              showDocuments={showDocuments}
+              onToggleDocuments={toggleDocumentsSection}
+            />
 
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-slate-800">Управление секциями сайта</h2>
-                  <p className="text-slate-600">Включайте и отключайте видимость секций</p>
-                </div>
-              </div>
-              <Card className="p-4 flex items-center justify-between bg-slate-50">
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${showDocuments ? 'bg-green-100' : 'bg-slate-200'}`}>
-                    <Icon name="FileText" className={showDocuments ? 'text-green-600' : 'text-slate-400'} size={20} />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-800">Документы и сертификаты</p>
-                    <p className="text-sm text-slate-500">
-                      {showDocuments ? 'Секция отображается на сайте' : 'Секция скрыта от посетителей'}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant={showDocuments ? 'outline' : 'default'}
-                  onClick={toggleDocumentsSection}
-                >
-                  {showDocuments ? (
-                    <>
-                      <Icon name="EyeOff" className="mr-2" size={16} />
-                      Скрыть секцию
-                    </>
-                  ) : (
-                    <>
-                      <Icon name="Eye" className="mr-2" size={16} />
-                      Показать секцию
-                    </>
-                  )}
-                </Button>
-              </Card>
-            </Card>
+            <RequestsSection 
+              requests={requests}
+              onLoadRequests={loadRequests}
+              onDeleteRequest={deleteRequest}
+            />
 
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-slate-800">Заявки на расчет</h2>
-                  <p className="text-slate-600">Все заявки с сайта</p>
-                </div>
-                <Button variant="outline" onClick={loadRequests}>
-                  <Icon name="RefreshCw" className="mr-2" size={16} />
-                  Обновить
-                </Button>
-              </div>
-
-              <div className="space-y-4">
-                {requests.length === 0 ? (
-                  <p className="text-center text-slate-500 py-8">Заявок пока нет</p>
-                ) : (
-                  requests.map((request) => (
-                    <Card key={request.id} className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="font-bold text-slate-800">{request.company}</h3>
-                          <p className="text-sm text-slate-600">{request.object_name}</p>
-                        </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          request.status === 'completed' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {request.status === 'completed' ? 'Завершена' : 'Шаг 1'}
-                        </span>
-                      </div>
-                      
-                      <div className="grid md:grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <p className="text-slate-500">Контакт</p>
-                          <p className="font-medium">{request.full_name}</p>
-                          <p className="text-slate-600">{request.phone}</p>
-                          <p className="text-slate-600">{request.email}</p>
-                        </div>
-                        <div>
-                          <p className="text-slate-500">Объект</p>
-                          <p className="font-medium">{request.object_address}</p>
-                          <p className="text-slate-600">Роль: {request.role === 'contractor' ? 'Подрядчик' : request.role === 'customer' ? 'Конечный заказчик' : 'Проектная организация'}</p>
-                        </div>
-                      </div>
-
-                      {request.status === 'completed' && (
-                        <div className="mt-3 pt-3 border-t">
-                          <p className="text-sm font-medium text-slate-700 mb-2">Детали проекта:</p>
-                          <div className="text-sm space-y-1">
-                            {request.pool_size && <p><span className="text-slate-500">Бассейн:</span> {request.pool_size}</p>}
-                            {request.visitors_info && <p><span className="text-slate-500">Посетители:</span> {request.visitors_info}</p>}
-                            {request.deadline && <p><span className="text-slate-500">Сроки:</span> {request.deadline}</p>}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-xs text-slate-400">
-                          <Icon name="Calendar" size={12} />
-                          {new Date(request.created_at).toLocaleString('ru-RU')}
-                        </div>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteRequest(request.id)}
-                        >
-                          <Icon name="Trash2" className="mr-2" size={14} />
-                          Удалить
-                        </Button>
-                      </div>
-                    </Card>
-                  ))
-                )}
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold text-slate-800 mb-4">Статистика</h2>
-              <div className="grid md:grid-cols-4 gap-6">
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <Icon name="Users" className="text-primary mb-2" size={32} />
-                  <p className="text-3xl font-bold text-slate-800">{users.length}</p>
-                  <p className="text-slate-600">Всего пользователей</p>
-                </div>
-                <div className="p-4 bg-green-50 rounded-lg">
-                  <Icon name="CheckCircle" className="text-green-600 mb-2" size={32} />
-                  <p className="text-3xl font-bold text-slate-800">{users.filter(u => u.is_active).length}</p>
-                  <p className="text-slate-600">Активных</p>
-                </div>
-                <div className="p-4 bg-purple-50 rounded-lg">
-                  <Icon name="Shield" className="text-purple-600 mb-2" size={32} />
-                  <p className="text-3xl font-bold text-slate-800">{users.filter(u => u.role === 'admin').length}</p>
-                  <p className="text-slate-600">Администраторов</p>
-                </div>
-                <div className="p-4 bg-orange-50 rounded-lg">
-                  <Icon name="FileText" className="text-orange-600 mb-2" size={32} />
-                  <p className="text-3xl font-bold text-slate-800">{requests.length}</p>
-                  <p className="text-slate-600">Заявок получено</p>
-                </div>
-              </div>
-            </Card>
+            <StatisticsSection 
+              users={users}
+              requests={requests}
+            />
           </div>
         ) : (
           <Card className="p-8 text-center">
