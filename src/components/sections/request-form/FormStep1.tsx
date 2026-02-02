@@ -35,37 +35,61 @@ export default function FormStep1({
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <Label htmlFor="phone">Контактный телефон *</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="phone">Контактный телефон *</Label>
+          <span className="text-xs text-slate-500">{formData.phone.length}/30</span>
+        </div>
         <Input 
           id="phone" 
           type="tel" 
           placeholder="+7 (___) ___-__-__"
           value={formData.phone}
-          onChange={(e) => onFormChange('phone', e.target.value)}
-          className={`mt-2 ${errors.phone ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+          onChange={(e) => {
+            if (e.target.value.length <= 30) {
+              onFormChange('phone', e.target.value);
+            }
+          }}
+          maxLength={30}
+          className={errors.phone ? 'border-red-500 focus-visible:ring-red-500' : ''}
         />
         {errors.phone && <p className="text-sm text-red-500 mt-1">Необходимо заполнить контактный телефон</p>}
       </div>
       <div>
-        <Label htmlFor="email">E-mail *</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="email">E-mail *</Label>
+          <span className="text-xs text-slate-500">{formData.email.length}/30</span>
+        </div>
         <Input 
           id="email" 
           type="email" 
           placeholder="example@company.ru"
           value={formData.email}
-          onChange={(e) => onFormChange('email', e.target.value)}
-          className={`mt-2 ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+          onChange={(e) => {
+            if (e.target.value.length <= 30) {
+              onFormChange('email', e.target.value);
+            }
+          }}
+          maxLength={30}
+          className={errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}
         />
         {errors.email && <p className="text-sm text-red-500 mt-1">Необходимо заполнить e-mail</p>}
       </div>
       <div>
-        <Label htmlFor="company">Наименование предприятия *</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="company">Наименование предприятия *</Label>
+          <span className="text-xs text-slate-500">{formData.company.length}/30</span>
+        </div>
         <Input 
           id="company" 
           placeholder="ООО «Название»"
           value={formData.company}
-          onChange={(e) => onFormChange('company', e.target.value)}
-          className={`mt-2 ${errors.company ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+          onChange={(e) => {
+            if (e.target.value.length <= 30) {
+              onFormChange('company', e.target.value);
+            }
+          }}
+          maxLength={30}
+          className={errors.company ? 'border-red-500 focus-visible:ring-red-500' : ''}
         />
         {errors.company && <p className="text-sm text-red-500 mt-1">Необходимо заполнить наименование предприятия</p>}
       </div>
@@ -84,35 +108,59 @@ export default function FormStep1({
         {errors.role && <p className="text-sm text-red-500 mt-1">Необходимо выбрать роль</p>}
       </div>
       <div>
-        <Label htmlFor="fullName">ФИО, должность *</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="fullName">ФИО, должность *</Label>
+          <span className="text-xs text-slate-500">{formData.fullName.length}/30</span>
+        </div>
         <Input 
           id="fullName" 
           placeholder="Иванов Иван Иванович, Директор"
           value={formData.fullName}
-          onChange={(e) => onFormChange('fullName', e.target.value)}
-          className={`mt-2 ${errors.fullName ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+          onChange={(e) => {
+            if (e.target.value.length <= 30) {
+              onFormChange('fullName', e.target.value);
+            }
+          }}
+          maxLength={30}
+          className={errors.fullName ? 'border-red-500 focus-visible:ring-red-500' : ''}
         />
         {errors.fullName && <p className="text-sm text-red-500 mt-1">Необходимо заполнить ФИО и должность</p>}
       </div>
       <div>
-        <Label htmlFor="objectName">Наименование объекта *</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="objectName">Наименование объекта *</Label>
+          <span className="text-xs text-slate-500">{formData.objectName.length}/30</span>
+        </div>
         <Input 
           id="objectName" 
           placeholder="Бассейн «Название»"
           value={formData.objectName}
-          onChange={(e) => onFormChange('objectName', e.target.value)}
-          className={`mt-2 ${errors.objectName ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+          onChange={(e) => {
+            if (e.target.value.length <= 30) {
+              onFormChange('objectName', e.target.value);
+            }
+          }}
+          maxLength={30}
+          className={errors.objectName ? 'border-red-500 focus-visible:ring-red-500' : ''}
         />
         {errors.objectName && <p className="text-sm text-red-500 mt-1">Необходимо заполнить наименование объекта</p>}
       </div>
       <div>
-        <Label htmlFor="objectAddress">Адрес объекта *</Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="objectAddress">Адрес объекта *</Label>
+          <span className="text-xs text-slate-500">{formData.objectAddress.length}/30</span>
+        </div>
         <Input 
           id="objectAddress" 
           placeholder="г. Город, ул. Улица, д. 1"
           value={formData.objectAddress}
-          onChange={(e) => onFormChange('objectAddress', e.target.value)}
-          className={`mt-2 ${errors.objectAddress ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+          onChange={(e) => {
+            if (e.target.value.length <= 30) {
+              onFormChange('objectAddress', e.target.value);
+            }
+          }}
+          maxLength={30}
+          className={errors.objectAddress ? 'border-red-500 focus-visible:ring-red-500' : ''}
         />
         {errors.objectAddress && <p className="text-sm text-red-500 mt-1">Необходимо заполнить адрес объекта</p>}
       </div>
