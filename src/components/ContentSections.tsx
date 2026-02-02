@@ -286,9 +286,11 @@ export default function ContentSections() {
                 <h3 className="text-2xl font-bold text-slate-800">Сенсор для чаши бассейна</h3>
               </div>
               
-              <div className="w-full h-64 bg-slate-200 rounded-xl shadow-lg mb-6 flex items-center justify-center">
-                <Icon name="Radio" className="text-slate-400" size={64} />
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/8707c55e-51a1-4738-a4a2-6c3705340c3f.jpg"
+                alt="Сенсор для чаши бассейна Sentag"
+                className="w-full h-auto rounded-xl shadow-lg mb-6"
+              />
               
               {expandedComponent === 'sensor' && (
                 <div className="mb-6 space-y-4 animate-fade-in">
