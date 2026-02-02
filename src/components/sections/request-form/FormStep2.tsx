@@ -55,18 +55,32 @@ export default function FormStep2({
           className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer block"
         >
           <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
-          {companyCardFile ? (
-            <div>
-              <p className="text-sm text-slate-700 font-medium">{companyCardFile.name}</p>
-              <p className="text-xs text-slate-400 mt-1">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
-            </div>
-          ) : (
-            <div>
-              <p className="text-sm text-slate-600">Нажмите для добавления карточки предприятия</p>
-              <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 20 МБ</p>
-            </div>
-          )}
+          <p className="text-sm text-slate-600">Нажмите для добавления карточки предприятия</p>
+          <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 20 МБ</p>
         </label>
+        
+        {companyCardFile && (
+          <div className="mt-4">
+            <p className="text-sm font-medium text-slate-700 mb-2">Загружен файл:</p>
+            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Icon name="FileText" className="text-slate-400" size={20} />
+                <div>
+                  <p className="text-sm text-slate-700 font-medium">{companyCardFile.name}</p>
+                  <p className="text-xs text-slate-400">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => onSetCompanyCardFile(null)}
+              >
+                <Icon name="X" size={16} />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
       <div>
         <Label htmlFor="poolScheme">Добавьте схему бассейна</Label>
