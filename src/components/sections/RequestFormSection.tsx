@@ -171,13 +171,13 @@ export default function RequestFormSection() {
                   size="lg"
                   onClick={() => setFormStep(2)}
                   disabled={
-                    !formData.phone || 
-                    !formData.email || 
-                    !formData.company || 
-                    !formData.role || 
-                    !formData.fullName || 
-                    !formData.objectName || 
-                    !formData.objectAddress || 
+                    !formData.phone.trim() || 
+                    !formData.email.trim() || 
+                    !formData.company.trim() || 
+                    !formData.role.trim() || 
+                    !formData.fullName.trim() || 
+                    !formData.objectName.trim() || 
+                    !formData.objectAddress.trim() || 
                     !formData.consent
                   }
                 >
