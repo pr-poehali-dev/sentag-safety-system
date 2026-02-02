@@ -148,54 +148,47 @@ export default function RequestFormSection() {
             {formStep === 2 && (
               <div className="space-y-6 animate-fade-in">
                 <div>
-                  <Label htmlFor="visitors">Максимальное количество посетителей в день *</Label>
-                  <Input 
-                    id="visitors" 
-                    type="number"
-                    placeholder="Например: 200"
-                    className="mt-2"
-                  />
+                  <Label htmlFor="companyCard">1. Добавьте карточку предприятия</Label>
+                  <div className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer">
+                    <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
+                    <p className="text-sm text-slate-600">Прикрепите файл с карточкой предприятия</p>
+                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG до 10 МБ</p>
+                  </div>
                 </div>
                 <div>
-                  <Label htmlFor="zones">Градация зон</Label>
+                  <Label htmlFor="visitorsInfo">2. Укажите, максимальное количество посетителей в день? Есть ли градация, детские зоны, взрослые зоны? Цвета браслетов и их количество?</Label>
                   <Textarea 
-                    id="zones" 
-                    placeholder="Опишите детские зоны, взрослые зоны, их размеры и глубину..."
+                    id="visitorsInfo" 
+                    placeholder="Например: До 300 посетителей в день. Есть детская зона (глубина 0.8м) и взрослая зона (глубина 2.5м). Браслеты: синие - 100 шт, красные - 50 шт, желтые - 50 шт."
                     className="mt-2"
-                    rows={4}
+                    rows={5}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="bracelets">Цвета браслетов и их количество</Label>
-                  <Input 
-                    id="bracelets" 
-                    placeholder="Например: синие - 50 шт, красные - 30 шт"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="poolSize">Форма, размеры и глубина бассейна *</Label>
+                  <Label htmlFor="poolSize">3. Укажите форму, размеры и глубину бассейна *</Label>
                   <Textarea 
                     id="poolSize" 
-                    placeholder="Опишите параметры бассейна..."
+                    placeholder="Например: Прямоугольная форма, 25м х 12м, глубина от 1.2м до 2.8м"
                     className="mt-2"
                     rows={3}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="poolScheme">Схема бассейна</Label>
+                  <Label htmlFor="poolScheme">4. Добавьте схему бассейна</Label>
+                  <p className="text-sm text-slate-500 mt-1 mb-2">При наличии укажите на схеме: подводные фонари, водные преграды, волны, аэромассажные зоны, подводные лежаки, гейзеры и др.</p>
                   <div className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer">
                     <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
-                    <p className="text-sm text-slate-600">Прикрепите файл со схемой</p>
-                    <p className="text-xs text-slate-400 mt-1">Укажите подводные фонари, водные преграды, волны и др.</p>
+                    <p className="text-sm text-slate-600">Прикрепите файл со схемой бассейна</p>
+                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, DWG до 20 МБ</p>
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="deadline">Сроки поставки и запуска объекта</Label>
-                  <Input 
+                  <Label htmlFor="deadline">5. Какие сроки поставки интересуют, когда планируется запуск объекта?</Label>
+                  <Textarea 
                     id="deadline" 
-                    type="date"
+                    placeholder="Например: Поставка до 1 июня 2025, запуск объекта планируется на 15 июня 2025"
                     className="mt-2"
+                    rows={2}
                   />
                 </div>
                 <div className="flex items-start gap-3">
