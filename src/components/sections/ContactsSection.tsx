@@ -15,6 +15,11 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
     }
   };
 
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('info@meridian-t.ru');
+    alert('Email скопирован в буфер обмена');
+  };
+
   return (
     <section id="contacts" className="py-20 bg-gradient-to-b from-slate-50 to-white">
       <div className="container mx-auto px-4">
@@ -50,9 +55,9 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
             </div>
             <h3 className="font-bold text-lg mb-2 text-slate-800">Email</h3>
             <p className="text-slate-600">
-              <a href="mailto:info@meridian-t.ru" className="hover:text-primary transition">info@meridian-t.ru</a>
+              <button onClick={handleCopyEmail} className="hover:text-primary transition cursor-pointer">info@meridian-t.ru</button>
             </p>
-            <Button variant="link" className="mt-4">
+            <Button variant="link" className="mt-4" onClick={handleCopyEmail}>
               Написать письмо
             </Button>
           </Card>
