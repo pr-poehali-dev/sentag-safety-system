@@ -13,6 +13,7 @@ interface FormStep2Props {
   poolSchemeFiles: File[];
   isSubmitting: boolean;
   uploadProgress?: string;
+  canSubmit?: boolean;
   onStep2DataChange: (field: string, value: string) => void;
   onSetCompanyCardFile: (file: File | null) => void;
   onSetPoolSchemeFiles: (files: File[]) => void;
@@ -26,6 +27,7 @@ export default function FormStep2({
   poolSchemeFiles,
   isSubmitting,
   uploadProgress,
+  canSubmit = true,
   onStep2DataChange,
   onSetCompanyCardFile,
   onSetPoolSchemeFiles,
@@ -64,12 +66,20 @@ export default function FormStep2({
         {companyCardFile && (
           <div className="mt-4">
             <p className="text-sm font-medium text-slate-700 mb-2">Загружен файл:</p>
-            <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
               <div className="flex items-center gap-3">
-                <Icon name="FileText" className="text-slate-400" size={20} />
+                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                  <Icon name="FileText" className="text-green-600" size={20} />
+                </div>
                 <div>
                   <p className="text-sm text-slate-700 font-medium">{companyCardFile.name}</p>
-                  <p className="text-xs text-slate-400">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-slate-500">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
+                    <div className="flex items-center gap-1">
+                      <Icon name="CheckCircle2" className="text-green-600" size={14} />
+                      <span className="text-xs text-green-600 font-medium">Готов к отправке</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <Button
@@ -126,12 +136,20 @@ export default function FormStep2({
           <div className="mt-4 space-y-2">
             <p className="text-sm font-medium text-slate-700">Загружено схем: {poolSchemeFiles.length}/5</p>
             {poolSchemeFiles.map((file, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Icon name="FileText" className="text-slate-400" size={20} />
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Icon name="FileImage" className="text-blue-600" size={20} />
+                  </div>
                   <div>
                     <p className="text-sm text-slate-700 font-medium">{file.name}</p>
-                    <p className="text-xs text-slate-400">{(file.size / 1024 / 1024).toFixed(2)} МБ</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} МБ</p>
+                      <div className="flex items-center gap-1">
+                        <Icon name="CheckCircle2" className="text-blue-600" size={14} />
+                        <span className="text-xs text-blue-600 font-medium">Готов к отправке</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <Button
@@ -201,7 +219,12 @@ export default function FormStep2({
         >
           Назад
         </Button>
-        <Button className="flex-1" size="lg" onClick={onSubmitStep2} disabled={isSubmitting}>
+        <Button 
+          className="flex-1" 
+          size="lg" 
+          onClick={onSubmitStep2} 
+          disabled={!canSubmit || isSubmitting}
+        >
           {isSubmitting ? 'Отправка...' : 'Отправить заявку'}
         </Button>
       </div>

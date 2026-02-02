@@ -11,8 +11,11 @@ export default function RequestFormSection() {
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [requestId, setRequestId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
   const [companyCardFile, setCompanyCardFile] = useState<File | null>(null);
   const [poolSchemeFiles, setPoolSchemeFiles] = useState<File[]>([]);
+  const [companyCardLoaded, setCompanyCardLoaded] = useState(false);
+  const [poolSchemesLoaded, setPoolSchemesLoaded] = useState<boolean[]>([]);
   const [formData, setFormData] = useState({
     phone: '',
     email: '',
@@ -227,6 +230,28 @@ export default function RequestFormSection() {
     setStep2Data({ ...step2Data, [field]: value });
   };
 
+  const handleSetCompanyCardFile = (file: File | null) => {
+    setCompanyCardFile(file);
+    setCompanyCardLoaded(!!file);
+  };
+
+  const handleSetPoolSchemeFiles = (files: File[]) => {
+    setPoolSchemeFiles(files);
+    setPoolSchemesLoaded(files.map(() => true));
+  };
+
+  const canSubmitStep2 = () => {
+    if (isSubmitting || isUploadingFiles) return false;
+    
+    if (companyCardFile && !companyCardLoaded) return false;
+    
+    for (let i = 0; i < poolSchemeFiles.length; i++) {
+      if (!poolSchemesLoaded[i]) return false;
+    }
+    
+    return true;
+  };
+
   return (
     <section id="request" className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -268,9 +293,10 @@ export default function RequestFormSection() {
                 poolSchemeFiles={poolSchemeFiles}
                 isSubmitting={isSubmitting}
                 uploadProgress={uploadProgress}
+                canSubmit={canSubmitStep2()}
                 onStep2DataChange={handleStep2DataChange}
-                onSetCompanyCardFile={setCompanyCardFile}
-                onSetPoolSchemeFiles={setPoolSchemeFiles}
+                onSetCompanyCardFile={handleSetCompanyCardFile}
+                onSetPoolSchemeFiles={handleSetPoolSchemeFiles}
                 onSubmitStep2={handleSubmitStep2}
                 onBackStep={() => setFormStep(1)}
               />
