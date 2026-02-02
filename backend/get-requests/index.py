@@ -51,6 +51,8 @@ def handler(event: dict, context) -> dict:
                 visitors_info,
                 pool_size,
                 deadline,
+                company_card_url,
+                pool_scheme_urls,
                 status,
                 step1_completed_at,
                 step2_completed_at,

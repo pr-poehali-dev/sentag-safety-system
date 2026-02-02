@@ -1,10 +1,12 @@
 import json
 import os
 import psycopg2
+import boto3
+import base64
 from datetime import datetime
 
 def handler(event: dict, context) -> dict:
-    """Сохранение данных заявки на расчет в базу данных"""
+    """Сохранение данных заявки на расчет в базу данных с загрузкой файлов в S3"""
     
     method = event.get('httpMethod', 'POST')
     
@@ -76,11 +78,52 @@ def handler(event: dict, context) -> dict:
         elif step == 2:
             request_id = body.get('requestId')
             
+            s3 = boto3.client('s3',
+                endpoint_url='https://bucket.poehali.dev',
+                aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+                aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY']
+            )
+            
+            company_card_url = None
+            pool_scheme_urls = []
+            
+            if body.get('companyCardFile'):
+                file_data = body['companyCardFile']
+                file_name = file_data.get('name', 'company_card.pdf')
+                file_content = base64.b64decode(file_data['content'])
+                content_type = file_data.get('type', 'application/pdf')
+                
+                key = f'request-forms/{request_id}/company_card_{file_name}'
+                s3.put_object(
+                    Bucket='files',
+                    Key=key,
+                    Body=file_content,
+                    ContentType=content_type
+                )
+                company_card_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
+            
+            if body.get('poolSchemeFiles'):
+                for idx, file_data in enumerate(body['poolSchemeFiles']):
+                    file_name = file_data.get('name', f'pool_scheme_{idx}.pdf')
+                    file_content = base64.b64decode(file_data['content'])
+                    content_type = file_data.get('type', 'application/pdf')
+                    
+                    key = f'request-forms/{request_id}/pool_scheme_{idx}_{file_name}'
+                    s3.put_object(
+                        Bucket='files',
+                        Key=key,
+                        Body=file_content,
+                        ContentType=content_type
+                    )
+                    pool_scheme_urls.append(f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}")
+            
             cur.execute("""
                 UPDATE request_forms 
                 SET visitors_info = %s,
                     pool_size = %s,
                     deadline = %s,
+                    company_card_url = %s,
+                    pool_scheme_urls = %s,
                     step2_completed_at = NOW(),
                     updated_at = NOW(),
                     status = 'completed'
@@ -90,6 +133,8 @@ def handler(event: dict, context) -> dict:
                 body.get('visitorsInfo'),
                 body.get('poolSize'),
                 body.get('deadline'),
+                company_card_url,
+                pool_scheme_urls,
                 request_id
             ))
             

@@ -96,6 +96,18 @@ export default function RequestFormSection() {
     }
   };
   
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        resolve(base64.split(',')[1]);
+      };
+      reader.onerror = reject;
+    });
+  };
+
   const handleSubmitStep2 = async () => {
     if (!requestId) {
       alert('Ошибка: ID заявки не найден');
@@ -105,6 +117,27 @@ export default function RequestFormSection() {
     setIsSubmitting(true);
     
     try {
+      let companyCardData = null;
+      const poolSchemeData = [];
+      
+      if (companyCardFile) {
+        const content = await fileToBase64(companyCardFile);
+        companyCardData = {
+          name: companyCardFile.name,
+          type: companyCardFile.type,
+          content: content
+        };
+      }
+      
+      for (const file of poolSchemeFiles) {
+        const content = await fileToBase64(file);
+        poolSchemeData.push({
+          name: file.name,
+          type: file.type,
+          content: content
+        });
+      }
+      
       const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
         method: 'POST',
         headers: {
@@ -113,7 +146,9 @@ export default function RequestFormSection() {
         body: JSON.stringify({
           step: 2,
           requestId,
-          ...step2Data
+          ...step2Data,
+          companyCardFile: companyCardData,
+          poolSchemeFiles: poolSchemeData
         })
       });
       

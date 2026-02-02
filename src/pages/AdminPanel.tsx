@@ -37,6 +37,8 @@ interface RequestForm {
   visitors_info: string | null;
   pool_size: string | null;
   deadline: string | null;
+  company_card_url: string | null;
+  pool_scheme_urls: string[] | null;
   status: string;
   step1_completed_at: string;
   step2_completed_at: string | null;

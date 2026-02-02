@@ -14,6 +14,8 @@ interface RequestForm {
   visitors_info: string | null;
   pool_size: string | null;
   deadline: string | null;
+  company_card_url: string | null;
+  pool_scheme_urls: string[] | null;
   status: string;
   step1_completed_at: string;
   step2_completed_at: string | null;
@@ -86,6 +88,39 @@ export default function RequestsSection({
                     {request.visitors_info && <p><span className="text-slate-500">Посетители:</span> {request.visitors_info}</p>}
                     {request.deadline && <p><span className="text-slate-500">Сроки:</span> {request.deadline}</p>}
                   </div>
+                  
+                  {(request.company_card_url || (request.pool_scheme_urls && request.pool_scheme_urls.length > 0)) && (
+                    <div className="mt-3 pt-3 border-t">
+                      <p className="text-sm font-medium text-slate-700 mb-2">Прикрепленные файлы:</p>
+                      <div className="space-y-2">
+                        {request.company_card_url && (
+                          <a 
+                            href={request.company_card_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-sm text-primary hover:underline"
+                          >
+                            <Icon name="FileText" size={16} />
+                            <span>Карточка предприятия</span>
+                            <Icon name="ExternalLink" size={12} />
+                          </a>
+                        )}
+                        {request.pool_scheme_urls && request.pool_scheme_urls.map((url, idx) => (
+                          <a 
+                            key={idx}
+                            href={url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-sm text-primary hover:underline"
+                          >
+                            <Icon name="FileText" size={16} />
+                            <span>Схема бассейна {request.pool_scheme_urls!.length > 1 ? `${idx + 1}` : ''}</span>
+                            <Icon name="ExternalLink" size={12} />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
