@@ -3,57 +3,38 @@ import Icon from '@/components/ui/icon';
 
 export default function SystemBenefitsSection() {
   return (
-    <section id="system" className="py-20 bg-gradient-to-b from-slate-50 to-white">
+    <>
+      <section id="system" className="py-20 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-slate-800">
-            Как работает система оповещения опасности утопления?
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-slate-800">
+            Что вы получаете используя СООУ «Sentag»
           </h2>
-          <div className="max-w-4xl mx-auto space-y-8 mt-16">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                step: '01',
-                icon: 'Watch',
-                title: 'Браслет подает сигнал',
-                description: 'Если посетитель бассейна находится продолжительное время на критической глубине, браслет подает сигнал'
+                icon: 'ShieldCheck',
+                title: 'Обеспечение безопасности людей',
+                description: 'Защита посетителей на закрытой воде с помощью передовых технологий мониторинга'
               },
               {
-                step: '02',
-                icon: 'Radio',
-                title: 'Передача на сенсоры',
-                description: 'Информация поступает на сенсоры, установленные в бассейне'
+                icon: 'Users',
+                title: 'Оптимизация работы спасателей',
+                description: 'Система помогает персоналу быстрее реагировать на критические ситуации'
               },
               {
-                step: '03',
-                icon: 'AlertTriangle',
-                title: 'Тревожное оповещение',
-                description: 'Тревожный сигнал отображается на дисплее настенного модуля, включаются световые и звуковые приборы оповещения'
+                icon: 'Award',
+                title: 'Повышение имиджа и репутации',
+                description: 'Современные системы безопасности укрепляют доверие клиентов к вашему заведению'
               }
             ].map((item, idx) => (
-              <div key={idx} className="flex gap-6 items-start animate-fade-in" style={{ animationDelay: `${idx * 0.2}s` }}>
-                <div className="flex-shrink-0">
-                  <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center shadow-lg">
-                    <Icon name={item.icon} className="text-white" size={32} />
-                  </div>
+              <Card key={idx} className="p-8 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 animate-fade-in" style={{ animationDelay: `${idx * 0.1}s` }}>
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                  <Icon name={item.icon} className="text-primary" size={32} />
                 </div>
-                <div className="flex-1">
-                  <div className="text-sm font-bold text-primary mb-2">{item.step}</div>
-                  <h3 className="text-2xl font-bold mb-3 text-slate-800">{item.title}</h3>
-                  <p className="text-slate-600 text-lg">{item.description}</p>
-                </div>
-              </div>
+                <h3 className="text-xl font-bold mb-4 text-slate-800">{item.title}</h3>
+                <p className="text-slate-600">{item.description}</p>
+              </Card>
             ))}
-          </div>
-          <div className="mt-16 max-w-3xl mx-auto">
-            <Card className="p-8 bg-blue-50 border-blue-200">
-              <p className="text-lg text-slate-700 leading-relaxed">
-                <strong>Продолжительность времени нахождения и глубина настраивается отдельно</strong> с учетом особенностей бассейнов и возрастной категории посетителей. Браслеты могут отличаться настройками и цветами.
-              </p>
-            </Card>
-          </div>
-          <div className="mt-12 text-center max-w-4xl mx-auto">
-            <p className="text-xl text-slate-700 leading-relaxed">
-              Инновационная технология Sentag обеспечивает <strong className="text-primary">самую раннюю и точную сигнализацию</strong> об обнаружении опасности утопления с целью сокращения времени на спасение в случае инцидента. Технические решения, предлагаемые нашей компанией, <strong className="text-primary">сводят к нулю риски</strong> того что критическая ситуация останется незамеченной.
-            </p>
           </div>
         </div>
       </section>
