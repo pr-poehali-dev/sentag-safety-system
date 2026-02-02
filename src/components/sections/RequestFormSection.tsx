@@ -252,16 +252,18 @@ export default function RequestFormSection() {
                     </div>
                   )}
                 </div>
-                <Button className="w-full" size="lg">
-                  Отправить заявку
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => setFormStep(1)}
-                >
-                  Назад
-                </Button>
+                <div className="flex gap-4">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => setFormStep(1)}
+                  >
+                    Назад
+                  </Button>
+                  <Button className="flex-1" size="lg">
+                    Отправить заявку
+                  </Button>
+                </div>
               </div>
             )}
           </Card>
