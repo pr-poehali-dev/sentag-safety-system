@@ -16,11 +16,13 @@ export default function Header({ scrollToSection }: HeaderProps) {
             className="h-12 w-auto"
           />
           <div className="w-px h-10 bg-slate-300"></div>
-          <img 
-            src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg" 
-            alt="Меридиан" 
-            className="h-12 w-auto"
-          />
+          <button onClick={() => scrollToSection('about')} className="cursor-pointer transition hover:opacity-80">
+            <img 
+              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg" 
+              alt="Меридиан" 
+              className="h-12 w-auto"
+            />
+          </button>
         </div>
         <nav className="hidden md:flex gap-6">
           <button onClick={() => scrollToSection('system')} className="text-slate-600 hover:text-primary transition">О системе</button>
