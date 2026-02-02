@@ -46,6 +46,7 @@ export default function FormStep2({
               return;
             }
             onSetCompanyCardFile(file || null);
+            e.target.value = '';
           }}
           className="hidden"
         />
@@ -55,15 +56,15 @@ export default function FormStep2({
         >
           <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
           {companyCardFile ? (
-            <>
+            <div>
               <p className="text-sm text-slate-700 font-medium">{companyCardFile.name}</p>
               <p className="text-xs text-slate-400 mt-1">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
-            </>
+            </div>
           ) : (
-            <>
+            <div>
               <p className="text-sm text-slate-600">Нажмите для добавления карточки предприятия</p>
               <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 20 МБ</p>
-            </>
+            </div>
           )}
         </label>
       </div>
