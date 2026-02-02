@@ -7,11 +7,17 @@ interface HeroSectionProps {
 
 export default function HeroSection({ scrollToSection }: HeroSectionProps) {
   return (
-    <section className="relative h-screen flex items-center justify-center text-white overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-700 to-cyan-600 z-0" />
-      <div className="absolute inset-0 opacity-10 z-0" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+    <section className="relative h-screen flex items-start justify-center text-white overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/10cc27e4-2dba-46d6-90da-7f6f121e50a7.png" 
+          alt="Браслет Sentag" 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+      </div>
       
-      <div className="container mx-auto px-4 text-center z-10 animate-fade-in">
+      <div className="container mx-auto px-4 text-center z-10 animate-fade-in mt-32">
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
           СООУ Sentag в России
         </h1>
