@@ -1,0 +1,47 @@
+{
+  "tests": [
+    {
+      "name": "Request OTP for admin user",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "request_otp",
+        "email": "admin@meridian-t.ru"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Request OTP for non-existent user",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "request_otp",
+        "email": "nonexistent@example.com"
+      },
+      "expectedStatus": 404,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Verify invalid OTP",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "verify_otp",
+        "email": "admin@meridian-t.ru",
+        "otp": "000000"
+      },
+      "expectedStatus": 401,
+      "expectedBody": {
+        "error": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
