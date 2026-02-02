@@ -253,7 +253,6 @@ export default function ContentSections() {
                 alt="Настенный модуль Sentag"
                 className="w-full h-auto rounded-xl shadow-lg mb-6"
               />
-              </div>
               
               {expandedComponent === 'wall' && (
                 <div className="mb-6 space-y-4 animate-fade-in">
