@@ -40,23 +40,23 @@ export default function Header({ scrollToSection }: HeaderProps) {
             />
           </button>
         </div>
-        <nav className="hidden lg:flex gap-6">
-          <button onClick={() => scrollToSection('system')} className="text-slate-600 hover:text-primary transition">О системе</button>
-          <button onClick={() => scrollToSection('how-it-works')} className="text-slate-600 hover:text-primary transition">Как работает</button>
-          <button onClick={() => scrollToSection('advantages')} className="text-slate-600 hover:text-primary transition">Преимущества</button>
-          <button onClick={() => scrollToSection('components')} className="text-slate-600 hover:text-primary transition">Компоненты</button>
-          <button onClick={() => scrollToSection('about')} className="text-slate-600 hover:text-primary transition">О компании</button>
+        <nav className="hidden xl:flex gap-4 2xl:gap-6 text-sm 2xl:text-base">
+          <button onClick={() => scrollToSection('system')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">О системе</button>
+          <button onClick={() => scrollToSection('how-it-works')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Как работает</button>
+          <button onClick={() => scrollToSection('advantages')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Преимущества</button>
+          <button onClick={() => scrollToSection('components')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Компоненты</button>
+          <button onClick={() => scrollToSection('about')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">О компании</button>
           {showDocuments && (
-            <button onClick={() => scrollToSection('documents')} className="text-slate-600 hover:text-primary transition">Документы</button>
+            <button onClick={() => scrollToSection('documents')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Документы</button>
           )}
-          <button onClick={() => scrollToSection('contacts')} className="text-slate-600 hover:text-primary transition">Контакты</button>
+          <button onClick={() => scrollToSection('contacts')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Контакты</button>
         </nav>
-        <Button onClick={() => scrollToSection('request')} className="hidden lg:flex">
+        <Button onClick={() => scrollToSection('request')} className="hidden xl:flex text-sm 2xl:text-base whitespace-nowrap">
           Оставить заявку
         </Button>
         
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetTrigger asChild className="lg:hidden">
+          <SheetTrigger asChild className="xl:hidden">
             <Button variant="ghost" size="icon">
               <Icon name="Menu" size={24} />
             </Button>
