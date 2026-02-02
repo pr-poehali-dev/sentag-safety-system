@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "name": "Get all requests",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "requests": "array"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

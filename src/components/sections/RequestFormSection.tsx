@@ -21,6 +21,8 @@ export default function RequestFormSection() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [showConsentText, setShowConsentText] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [requestId, setRequestId] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [companyCardFile, setCompanyCardFile] = useState<File | null>(null);
   const [poolSchemeFile, setPoolSchemeFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
@@ -32,6 +34,11 @@ export default function RequestFormSection() {
     objectName: '',
     objectAddress: '',
     consent: false,
+  });
+  const [step2Data, setStep2Data] = useState({
+    visitorsInfo: '',
+    poolSize: '',
+    deadline: ''
   });
 
   const handleFormChange = (field: string, value: any) => {
@@ -56,9 +63,91 @@ export default function RequestFormSection() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleNextStep = () => {
-    if (validateStep1()) {
-      setFormStep(2);
+  const handleNextStep = async () => {
+    if (!validateStep1()) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          step: 1,
+          ...formData
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        setRequestId(result.requestId);
+        setFormStep(2);
+      } else {
+        alert('Ошибка при сохранении данных');
+      }
+    } catch (error) {
+      console.error('Error saving step 1:', error);
+      alert('Ошибка при сохранении данных');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
+  const handleSubmitStep2 = async () => {
+    if (!requestId) {
+      alert('Ошибка: ID заявки не найден');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          step: 2,
+          requestId,
+          ...step2Data
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (result.success) {
+        alert('Заявка успешно отправлена!');
+        setFormStep(1);
+        setFormData({
+          phone: '',
+          email: '',
+          company: '',
+          role: '',
+          fullName: '',
+          objectName: '',
+          objectAddress: '',
+          consent: false,
+        });
+        setStep2Data({
+          visitorsInfo: '',
+          poolSize: '',
+          deadline: ''
+        });
+        setRequestId(null);
+        setCompanyCardFile(null);
+        setPoolSchemeFile(null);
+      } else {
+        alert('Ошибка при отправке заявки');
+      }
+    } catch (error) {
+      console.error('Error saving step 2:', error);
+      alert('Ошибка при отправке заявки');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -205,8 +294,9 @@ export default function RequestFormSection() {
                   className="w-full" 
                   size="lg"
                   onClick={handleNextStep}
+                  disabled={isSubmitting}
                 >
-                  Далее
+                  {isSubmitting ? 'Сохранение...' : 'Далее'}
                 </Button>
               </div>
             )}
@@ -253,6 +343,8 @@ export default function RequestFormSection() {
                   <Textarea 
                     id="visitorsInfo" 
                     placeholder="Например: До 300 посетителей в день. Есть детская зона (глубина 0.8м) и взрослая зона (глубина 2.5м). Браслеты: синие - 100 шт, красные - 50 шт, желтые - 50 шт."
+                    value={step2Data.visitorsInfo}
+                    onChange={(e) => setStep2Data({ ...step2Data, visitorsInfo: e.target.value })}
                     className="mt-2"
                     rows={5}
                   />
@@ -262,6 +354,8 @@ export default function RequestFormSection() {
                   <Textarea 
                     id="poolSize" 
                     placeholder="Например: Прямоугольная форма, 25м х 12м, глубина от 1.2м до 2.8м"
+                    value={step2Data.poolSize}
+                    onChange={(e) => setStep2Data({ ...step2Data, poolSize: e.target.value })}
                     className="mt-2"
                     rows={3}
                   />
@@ -307,6 +401,8 @@ export default function RequestFormSection() {
                   <Textarea 
                     id="deadline" 
                     placeholder="Например: Поставка до 1 июня 2025, запуск объекта планируется на 15 июня 2025"
+                    value={step2Data.deadline}
+                    onChange={(e) => setStep2Data({ ...step2Data, deadline: e.target.value })}
                     className="mt-2"
                     rows={2}
                   />
@@ -319,8 +415,8 @@ export default function RequestFormSection() {
                   >
                     Назад
                   </Button>
-                  <Button className="flex-1" size="lg">
-                    Отправить заявку
+                  <Button className="flex-1" size="lg" onClick={handleSubmitStep2} disabled={isSubmitting}>
+                    {isSubmitting ? 'Отправка...' : 'Отправить заявку'}
                   </Button>
                 </div>
               </div>

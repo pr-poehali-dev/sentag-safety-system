@@ -1,3 +1,5 @@
 {
+  "get-requests": "https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c",
+  "save-request": "https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6",
   "admin-auth": "https://functions.poehali.dev/cfaa29d5-c049-499c-b21d-9d21762b09c1"
 }

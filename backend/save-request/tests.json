@@ -1,0 +1,26 @@
+{
+  "tests": [
+    {
+      "name": "Save step 1 data",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "step": 1,
+        "phone": "+7 (999) 123-45-67",
+        "email": "test@example.com",
+        "company": "ООО Тест",
+        "role": "contractor",
+        "fullName": "Иванов Иван Иванович, Директор",
+        "objectName": "Бассейн Тестовый",
+        "objectAddress": "г. Москва, ул. Тестовая, д. 1",
+        "consent": true
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "requestId": "number"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
