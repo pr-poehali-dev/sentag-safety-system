@@ -126,21 +126,33 @@ export default function RequestFormSection() {
         });
       }
       
+      const requestBody = {
+        step: 2,
+        requestId,
+        ...step2Data,
+        companyCardFile: companyCardData,
+        poolSchemeFiles: poolSchemeData
+      };
+      
+      console.log('Sending step 2 request:', {
+        ...requestBody,
+        companyCardFile: companyCardData ? { name: companyCardData.name, type: companyCardData.type, contentLength: companyCardData.content.length } : null,
+        poolSchemeFiles: poolSchemeData.map(f => ({ name: f.name, type: f.type, contentLength: f.content.length }))
+      });
+      
       const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          step: 2,
-          requestId,
-          ...step2Data,
-          companyCardFile: companyCardData,
-          poolSchemeFiles: poolSchemeData
-        })
+        body: JSON.stringify(requestBody)
       });
       
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
       const result = await response.json();
+      console.log('Response body:', result);
       
       if (!response.ok) {
         console.error('Server error:', result);
@@ -174,7 +186,11 @@ export default function RequestFormSection() {
       }
     } catch (error) {
       console.error('Error saving step 2:', error);
-      alert('Ошибка при отправке заявки');
+      if (error instanceof Error) {
+        alert(`Ошибка при отправке заявки: ${error.message}`);
+      } else {
+        alert('Ошибка при отправке заявки');
+      }
     } finally {
       setIsSubmitting(false);
     }
