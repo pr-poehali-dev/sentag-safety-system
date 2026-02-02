@@ -302,7 +302,7 @@ export default function RequestFormSection() {
             {formStep === 2 && (
               <div className="space-y-6 animate-fade-in">
                 <div>
-                  <Label htmlFor="fileUpload">Добавьте файлы (до 6 файлов, каждый до 20 МБ)</Label>
+                  <Label htmlFor="fileUpload">Добавьте карточку предприятия, схему бассейна. При наличии укажите на схеме: подводные фонари, водные преграды, волны, аэромассажные зоны, подводные лежаки, гейзеры и др.</Label>
                   <input
                     type="file"
                     id="fileUpload"
