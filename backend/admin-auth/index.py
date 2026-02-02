@@ -23,13 +23,13 @@ def send_otp_email(email: str, otp: str) -> bool:
     smtp_host = os.environ.get('SMTP_HOST', 'smtp.yandex.ru')
     smtp_port = int(os.environ.get('SMTP_PORT', '465'))
     smtp_user = os.environ.get('SMTP_USER', '').strip()
-    smtp_password = os.environ.get('SMTP_PASSWORD', '').strip()
+    smtp_password = os.environ.get('SMTP_PASSWORD', '').replace(' ', '')
     
     if not smtp_user or not smtp_password:
         print("[DEBUG] SMTP credentials not configured")
         return False
     
-    print(f"[DEBUG] SMTP config: host={smtp_host}, port={smtp_port}, user={smtp_user}, pass_len={len(smtp_password)}")
+    print(f"[DEBUG] SMTP: host={smtp_host}, port={smtp_port}, user={smtp_user}")
     
     msg = MIMEMultipart('alternative')
     msg['Subject'] = 'Ваш код доступа в админ-панель Sentag'
@@ -40,13 +40,13 @@ def send_otp_email(email: str, otp: str) -> bool:
     <html>
       <body style="font-family: Arial, sans-serif; padding: 20px;">
         <div style="max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #0EA5E9;">Вход в админ-панель Sentag</h2>
+          <h2 style="color: #0EA5E9;">Код доступа в админ-панель</h2>
           <p>Ваш одноразовый код для входа:</p>
-          <div style="background: #f3f4f6; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #0EA5E9; border-radius: 8px;">
+          <div style="background: #f1f5f9; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1e293b; border-radius: 8px;">
             {otp}
           </div>
-          <p style="color: #64748b; margin-top: 20px;">Код действителен 10 минут</p>
-          <p style="color: #64748b; font-size: 12px;">Если вы не запрашивали вход, проигнорируйте это письмо</p>
+          <p style="color: #64748b; margin-top: 20px;">Код действителен 10 минут.</p>
+          <p style="color: #64748b;">Если вы не запрашивали код, просто проигнорируйте это письмо.</p>
         </div>
       </body>
     </html>
@@ -64,7 +64,7 @@ def send_otp_email(email: str, otp: str) -> bool:
         server.login(smtp_user, smtp_password)
         server.send_message(msg)
         server.quit()
-        print(f"[DEBUG] Email sent successfully to {to_email}")
+        print(f"[DEBUG] Email sent successfully to {email}")
         return True
     except Exception as e:
         print(f"[DEBUG] Email send error: {e}")
@@ -114,52 +114,41 @@ def handler(event: dict, context) -> dict:
                     'isBase64Encoded': False
                 }
             
-            with conn.cursor() as cur:
-                cur.execute("SELECT id, is_active FROM users WHERE email = %s", (email,))
-                user = cur.fetchone()
-                
-                if not user:
-                    return {
-                        'statusCode': 404,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Пользователь не найден'}),
-                        'isBase64Encoded': False
-                    }
-                
-                user_id, is_active = user
-                
-                if not is_active:
-                    return {
-                        'statusCode': 403,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Пользователь деактивирован'}),
-                        'isBase64Encoded': False
-                    }
-                
-                otp = generate_otp()
-                otp_hash = hash_password(otp)
-                expires_at = datetime.utcnow() + timedelta(minutes=10)
-                
-                cur.execute(
-                    "INSERT INTO one_time_passwords (user_id, password_hash, expires_at) VALUES (%s, %s, %s)",
-                    (user_id, otp_hash, expires_at)
-                )
-                conn.commit()
-                
-                email_sent = send_otp_email(email, otp)
-                
-                if not email_sent:
-                    return {
-                        'statusCode': 500,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Ошибка отправки email. Проверьте настройки SMTP.'}),
-                        'isBase64Encoded': False
-                    }
-                
+            cur = conn.cursor()
+            cur.execute("SELECT id FROM users WHERE email = %s AND is_active = TRUE", (email,))
+            user = cur.fetchone()
+            
+            if not user:
+                return {
+                    'statusCode': 404,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Пользователь не найден'}),
+                    'isBase64Encoded': False
+                }
+            
+            user_id = user[0]
+            otp = generate_otp()
+            otp_hash = hash_password(otp)
+            expires_at = datetime.utcnow() + timedelta(minutes=10)
+            
+            cur.execute(
+                "INSERT INTO one_time_passwords (user_id, password_hash, expires_at) VALUES (%s, %s, %s)",
+                (user_id, otp_hash, expires_at)
+            )
+            conn.commit()
+            
+            if send_otp_email(email, otp):
                 return {
                     'statusCode': 200,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                     'body': json.dumps({'message': 'Код отправлен на email'}),
+                    'isBase64Encoded': False
+                }
+            else:
+                return {
+                    'statusCode': 500,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Не удалось отправить email'}),
                     'isBase64Encoded': False
                 }
         
@@ -175,73 +164,64 @@ def handler(event: dict, context) -> dict:
                     'isBase64Encoded': False
                 }
             
-            otp_hash = hash_password(otp)
+            cur = conn.cursor()
+            cur.execute("SELECT id, role FROM users WHERE email = %s AND is_active = TRUE", (email,))
+            user = cur.fetchone()
             
-            with conn.cursor() as cur:
-                cur.execute("SELECT id, email, role FROM users WHERE email = %s AND is_active = TRUE", (email,))
-                user = cur.fetchone()
-                
-                if not user:
-                    return {
-                        'statusCode': 404,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Пользователь не найден'}),
-                        'isBase64Encoded': False
-                    }
-                
-                user_id, user_email, user_role = user
-                
-                cur.execute(
-                    """SELECT id FROM one_time_passwords 
-                       WHERE user_id = %s AND password_hash = %s 
-                       AND expires_at > NOW() AND used = FALSE
-                       ORDER BY created_at DESC LIMIT 1""",
-                    (user_id, otp_hash)
-                )
-                otp_record = cur.fetchone()
-                
-                if not otp_record:
-                    return {
-                        'statusCode': 401,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Неверный или истекший код'}),
-                        'isBase64Encoded': False
-                    }
-                
-                cur.execute("UPDATE one_time_passwords SET used = TRUE WHERE id = %s", (otp_record[0],))
-                
-                session_token = secrets.token_urlsafe(32)
-                session_expires = datetime.utcnow() + timedelta(days=7)
-                ip_address = event.get('requestContext', {}).get('identity', {}).get('sourceIp', '')
-                user_agent = event.get('headers', {}).get('user-agent', '')
-                
-                cur.execute(
-                    """INSERT INTO sessions (user_id, session_token, expires_at, ip_address, user_agent) 
-                       VALUES (%s, %s, %s, %s, %s)""",
-                    (user_id, session_token, session_expires, ip_address, user_agent)
-                )
-                conn.commit()
-                
+            if not user:
                 return {
-                    'statusCode': 200,
-                    'headers': {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'X-Set-Cookie': f'session_token={session_token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=604800'
-                    },
-                    'body': json.dumps({
-                        'message': 'Успешный вход',
-                        'user': {'id': user_id, 'email': user_email, 'role': user_role},
-                        'session_token': session_token
-                    }),
+                    'statusCode': 404,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Пользователь не найден'}),
                     'isBase64Encoded': False
                 }
+            
+            user_id, user_role = user
+            otp_hash = hash_password(otp)
+            
+            cur.execute(
+                """SELECT id FROM one_time_passwords 
+                   WHERE user_id = %s AND password_hash = %s 
+                   AND expires_at > NOW() AND used = FALSE
+                   ORDER BY created_at DESC LIMIT 1""",
+                (user_id, otp_hash)
+            )
+            otp_record = cur.fetchone()
+            
+            if not otp_record:
+                return {
+                    'statusCode': 401,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Неверный или истекший код'}),
+                    'isBase64Encoded': False
+                }
+            
+            cur.execute("UPDATE one_time_passwords SET used = TRUE WHERE id = %s", (otp_record[0],))
+            
+            session_token = secrets.token_urlsafe(32)
+            session_expires = datetime.utcnow() + timedelta(days=7)
+            
+            cur.execute(
+                "INSERT INTO sessions (user_id, session_token, expires_at) VALUES (%s, %s, %s)",
+                (user_id, session_token, session_expires)
+            )
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({
+                    'session_token': session_token,
+                    'user': {'id': user_id, 'email': email, 'role': user_role}
+                }),
+                'isBase64Encoded': False
+            }
         
         elif action == 'verify_session':
-            auth_header = event.get('headers', {}).get('x-authorization', '')
-            session_token = auth_header.replace('Bearer ', '') if auth_header else body.get('session_token', '')
+            auth_header = event.get('headers', {}).get('X-Authorization', event.get('headers', {}).get('authorization', ''))
+            token = auth_header.replace('Bearer ', '').strip()
             
-            if not session_token:
+            if not token:
                 return {
                     'statusCode': 401,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
@@ -249,83 +229,89 @@ def handler(event: dict, context) -> dict:
                     'isBase64Encoded': False
                 }
             
-            with conn.cursor() as cur:
-                cur.execute(
-                    """SELECT u.id, u.email, u.role 
-                       FROM sessions s 
-                       JOIN users u ON s.user_id = u.id
-                       WHERE s.session_token = %s AND s.expires_at > NOW() AND u.is_active = TRUE""",
-                    (session_token,)
-                )
-                user = cur.fetchone()
-                
-                if not user:
-                    return {
-                        'statusCode': 401,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Сессия недействительна'}),
-                        'isBase64Encoded': False
-                    }
-                
-                user_id, user_email, user_role = user
-                
+            cur = conn.cursor()
+            cur.execute(
+                """SELECT u.id, u.email, u.role 
+                   FROM sessions s 
+                   JOIN users u ON s.user_id = u.id 
+                   WHERE s.session_token = %s AND s.expires_at > NOW() AND u.is_active = TRUE""",
+                (token,)
+            )
+            user = cur.fetchone()
+            
+            if not user:
                 return {
-                    'statusCode': 200,
+                    'statusCode': 401,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({
-                        'user': {'id': user_id, 'email': user_email, 'role': user_role}
-                    }),
+                    'body': json.dumps({'error': 'Сессия недействительна'}),
                     'isBase64Encoded': False
                 }
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({
+                    'user': {'id': user[0], 'email': user[1], 'role': user[2]}
+                }),
+                'isBase64Encoded': False
+            }
         
         elif action == 'list_users':
-            auth_header = event.get('headers', {}).get('x-authorization', '')
-            session_token = auth_header.replace('Bearer ', '') if auth_header else body.get('session_token', '')
+            auth_header = event.get('headers', {}).get('X-Authorization', event.get('headers', {}).get('authorization', ''))
+            token = auth_header.replace('Bearer ', '').strip()
             
-            with conn.cursor() as cur:
-                cur.execute(
-                    """SELECT u.role FROM sessions s 
-                       JOIN users u ON s.user_id = u.id
-                       WHERE s.session_token = %s AND s.expires_at > NOW()""",
-                    (session_token,)
-                )
-                result = cur.fetchone()
-                
-                if not result or result[0] != 'admin':
-                    return {
-                        'statusCode': 403,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Доступ запрещен'}),
-                        'isBase64Encoded': False
-                    }
-                
-                cur.execute(
-                    """SELECT id, email, role, created_at, is_active 
-                       FROM users ORDER BY created_at DESC"""
-                )
-                users = cur.fetchall()
-                
-                users_list = [
-                    {
-                        'id': u[0],
-                        'email': u[1],
-                        'role': u[2],
-                        'created_at': u[3].isoformat() if u[3] else None,
-                        'is_active': u[4]
-                    }
-                    for u in users
-                ]
-                
+            cur = conn.cursor()
+            cur.execute(
+                """SELECT u.role FROM sessions s 
+                   JOIN users u ON s.user_id = u.id 
+                   WHERE s.session_token = %s AND s.expires_at > NOW()""",
+                (token,)
+            )
+            session_user = cur.fetchone()
+            
+            if not session_user or session_user[0] != 'admin':
                 return {
-                    'statusCode': 200,
+                    'statusCode': 403,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'users': users_list}),
+                    'body': json.dumps({'error': 'Доступ запрещен'}),
                     'isBase64Encoded': False
                 }
+            
+            cur.execute("SELECT id, email, role, created_at, is_active FROM users ORDER BY created_at DESC")
+            users = cur.fetchall()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({
+                    'users': [
+                        {'id': u[0], 'email': u[1], 'role': u[2], 'created_at': u[3].isoformat(), 'is_active': u[4]}
+                        for u in users
+                    ]
+                }),
+                'isBase64Encoded': False
+            }
         
         elif action == 'create_user':
-            auth_header = event.get('headers', {}).get('x-authorization', '')
-            session_token = auth_header.replace('Bearer ', '') if auth_header else body.get('session_token', '')
+            auth_header = event.get('headers', {}).get('X-Authorization', event.get('headers', {}).get('authorization', ''))
+            token = auth_header.replace('Bearer ', '').strip()
+            
+            cur = conn.cursor()
+            cur.execute(
+                """SELECT u.id, u.role FROM sessions s 
+                   JOIN users u ON s.user_id = u.id 
+                   WHERE s.session_token = %s AND s.expires_at > NOW()""",
+                (token,)
+            )
+            session_user = cur.fetchone()
+            
+            if not session_user or session_user[1] != 'admin':
+                return {
+                    'statusCode': 403,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Доступ запрещен'}),
+                    'isBase64Encoded': False
+                }
             
             new_email = body.get('new_email', '').strip().lower()
             new_role = body.get('new_role', 'user')
@@ -338,93 +324,58 @@ def handler(event: dict, context) -> dict:
                     'isBase64Encoded': False
                 }
             
-            with conn.cursor() as cur:
-                cur.execute(
-                    """SELECT u.id, u.role FROM sessions s 
-                       JOIN users u ON s.user_id = u.id
-                       WHERE s.session_token = %s AND s.expires_at > NOW()""",
-                    (session_token,)
-                )
-                result = cur.fetchone()
-                
-                if not result or result[1] != 'admin':
-                    return {
-                        'statusCode': 403,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Доступ запрещен'}),
-                        'isBase64Encoded': False
-                    }
-                
-                creator_id = result[0]
-                
-                cur.execute(
-                    "INSERT INTO users (email, role, created_by, is_active) VALUES (%s, %s, %s, TRUE) RETURNING id",
-                    (new_email, new_role, creator_id)
-                )
-                new_user_id = cur.fetchone()[0]
-                conn.commit()
-                
-                return {
-                    'statusCode': 200,
-                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'message': 'Пользователь создан', 'user_id': new_user_id}),
-                    'isBase64Encoded': False
-                }
+            cur.execute(
+                "INSERT INTO users (email, role, created_by) VALUES (%s, %s, %s) RETURNING id",
+                (new_email, new_role, session_user[0])
+            )
+            new_user_id = cur.fetchone()[0]
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'message': 'Пользователь создан', 'user_id': new_user_id}),
+                'isBase64Encoded': False
+            }
         
         elif action == 'update_user':
-            auth_header = event.get('headers', {}).get('x-authorization', '')
-            session_token = auth_header.replace('Bearer ', '') if auth_header else body.get('session_token', '')
+            auth_header = event.get('headers', {}).get('X-Authorization', event.get('headers', {}).get('authorization', ''))
+            token = auth_header.replace('Bearer ', '').strip()
             
-            target_user_id = body.get('user_id')
+            cur = conn.cursor()
+            cur.execute(
+                """SELECT u.role FROM sessions s 
+                   JOIN users u ON s.user_id = u.id 
+                   WHERE s.session_token = %s AND s.expires_at > NOW()""",
+                (token,)
+            )
+            session_user = cur.fetchone()
+            
+            if not session_user or session_user[0] != 'admin':
+                return {
+                    'statusCode': 403,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'body': json.dumps({'error': 'Доступ запрещен'}),
+                    'isBase64Encoded': False
+                }
+            
+            user_id = body.get('user_id')
             new_role = body.get('role')
             is_active = body.get('is_active')
             
-            with conn.cursor() as cur:
-                cur.execute(
-                    """SELECT u.id, u.role FROM sessions s 
-                       JOIN users u ON s.user_id = u.id
-                       WHERE s.session_token = %s AND s.expires_at > NOW()""",
-                    (session_token,)
-                )
-                result = cur.fetchone()
-                
-                if not result or result[1] != 'admin':
-                    return {
-                        'statusCode': 403,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Доступ запрещен'}),
-                        'isBase64Encoded': False
-                    }
-                
-                updates = []
-                params = []
-                
-                if new_role:
-                    updates.append("role = %s")
-                    params.append(new_role)
-                
-                if is_active is not None:
-                    updates.append("is_active = %s")
-                    params.append(is_active)
-                
-                if not updates:
-                    return {
-                        'statusCode': 400,
-                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                        'body': json.dumps({'error': 'Нет данных для обновления'}),
-                        'isBase64Encoded': False
-                    }
-                
-                params.append(target_user_id)
-                cur.execute(f"UPDATE users SET {', '.join(updates)} WHERE id = %s", params)
-                conn.commit()
-                
-                return {
-                    'statusCode': 200,
-                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-                    'body': json.dumps({'message': 'Пользователь обновлен'}),
-                    'isBase64Encoded': False
-                }
+            if new_role:
+                cur.execute("UPDATE users SET role = %s WHERE id = %s", (new_role, user_id))
+            if is_active is not None:
+                cur.execute("UPDATE users SET is_active = %s WHERE id = %s", (is_active, user_id))
+            
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'message': 'Пользователь обновлен'}),
+                'isBase64Encoded': False
+            }
         
         else:
             return {
@@ -433,13 +384,15 @@ def handler(event: dict, context) -> dict:
                 'body': json.dumps({'error': 'Неизвестное действие'}),
                 'isBase64Encoded': False
             }
-        
+            
     except Exception as e:
         print(f"Error: {e}")
+        import traceback
+        print(traceback.format_exc())
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
-            'body': json.dumps({'error': f'Внутренняя ошибка сервера: {str(e)}'}),
+            'body': json.dumps({'error': 'Внутренняя ошибка сервера'}),
             'isBase64Encoded': False
         }
     finally:
