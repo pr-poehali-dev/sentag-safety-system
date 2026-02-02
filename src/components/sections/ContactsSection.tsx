@@ -14,8 +14,10 @@ export default function ContactsSection() {
             </div>
             <h3 className="font-bold text-lg mb-2 text-slate-800">Адрес</h3>
             <p className="text-slate-600">г. Тюмень, ул. 30 лет Победы,<br />д. 60А, офис 302</p>
-            <Button variant="link" className="mt-4">
-              Открыть на карте
+            <Button variant="link" className="mt-4" asChild>
+              <a href="https://yandex.ru/maps/?text=г.+Тюмень,+ул.+30+лет+Победы,+д.+60А" target="_blank" rel="noopener noreferrer">
+                Открыть на карте
+              </a>
             </Button>
           </Card>
           <Card className="p-8 text-center hover:shadow-xl transition">
