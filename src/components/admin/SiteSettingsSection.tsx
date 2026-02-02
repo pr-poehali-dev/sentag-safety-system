@@ -19,6 +19,7 @@ export default function SiteSettingsSection({
   const [seoDescription, setSeoDescription] = useState('');
   const [faviconUrl, setFaviconUrl] = useState('');
   const [isEditingSeo, setIsEditingSeo] = useState(false);
+  const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
 
   useEffect(() => {
     const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
@@ -82,6 +83,39 @@ export default function SiteSettingsSection({
     setIsEditingSeo(false);
   };
 
+  const handleFaviconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.match(/^image\/(jpeg|jpg|png)$/)) {
+      alert('Пожалуйста, выберите файл JPG или PNG');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Размер файла не должен превышать 5 МБ');
+      return;
+    }
+
+    setIsUploadingFavicon(true);
+
+    try {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setFaviconUrl(base64String);
+        setIsUploadingFavicon(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Ошибка загрузки фавикона:', error);
+      alert('Не удалось загрузить файл');
+      setIsUploadingFavicon(false);
+    }
+
+    e.target.value = '';
+  };
+
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
@@ -141,20 +175,47 @@ export default function SiteSettingsSection({
               </div>
 
               <div>
-                <Label htmlFor="faviconUrl">URL фавикона</Label>
-                <Input
-                  id="faviconUrl"
-                  value={faviconUrl}
-                  onChange={(e) => setFaviconUrl(e.target.value)}
-                  placeholder="https://cdn.poehali.dev/..."
-                  className="mt-2"
-                />
-                {faviconUrl && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <img src={faviconUrl} alt="Favicon" className="w-6 h-6" />
-                    <span className="text-xs text-slate-500">Предпросмотр фавикона</span>
+                <Label>Фавикон</Label>
+                <div className="mt-2 space-y-3">
+                  <input
+                    type="file"
+                    id="faviconUpload"
+                    accept=".jpg,.jpeg,.png"
+                    onChange={handleFaviconUpload}
+                    className="hidden"
+                    disabled={isUploadingFavicon}
+                  />
+                  <label
+                    htmlFor="faviconUpload"
+                    className="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:border-primary transition cursor-pointer block"
+                  >
+                    <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={24} />
+                    <p className="text-sm text-slate-600">
+                      {isUploadingFavicon ? 'Загрузка...' : 'Нажмите для загрузки фавикона'}
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">JPG или PNG до 5 МБ</p>
+                  </label>
+                  
+                  <div className="text-center text-xs text-slate-500">или</div>
+                  
+                  <div>
+                    <Label htmlFor="faviconUrl" className="text-xs">Вставить URL изображения</Label>
+                    <Input
+                      id="faviconUrl"
+                      value={faviconUrl}
+                      onChange={(e) => setFaviconUrl(e.target.value)}
+                      placeholder="https://cdn.poehali.dev/..."
+                      className="mt-1"
+                    />
                   </div>
-                )}
+                  
+                  {faviconUrl && (
+                    <div className="mt-2 p-3 bg-slate-100 rounded-lg flex items-center gap-3">
+                      <img src={faviconUrl} alt="Favicon" className="w-8 h-8 object-contain" />
+                      <span className="text-xs text-slate-600">Предпросмотр текущего фавикона</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-2">
