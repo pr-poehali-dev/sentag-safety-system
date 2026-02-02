@@ -20,8 +20,8 @@ export default function SiteSettingsSection({
   const [isEditingSeo, setIsEditingSeo] = useState(false);
 
   useEffect(() => {
-    const savedTitle = localStorage.getItem('seo_title') || 'СООУ Sentag в России - Безопасность бассейнов';
-    const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства Sentag AB.';
+    const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
+    const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
     setSeoTitle(savedTitle);
     setSeoDescription(savedDescription);
     
@@ -56,8 +56,8 @@ export default function SiteSettingsSection({
   };
 
   const handleCancelSeo = () => {
-    const savedTitle = localStorage.getItem('seo_title') || 'СООУ Sentag в России - Безопасность бассейнов';
-    const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства Sentag AB.';
+    const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
+    const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
     setSeoTitle(savedTitle);
     setSeoDescription(savedDescription);
     setIsEditingSeo(false);
@@ -100,11 +100,11 @@ export default function SiteSettingsSection({
                   id="seoTitle"
                   value={seoTitle}
                   onChange={(e) => setSeoTitle(e.target.value)}
-                  placeholder="СООУ Sentag в России - Безопасность бассейнов"
+                  placeholder="Безопасность вашего бассейна под контролем"
                   className="mt-2"
-                  maxLength={60}
+                  maxLength={100}
                 />
-                <p className="text-xs text-slate-500 mt-1">{seoTitle.length}/60 символов</p>
+                <p className="text-xs text-slate-500 mt-1">{seoTitle.length}/100 символов</p>
               </div>
 
               <div>
@@ -116,9 +116,9 @@ export default function SiteSettingsSection({
                   placeholder="Передовые системы защиты для посетителей бассейнов..."
                   className="mt-2"
                   rows={3}
-                  maxLength={160}
+                  maxLength={300}
                 />
-                <p className="text-xs text-slate-500 mt-1">{seoDescription.length}/160 символов</p>
+                <p className="text-xs text-slate-500 mt-1">{seoDescription.length}/300 символов</p>
               </div>
 
               <div className="flex gap-2">
