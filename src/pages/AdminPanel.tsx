@@ -207,6 +207,28 @@ export default function AdminPanel() {
     }
   };
 
+  const deleteRequest = async (requestId: number) => {
+    if (!confirm('Вы уверены, что хотите удалить эту заявку?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://functions.poehali.dev/083d3fc1-3983-4501-8686-0e63931b991e?id=${requestId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        toast({ title: 'Успешно', description: 'Заявка удалена' });
+        loadRequests();
+      } else {
+        const data = await response.json();
+        toast({ title: 'Ошибка', description: data.error || 'Не удалось удалить заявку', variant: 'destructive' });
+      }
+    } catch (error) {
+      toast({ title: 'Ошибка', description: 'Ошибка подключения', variant: 'destructive' });
+    }
+  };
+
   const toggleDocumentsSection = () => {
     const newState = !showDocuments;
     setShowDocuments(newState);
@@ -462,9 +484,19 @@ export default function AdminPanel() {
                         </div>
                       )}
 
-                      <div className="mt-3 flex items-center gap-2 text-xs text-slate-400">
-                        <Icon name="Calendar" size={12} />
-                        {new Date(request.created_at).toLocaleString('ru-RU')}
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                          <Icon name="Calendar" size={12} />
+                          {new Date(request.created_at).toLocaleString('ru-RU')}
+                        </div>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteRequest(request.id)}
+                        >
+                          <Icon name="Trash2" className="mr-2" size={14} />
+                          Удалить
+                        </Button>
                       </div>
                     </Card>
                   ))
