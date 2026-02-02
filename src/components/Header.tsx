@@ -7,7 +7,7 @@ interface HeaderProps {
 
 export default function Header({ scrollToSection }: HeaderProps) {
   return (
-    <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
+    <header className="fixed top-0 w-full bg-[#f5f5f5] shadow-sm z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <img 

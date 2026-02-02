@@ -17,7 +17,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/30" />
       </div>
       
-      <div className="container mx-auto px-4 text-center z-10 animate-fade-in mt-32">
+      <div className="container mx-auto px-4 text-center z-10 animate-fade-in mt-24">
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
           СООУ Sentag в России
         </h1>
