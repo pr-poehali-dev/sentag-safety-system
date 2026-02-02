@@ -17,17 +17,20 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
       </div>
       
-      <div className="container mx-auto px-4 text-center z-10 animate-fade-in mt-32">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          СООУ Sentag в России
-        </h1>
-        <p className="text-xl md:text-2xl mb-4 text-blue-100">
-          Безопасность вашего бассейна под контролем
-        </p>
-        <p className="text-lg md:text-xl mb-48 max-w-4xl mx-auto text-blue-50">
-          Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="container mx-auto px-4 text-center z-10 animate-fade-in mt-32 flex flex-col h-full">
+        <div>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            СООУ Sentag в России
+          </h1>
+          <p className="text-xl md:text-2xl mb-4 text-blue-100">
+            Безопасность вашего бассейна под контролем
+          </p>
+          <p className="text-lg md:text-xl mb-8 max-w-4xl mx-auto text-blue-50">
+            Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания.
+          </p>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-auto mb-20">
           <Button size="lg" onClick={() => scrollToSection('request')} className="bg-white text-primary hover:bg-blue-50 text-lg px-8 py-6 font-semibold">
             Запросить расчет
           </Button>
