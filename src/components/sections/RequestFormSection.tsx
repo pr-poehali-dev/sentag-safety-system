@@ -21,6 +21,8 @@ export default function RequestFormSection() {
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [showConsentText, setShowConsentText] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [companyCardFile, setCompanyCardFile] = useState<File | null>(null);
+  const [poolSchemeFile, setPoolSchemeFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     phone: '',
     email: '',
@@ -213,11 +215,38 @@ export default function RequestFormSection() {
               <div className="space-y-6 animate-fade-in">
                 <div>
                   <Label htmlFor="companyCard">1. Добавьте карточку предприятия</Label>
-                  <div className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer">
+                  <input
+                    type="file"
+                    id="companyCard"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file && file.size <= 10 * 1024 * 1024) {
+                        setCompanyCardFile(file);
+                      } else if (file) {
+                        alert('Размер файла не должен превышать 10 МБ');
+                        e.target.value = '';
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="companyCard"
+                    className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer block"
+                  >
                     <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
-                    <p className="text-sm text-slate-600">Прикрепите файл с карточкой предприятия</p>
-                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 10 МБ</p>
-                  </div>
+                    {companyCardFile ? (
+                      <>
+                        <p className="text-sm text-slate-700 font-medium">{companyCardFile.name}</p>
+                        <p className="text-xs text-slate-400 mt-1">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm text-slate-600">Прикрепите файл с карточкой предприятия</p>
+                        <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 10 МБ</p>
+                      </>
+                    )}
+                  </label>
                 </div>
                 <div>
                   <Label htmlFor="visitorsInfo">2. Укажите, максимальное количество посетителей в день? Есть ли градация, детские зоны, взрослые зоны? Цвета браслетов и их количество?</Label>
@@ -240,11 +269,38 @@ export default function RequestFormSection() {
                 <div>
                   <Label htmlFor="poolScheme">4. Добавьте схему бассейна</Label>
                   <p className="text-sm text-slate-500 mt-1 mb-2">При наличии укажите на схеме: подводные фонари, водные преграды, волны, аэромассажные зоны, подводные лежаки, гейзеры и др.</p>
-                  <div className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer">
+                  <input
+                    type="file"
+                    id="poolScheme"
+                    accept=".pdf,.jpg,.jpeg,.png,.dwg"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file && file.size <= 20 * 1024 * 1024) {
+                        setPoolSchemeFile(file);
+                      } else if (file) {
+                        alert('Размер файла не должен превышать 20 МБ');
+                        e.target.value = '';
+                      }
+                    }}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="poolScheme"
+                    className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer block"
+                  >
                     <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
-                    <p className="text-sm text-slate-600">Прикрепите файл со схемой бассейна</p>
-                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, DWG до 20 МБ</p>
-                  </div>
+                    {poolSchemeFile ? (
+                      <>
+                        <p className="text-sm text-slate-700 font-medium">{poolSchemeFile.name}</p>
+                        <p className="text-xs text-slate-400 mt-1">{(poolSchemeFile.size / 1024 / 1024).toFixed(2)} МБ</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm text-slate-600">Прикрепите файл со схемой бассейна</p>
+                        <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, DWG до 20 МБ</p>
+                      </>
+                    )}
+                  </label>
                 </div>
                 <div>
                   <Label htmlFor="deadline">5. Какие сроки поставки интересуют, когда планируется запуск объекта?</Label>
