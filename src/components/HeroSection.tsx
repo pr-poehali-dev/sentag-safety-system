@@ -14,7 +14,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
           alt="Браслет Sentag" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/30" />
       </div>
       
       <div className="container mx-auto px-4 text-center z-10 animate-fade-in mt-32">
