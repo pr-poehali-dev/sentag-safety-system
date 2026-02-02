@@ -200,9 +200,13 @@ def send_telegram_step1(request_id: int, data: dict):
         bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
         chat_id = os.environ.get('TELEGRAM_CHAT_ID')
         
+        print(f'[Telegram] Step 1: bot_token exists={bool(bot_token)}, chat_id exists={bool(chat_id)}')
+        
         if not bot_token or not chat_id:
-            print('Telegram credentials not configured')
+            print('[Telegram] Credentials not configured')
             return
+        
+        print(f'[Telegram] Sending step 1 notification for request #{request_id}')
         
         role_names = {
             'contractor': 'Подрядчик',
@@ -225,7 +229,7 @@ def send_telegram_step1(request_id: int, data: dict):
 
 ⏳ <i>Ожидается заполнение шага 2...</i>"""
         
-        requests.post(
+        response = requests.post(
             f'https://api.telegram.org/bot{bot_token}/sendMessage',
             json={
                 'chat_id': chat_id,
@@ -234,8 +238,18 @@ def send_telegram_step1(request_id: int, data: dict):
             },
             timeout=10
         )
+        
+        print(f'[Telegram] Step 1 response status: {response.status_code}')
+        
+        if response.status_code != 200:
+            print(f'[Telegram] Step 1 error response: {response.text}')
+        else:
+            print('[Telegram] Step 1 notification sent successfully')
+            
     except Exception as e:
-        print(f'Error sending Telegram message: {e}')
+        print(f'[Telegram] Error sending step 1: {type(e).__name__}: {e}')
+        import traceback
+        print(f'[Telegram] Traceback: {traceback.format_exc()}')
 
 def send_telegram_step2(request_id: int, data: dict):
     """Отправка второго шага заявки в Telegram"""
@@ -243,9 +257,13 @@ def send_telegram_step2(request_id: int, data: dict):
         bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
         chat_id = os.environ.get('TELEGRAM_CHAT_ID')
         
+        print(f'[Telegram] Step 2: bot_token exists={bool(bot_token)}, chat_id exists={bool(chat_id)}')
+        
         if not bot_token or not chat_id:
-            print('Telegram credentials not configured')
+            print('[Telegram] Credentials not configured')
             return
+        
+        print(f'[Telegram] Sending step 2 notification for request #{request_id}')
         
         message = f"""✅ <b>Заявка #{request_id} завершена</b>
 <b>Шаг 2/2: Дополнительная информация</b>
@@ -269,7 +287,7 @@ def send_telegram_step2(request_id: int, data: dict):
             for i, url in enumerate(pool_schemes, 1):
                 message += f"\n  • <a href=\"{url}\">Схема {i}</a>"
         
-        requests.post(
+        response = requests.post(
             f'https://api.telegram.org/bot{bot_token}/sendMessage',
             json={
                 'chat_id': chat_id,
@@ -279,5 +297,15 @@ def send_telegram_step2(request_id: int, data: dict):
             },
             timeout=10
         )
+        
+        print(f'[Telegram] Step 2 response status: {response.status_code}')
+        
+        if response.status_code != 200:
+            print(f'[Telegram] Step 2 error response: {response.text}')
+        else:
+            print('[Telegram] Step 2 notification sent successfully')
+            
     except Exception as e:
-        print(f'Error sending Telegram message: {e}')
+        print(f'[Telegram] Error sending step 2: {type(e).__name__}: {e}')
+        import traceback
+        print(f'[Telegram] Traceback: {traceback.format_exc()}')
