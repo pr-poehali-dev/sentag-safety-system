@@ -176,9 +176,11 @@ export default function ContentSections() {
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <div className="flex justify-center mb-12">
-              <div className="w-32 h-32 bg-slate-100 rounded-2xl flex items-center justify-center">
-                <span className="text-3xl font-bold text-primary">Меридиан</span>
-              </div>
+              <img 
+                src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/d5c9cc72-6f46-4a5f-81b0-e6d17eb0dc48.jpg" 
+                alt="Логотип Меридиан" 
+                className="w-32 h-32 object-contain"
+              />
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-slate-800">О компании</h2>
             <div className="prose prose-lg max-w-none text-slate-700 space-y-6">
