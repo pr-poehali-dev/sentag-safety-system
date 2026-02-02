@@ -23,7 +23,8 @@ export default function RequestFormSection() {
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [requestId, setRequestId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [companyCardFile, setCompanyCardFile] = useState<File | null>(null);
+  const [poolSchemeFiles, setPoolSchemeFiles] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     phone: '',
     email: '',
@@ -137,7 +138,8 @@ export default function RequestFormSection() {
           deadline: ''
         });
         setRequestId(null);
-        setUploadedFiles([]);
+        setCompanyCardFile(null);
+        setPoolSchemeFiles([]);
       } else {
         alert('Ошибка при отправке заявки');
       }
@@ -302,19 +304,55 @@ export default function RequestFormSection() {
             {formStep === 2 && (
               <div className="space-y-6 animate-fade-in">
                 <div>
-                  <Label htmlFor="fileUpload">Добавьте карточку предприятия, схему бассейна. При наличии укажите на схеме: подводные фонари, водные преграды, волны, аэромассажные зоны, подводные лежаки, гейзеры и др.</Label>
+                  <Label htmlFor="companyCard">Добавьте карточку предприятия</Label>
                   <input
                     type="file"
-                    id="fileUpload"
-                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.dwg"
+                    id="companyCard"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file && file.size > 20 * 1024 * 1024) {
+                        alert('Размер файла не должен превышать 20 МБ');
+                        e.target.value = '';
+                        return;
+                      }
+                      setCompanyCardFile(file || null);
+                    }}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="companyCard"
+                    className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer block"
+                  >
+                    <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
+                    {companyCardFile ? (
+                      <>
+                        <p className="text-sm text-slate-700 font-medium">{companyCardFile.name}</p>
+                        <p className="text-xs text-slate-400 mt-1">{(companyCardFile.size / 1024 / 1024).toFixed(2)} МБ</p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm text-slate-600">Нажмите для добавления карточки предприятия</p>
+                        <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel до 20 МБ</p>
+                      </>
+                    )}
+                  </label>
+                </div>
+                <div>
+                  <Label htmlFor="poolScheme">Добавьте схему бассейна</Label>
+                  <p className="text-sm text-slate-500 mt-1 mb-2">При наличии укажите на схеме: подводные фонари, водные преграды, волны, аэромассажные зоны, подводные лежаки, гейзеры и др.</p>
+                  <input
+                    type="file"
+                    id="poolScheme"
+                    accept=".pdf,.jpg,.jpeg,.png,.dwg"
                     multiple
                     onChange={(e) => {
                       const files = Array.from(e.target.files || []);
                       const validFiles: File[] = [];
                       
                       for (const file of files) {
-                        if (uploadedFiles.length + validFiles.length >= 6) {
-                          alert('Максимум 6 файлов на одну заявку');
+                        if (poolSchemeFiles.length + validFiles.length >= 5) {
+                          alert('Максимум 5 файлов схем');
                           break;
                         }
                         if (file.size > 20 * 1024 * 1024) {
@@ -324,24 +362,24 @@ export default function RequestFormSection() {
                         validFiles.push(file);
                       }
                       
-                      setUploadedFiles([...uploadedFiles, ...validFiles]);
+                      setPoolSchemeFiles([...poolSchemeFiles, ...validFiles]);
                       e.target.value = '';
                     }}
                     className="hidden"
                   />
                   <label
-                    htmlFor="fileUpload"
+                    htmlFor="poolScheme"
                     className="mt-2 border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-primary transition cursor-pointer block"
                   >
                     <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
-                    <p className="text-sm text-slate-600">Нажмите для добавления файлов</p>
-                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, Word, Excel, DWG до 20 МБ (макс. 6 файлов)</p>
+                    <p className="text-sm text-slate-600">Нажмите для добавления схем бассейна</p>
+                    <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, DWG до 20 МБ (макс. 5 файлов)</p>
                   </label>
                   
-                  {uploadedFiles.length > 0 && (
+                  {poolSchemeFiles.length > 0 && (
                     <div className="mt-4 space-y-2">
-                      <p className="text-sm font-medium text-slate-700">Загружено файлов: {uploadedFiles.length}/6</p>
-                      {uploadedFiles.map((file, index) => (
+                      <p className="text-sm font-medium text-slate-700">Загружено схем: {poolSchemeFiles.length}/5</p>
+                      {poolSchemeFiles.map((file, index) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
                           <div className="flex items-center gap-3">
                             <Icon name="FileText" className="text-slate-400" size={20} />
@@ -355,7 +393,7 @@ export default function RequestFormSection() {
                             variant="ghost"
                             size="sm"
                             onClick={() => {
-                              setUploadedFiles(uploadedFiles.filter((_, i) => i !== index));
+                              setPoolSchemeFiles(poolSchemeFiles.filter((_, i) => i !== index));
                             }}
                           >
                             <Icon name="X" size={16} />
