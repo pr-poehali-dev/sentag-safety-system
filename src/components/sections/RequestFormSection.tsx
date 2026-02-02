@@ -28,6 +28,7 @@ export default function RequestFormSection() {
     poolSize: '',
     deadline: ''
   });
+  const [uploadProgress, setUploadProgress] = useState<string>('');
 
   const handleFormChange = (field: string, value: any) => {
     setFormData({ ...formData, [field]: value });
@@ -129,25 +130,31 @@ export default function RequestFormSection() {
     }
     
     setIsSubmitting(true);
+    setUploadProgress('Начинаем загрузку файлов...');
     
     try {
       let companyCardUrl = null;
       const poolSchemeUrls: string[] = [];
       
+      const totalFiles = (companyCardFile ? 1 : 0) + poolSchemeFiles.length;
+      let uploadedCount = 0;
+      
       if (companyCardFile) {
-        console.log('Загрузка карточки предприятия...');
+        setUploadProgress(`Загрузка карточки предприятия (${uploadedCount + 1}/${totalFiles})...`);
         companyCardUrl = await uploadFile(companyCardFile, 'company_card');
-        console.log('Карточка загружена:', companyCardUrl);
+        uploadedCount++;
+        setUploadProgress(`Карточка предприятия загружена (${uploadedCount}/${totalFiles})`);
       }
       
       for (let i = 0; i < poolSchemeFiles.length; i++) {
-        console.log(`Загрузка схемы бассейна ${i + 1}/${poolSchemeFiles.length}...`);
+        setUploadProgress(`Загрузка схемы бассейна ${i + 1} (${uploadedCount + 1}/${totalFiles})...`);
         const url = await uploadFile(poolSchemeFiles[i], 'pool_scheme');
         poolSchemeUrls.push(url);
-        console.log(`Схема ${i + 1} загружена:`, url);
+        uploadedCount++;
+        setUploadProgress(`Схема бассейна ${i + 1} загружена (${uploadedCount}/${totalFiles})`);
       }
       
-      console.log('Все файлы загружены, отправка данных формы...');
+      setUploadProgress('Все файлы загружены! Сохранение заявки...');
       
       const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
         method: 'POST',
@@ -175,31 +182,37 @@ export default function RequestFormSection() {
       }
       
       if (result.success) {
-        alert('Заявка успешно отправлена!');
-        setFormStep(1);
-        setFormData({
-          phone: '',
-          email: '',
-          company: '',
-          role: '',
-          fullName: '',
-          objectName: '',
-          objectAddress: '',
-          consent: false,
-        });
-        setStep2Data({
-          visitorsInfo: '',
-          poolSize: '',
-          deadline: ''
-        });
-        setRequestId(null);
-        setCompanyCardFile(null);
-        setPoolSchemeFiles([]);
+        setUploadProgress('Заявка успешно отправлена!');
+        setTimeout(() => {
+          alert('Заявка успешно отправлена!');
+          setFormStep(1);
+          setFormData({
+            phone: '',
+            email: '',
+            company: '',
+            role: '',
+            fullName: '',
+            objectName: '',
+            objectAddress: '',
+            consent: false,
+          });
+          setStep2Data({
+            visitorsInfo: '',
+            poolSize: '',
+            deadline: ''
+          });
+          setRequestId(null);
+          setCompanyCardFile(null);
+          setPoolSchemeFiles([]);
+          setUploadProgress('');
+        }, 1000);
       } else {
+        setUploadProgress('');
         alert(`Ошибка при отправке заявки: ${result.error || 'Неизвестная ошибка'}`);
       }
     } catch (error) {
       console.error('Error saving step 2:', error);
+      setUploadProgress('');
       if (error instanceof Error) {
         alert(`Ошибка при отправке заявки: ${error.message}`);
       } else {
@@ -254,6 +267,7 @@ export default function RequestFormSection() {
                 companyCardFile={companyCardFile}
                 poolSchemeFiles={poolSchemeFiles}
                 isSubmitting={isSubmitting}
+                uploadProgress={uploadProgress}
                 onStep2DataChange={handleStep2DataChange}
                 onSetCompanyCardFile={setCompanyCardFile}
                 onSetPoolSchemeFiles={setPoolSchemeFiles}

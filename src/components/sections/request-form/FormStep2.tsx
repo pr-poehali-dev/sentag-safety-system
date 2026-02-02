@@ -12,6 +12,7 @@ interface FormStep2Props {
   companyCardFile: File | null;
   poolSchemeFiles: File[];
   isSubmitting: boolean;
+  uploadProgress?: string;
   onStep2DataChange: (field: string, value: string) => void;
   onSetCompanyCardFile: (file: File | null) => void;
   onSetPoolSchemeFiles: (files: File[]) => void;
@@ -24,6 +25,7 @@ export default function FormStep2({
   companyCardFile,
   poolSchemeFiles,
   isSubmitting,
+  uploadProgress,
   onStep2DataChange,
   onSetCompanyCardFile,
   onSetPoolSchemeFiles,
@@ -180,11 +182,22 @@ export default function FormStep2({
           rows={2}
         />
       </div>
+      {uploadProgress && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin">
+              <Icon name="Loader2" className="text-blue-600" size={20} />
+            </div>
+            <p className="text-sm font-medium text-blue-800">{uploadProgress}</p>
+          </div>
+        </div>
+      )}
       <div className="flex gap-4">
         <Button 
           variant="outline" 
           className="flex-1"
           onClick={onBackStep}
+          disabled={isSubmitting}
         >
           Назад
         </Button>
