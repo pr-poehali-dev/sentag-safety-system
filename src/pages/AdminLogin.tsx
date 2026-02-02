@@ -100,7 +100,7 @@ export default function AdminLogin() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@meridian-t.ru"
+                placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyPress={(e) => handleKeyPress(e, requestOtp)}
