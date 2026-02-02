@@ -45,6 +45,15 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cur = conn.cursor()
         
+        cur.execute("""
+            DELETE FROM request_forms
+            WHERE created_at < NOW() - INTERVAL '7 days'
+        """)
+        deleted_count = cur.rowcount
+        if deleted_count > 0:
+            print(f"Удалено старых заявок: {deleted_count}")
+        conn.commit()
+        
         if step == 1:
             cur.execute("""
                 INSERT INTO request_forms (

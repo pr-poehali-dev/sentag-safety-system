@@ -38,6 +38,16 @@ def handler(event: dict, context) -> dict:
         cur = conn.cursor(cursor_factory=RealDictCursor)
         
         cur.execute("""
+            DELETE FROM request_forms
+            WHERE created_at < NOW() - INTERVAL '7 days'
+        """)
+        deleted_count = cur.rowcount
+        conn.commit()
+        
+        if deleted_count > 0:
+            print(f"Удалено старых заявок: {deleted_count}")
+        
+        cur.execute("""
             SELECT 
                 id,
                 phone,
