@@ -19,10 +19,10 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
       
       <div className="container mx-auto px-4 text-center z-10 animate-fade-in pt-20 pb-20">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight px-2">
-          СООУ Sentag в России
+          Безопасность вашего бассейна под контролем
         </h1>
         <p className="text-lg sm:text-xl md:text-2xl mb-3 md:mb-4 text-blue-100 px-2">
-          Безопасность вашего бассейна под контролем
+          СООУ Sentag в России
         </p>
         <p className="text-base sm:text-lg md:text-xl mb-8 md:mb-12 max-w-4xl mx-auto text-blue-50 px-4">
           Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания.
