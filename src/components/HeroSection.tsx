@@ -17,7 +17,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/40" />
       </div>
       
-      <div className="container mx-auto px-4 text-center z-10 animate-fade-in pt-20 pb-20">
+      <div className="container mx-auto px-4 text-center z-10 animate-fade-in pb-20" style={{ marginTop: '-5rem' }}>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight px-2">
           Безопасность вашего бассейна под контролем
         </h1>
