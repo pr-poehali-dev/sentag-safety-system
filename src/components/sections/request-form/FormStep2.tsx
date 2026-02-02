@@ -100,7 +100,7 @@ export default function FormStep2({
         <input
           type="file"
           id="poolScheme"
-          accept=".pdf,.jpg,.jpeg,.png,.dwg"
+          accept=".pdf,.jpg,.jpeg,.png,.dwg,.dxf,.ifc,.rvt,.skp,.tiff,.tif,.doc,.docx,.xls,.xlsx"
           multiple
           onChange={(e) => {
             const files = Array.from(e.target.files || []);
@@ -129,7 +129,7 @@ export default function FormStep2({
         >
           <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={32} />
           <p className="text-sm text-slate-600">Нажмите для добавления схем бассейна</p>
-          <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, DWG до 20 МБ (макс. 5 файлов)</p>
+          <p className="text-xs text-slate-400 mt-1">PDF, JPG, PNG, DWG, DXF, IFC, RVT, SKP, TIFF, DOC/DOCX, Excel до 20 МБ (макс. 5 файлов)</p>
         </label>
         
         {poolSchemeFiles.length > 0 && (
