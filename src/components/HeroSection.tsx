@@ -10,7 +10,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
     <section className="relative min-h-screen flex items-start justify-center text-white overflow-hidden pt-32 md:pt-40">
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/952e9eb2-8ecb-4a5b-af1a-6d941ce05946.png" 
+          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/5cd74665-2a1e-451b-90d1-e085df8bb566.jpg" 
           alt="Браслет Sentag" 
           className="w-full h-full object-cover object-center"
         />
@@ -19,10 +19,10 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
       
       <div className="container mx-auto px-4 text-center z-10 animate-fade-in pt-20 pb-20">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight px-2">
-          Безопасность вашего бассейна под контролем
+          СООУ Sentag в России
         </h1>
         <p className="text-lg sm:text-xl md:text-2xl mb-3 md:mb-4 text-blue-100 px-2">
-          СООУ Sentag в России
+          Безопасность вашего бассейна под контролем
         </p>
         <p className="text-base sm:text-lg md:text-xl mb-8 md:mb-12 max-w-4xl mx-auto text-blue-50 px-4">
           Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания.
