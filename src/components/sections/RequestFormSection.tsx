@@ -170,7 +170,16 @@ export default function RequestFormSection() {
                   className="w-full" 
                   size="lg"
                   onClick={() => setFormStep(2)}
-                  disabled={!formData.consent}
+                  disabled={
+                    !formData.phone || 
+                    !formData.email || 
+                    !formData.company || 
+                    !formData.role || 
+                    !formData.fullName || 
+                    !formData.objectName || 
+                    !formData.objectAddress || 
+                    !formData.consent
+                  }
                 >
                   Далее
                 </Button>
