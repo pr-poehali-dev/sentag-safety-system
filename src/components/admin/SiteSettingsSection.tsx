@@ -17,29 +17,41 @@ export default function SiteSettingsSection({
 }: SiteSettingsSectionProps) {
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
+  const [seoKeywords, setSeoKeywords] = useState('');
   const [faviconUrl, setFaviconUrl] = useState('');
   const [isEditingSeo, setIsEditingSeo] = useState(false);
   const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
 
   useEffect(() => {
+    const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
     const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
     const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
+    const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
     const savedFavicon = localStorage.getItem('favicon_url') || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
     setSeoTitle(savedTitle);
     setSeoDescription(savedDescription);
+    setSeoKeywords(savedKeywords);
     setFaviconUrl(savedFavicon);
     
-    updateMetaTags(savedTitle, savedDescription);
+    updateMetaTags(savedTitle, savedDescription, savedKeywords);
     updateFavicon(savedFavicon);
   }, []);
 
-  const updateMetaTags = (title: string, description: string) => {
+  const updateMetaTags = (title: string, description: string, keywords: string) => {
     document.title = title;
     
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', description);
     }
+    
+    let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta');
+      metaKeywords.name = 'keywords';
+      document.head.appendChild(metaKeywords);
+    }
+    metaKeywords.content = keywords;
     
     const ogTitle = document.querySelector('meta[property="og:title"]');
     if (ogTitle) {
@@ -66,19 +78,23 @@ export default function SiteSettingsSection({
   const handleSaveSeo = () => {
     localStorage.setItem('seo_title', seoTitle);
     localStorage.setItem('seo_description', seoDescription);
+    localStorage.setItem('seo_keywords', seoKeywords);
     localStorage.setItem('favicon_url', faviconUrl);
-    updateMetaTags(seoTitle, seoDescription);
+    updateMetaTags(seoTitle, seoDescription, seoKeywords);
     updateFavicon(faviconUrl);
     setIsEditingSeo(false);
     alert('SEO настройки сохранены');
   };
 
   const handleCancelSeo = () => {
+    const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
     const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
     const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
+    const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
     const savedFavicon = localStorage.getItem('favicon_url') || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
     setSeoTitle(savedTitle);
     setSeoDescription(savedDescription);
+    setSeoKeywords(savedKeywords);
     setFaviconUrl(savedFavicon);
     setIsEditingSeo(false);
   };
@@ -175,6 +191,19 @@ export default function SiteSettingsSection({
               </div>
 
               <div>
+                <Label htmlFor="seoKeywords">Ключевые слова (Keywords)</Label>
+                <Textarea
+                  id="seoKeywords"
+                  value={seoKeywords}
+                  onChange={(e) => setSeoKeywords(e.target.value)}
+                  placeholder="СООУ, система оповещения, безопасность в бассейне..."
+                  className="mt-2"
+                  rows={4}
+                />
+                <p className="text-xs text-slate-500 mt-1">Разделяйте ключевые слова запятыми</p>
+              </div>
+
+              <div>
                 <Label>Фавикон</Label>
                 <div className="mt-2 space-y-3">
                   <input
@@ -237,6 +266,10 @@ export default function SiteSettingsSection({
               <div>
                 <p className="text-slate-500 font-medium">Описание:</p>
                 <p className="text-slate-600">{seoDescription}</p>
+              </div>
+              <div>
+                <p className="text-slate-500 font-medium">Ключевые слова:</p>
+                <p className="text-slate-600 text-xs">{seoKeywords.substring(0, 200)}{seoKeywords.length > 200 ? '...' : ''}</p>
               </div>
               <div>
                 <p className="text-slate-500 font-medium">Фавикон:</p>
