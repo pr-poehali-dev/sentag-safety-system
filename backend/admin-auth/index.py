@@ -22,12 +22,14 @@ def send_otp_email(email: str, otp: str) -> bool:
     
     smtp_host = os.environ.get('SMTP_HOST', 'smtp.yandex.ru')
     smtp_port = int(os.environ.get('SMTP_PORT', '465'))
-    smtp_user = os.environ.get('SMTP_USER')
-    smtp_password = os.environ.get('SMTP_PASSWORD')
+    smtp_user = os.environ.get('SMTP_USER', '').strip()
+    smtp_password = os.environ.get('SMTP_PASSWORD', '').strip()
     
     if not smtp_user or not smtp_password:
-        print("SMTP credentials not configured")
+        print("[DEBUG] SMTP credentials not configured")
         return False
+    
+    print(f"[DEBUG] SMTP config: host={smtp_host}, port={smtp_port}, user={smtp_user}, pass_len={len(smtp_password)}")
     
     msg = MIMEMultipart('alternative')
     msg['Subject'] = 'Ваш код доступа в админ-панель Sentag'
