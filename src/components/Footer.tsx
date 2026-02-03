@@ -21,7 +21,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
           <div>
             <img 
-              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/65359691-8b10-40b2-b7b1-41ab7aabf7e7.jpg" 
+              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/bbb7b21a-5b12-4b3b-9d56-4f230ba9d0e6.jpg" 
               alt="Sentag" 
               className="h-10 md:h-12 w-auto mb-3 md:mb-4"
             />
