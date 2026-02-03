@@ -30,7 +30,7 @@ export default function ComponentsSection() {
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/3a94bbbd-d584-452c-9d57-5eacdbc561a3.jpg"
               alt="Браслет Sentag"
-              className="w-full h-64 object-contain rounded-xl shadow-lg mb-6"
+              className="w-full h-auto rounded-xl shadow-lg mb-6"
             />
             
             {expandedComponent === 'bracelet' && (
