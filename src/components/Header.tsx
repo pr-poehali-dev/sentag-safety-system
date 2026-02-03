@@ -29,7 +29,7 @@ export default function Header({ scrollToSection }: HeaderProps) {
           <img 
             src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/cf3bde7a-7217-4c93-8917-b7e2e6a73768.jpg" 
             alt="Sentag" 
-            className="h-8 md:h-12 w-auto"
+            className="h-8 md:h-12 w-auto mix-blend-multiply"
           />
           <div className="w-px h-8 md:h-10 bg-slate-300"></div>
           <button onClick={() => scrollToSection('about')} className="cursor-pointer transition hover:opacity-80">
