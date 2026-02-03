@@ -23,7 +23,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
       </div>
       
       <div className="container mx-auto px-4 text-center z-10 animate-fade-in pb-20" style={{ marginTop: '-4rem' }}>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight px-2">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 leading-tight px-2" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
           Безопасность вашего бассейна под контролем
         </h1>
         <p className="text-lg sm:text-xl md:text-2xl mb-3 md:mb-4 px-2 font-semibold" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
