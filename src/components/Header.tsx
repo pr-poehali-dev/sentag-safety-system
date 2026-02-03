@@ -23,7 +23,7 @@ export default function Header({ scrollToSection }: HeaderProps) {
     setMobileMenuOpen(false);
   };
   return (
-    <header className="fixed top-0 w-full bg-gradient-to-r from-slate-200 via-slate-100 to-white shadow-sm z-50">
+    <header className="fixed top-0 w-full bg-gradient-to-r from-slate-300 via-slate-150 to-white shadow-sm z-50">
       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
         <div className="flex items-center gap-3 md:gap-6">
           <img 
