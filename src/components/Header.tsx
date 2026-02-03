@@ -27,14 +27,14 @@ export default function Header({ scrollToSection }: HeaderProps) {
       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
         <div className="flex items-center gap-3 md:gap-6">
           <img 
-            src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/cf3bde7a-7217-4c93-8917-b7e2e6a73768.jpg" 
+            src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/65359691-8b10-40b2-b7b1-41ab7aabf7e7.jpg" 
             alt="Sentag" 
-            className="h-8 md:h-12 w-auto mix-blend-multiply"
+            className="h-8 md:h-12 w-auto"
           />
           <div className="w-px h-8 md:h-10 bg-slate-300"></div>
           <button onClick={() => scrollToSection('about')} className="cursor-pointer transition hover:opacity-80">
             <img 
-              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/e203c4a9-e075-4384-bdbd-fbf9ed187992.jpg" 
+              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/3908740f-80dc-4fb2-a2b2-d958e76d51aa.jpg" 
               alt="Меридиан" 
               className="h-8 md:h-12 w-auto"
             />
