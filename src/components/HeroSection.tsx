@@ -14,7 +14,12 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
           alt="Бассейн" 
           className="w-full h-full object-cover object-center sm:object-[center_30%] md:object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/40" />
+        <img 
+          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/9e399f98-043e-439c-a441-61eb5394bfa9.png" 
+          alt="Браслет Sentag" 
+          className="absolute bottom-0 left-0 w-[50%] sm:w-[40%] md:w-[35%] lg:w-[30%] xl:w-[25%] h-auto object-contain pointer-events-none"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/40 pointer-events-none" />
       </div>
       
       <div className="container mx-auto px-4 text-center z-10 animate-fade-in pb-20" style={{ marginTop: '-4rem' }}>
