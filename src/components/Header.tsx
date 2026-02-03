@@ -23,20 +23,20 @@ export default function Header({ scrollToSection }: HeaderProps) {
     setMobileMenuOpen(false);
   };
   return (
-    <header className="fixed top-0 w-full bg-gradient-to-r from-slate-300 via-slate-150 to-white shadow-sm z-50">
+    <header className="fixed top-0 w-full bg-[#f5f5f5] shadow-sm z-50">
       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
         <div className="flex items-center gap-3 md:gap-6">
           <img 
             src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/cf3bde7a-7217-4c93-8917-b7e2e6a73768.jpg" 
             alt="Sentag" 
-            className="h-8 md:h-12 w-auto mix-blend-multiply"
+            className="h-8 md:h-12 w-auto"
           />
           <div className="w-px h-8 md:h-10 bg-slate-300"></div>
           <button onClick={() => scrollToSection('about')} className="cursor-pointer transition hover:opacity-80">
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg" 
               alt="Меридиан" 
-              className="h-8 md:h-12 w-auto mix-blend-multiply"
+              className="h-8 md:h-12 w-auto"
             />
           </button>
         </div>
