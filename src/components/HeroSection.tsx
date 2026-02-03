@@ -14,11 +14,6 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
           alt="Бассейн" 
           className="w-full h-full object-cover object-center sm:object-[center_30%] md:object-center"
         />
-        <img 
-          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/d7c6d70d-62f8-4551-baf1-163f72598379.png" 
-          alt="Браслет Sentag" 
-          className="absolute bottom-0 left-0 w-[40%] sm:w-[35%] md:w-[30%] lg:w-[25%] h-auto object-contain"
-        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/40" />
       </div>
       
