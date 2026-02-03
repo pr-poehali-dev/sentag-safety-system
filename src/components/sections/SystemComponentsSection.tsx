@@ -29,7 +29,7 @@ export default function SystemComponentsSection({ expandedComponent, toggleCompo
               </div>
               <div className="flex items-center justify-center">
                 <img 
-                  src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/9684c64f-f412-4dff-afb0-b0f554bd549f.png" 
+                  src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/9684c64f-f412-4dff-afb0-b0f554bd549f.png?v=2" 
                   alt="Браслет Sentag" 
                   className="w-full max-w-sm h-auto object-contain rounded-lg"
                 />
