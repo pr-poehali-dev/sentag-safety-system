@@ -168,6 +168,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
           <Icon name="Users" className="text-cyan-600 mb-2" size={32} />
           <p className="text-3xl font-bold text-slate-800">{clickStats?.unique_visitors || 0}</p>
           <p className="text-slate-600">Уникальных посетителей</p>
+          <p className="text-xs text-slate-500 mt-1">За последние 30 дней</p>
         </div>
         <div className="p-4 bg-orange-50 rounded-lg">
           <Icon name="FileText" className="text-orange-600 mb-2" size={32} />
@@ -179,11 +180,13 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
           <Icon name="ClipboardCheck" className="text-green-600 mb-2" size={32} />
           <p className="text-3xl font-bold text-slate-800">{clickStats?.step2_count || 0}</p>
           <p className="text-slate-600">Завершили заявку</p>
+          <p className="text-xs text-slate-500 mt-1">Заполнили Шаг 2</p>
         </div>
         <div className="p-4 bg-purple-50 rounded-lg">
           <Icon name="TrendingUp" className="text-purple-600 mb-2" size={32} />
           <p className="text-3xl font-bold text-slate-800">{clickStats?.conversion_rate || 0}%</p>
           <p className="text-slate-600">Конверсия</p>
+          <p className="text-xs text-slate-500 mt-1">Шаг 2 / Шаг 1</p>
         </div>
         <div className="p-4 bg-blue-50 rounded-lg">
           <Icon name="MousePointerClick" className="text-primary mb-2" size={32} />
@@ -191,6 +194,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
             {clickStats?.total_stats.reduce((sum, stat) => sum + (stat.total_clicks || 0), 0) || 0}
           </p>
           <p className="text-slate-600">Кликов за месяц</p>
+          <p className="text-xs text-slate-500 mt-1">Все кнопки на сайте</p>
         </div>
       </div>
 
