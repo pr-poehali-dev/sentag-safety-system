@@ -333,20 +333,35 @@ def send_telegram_step2(request_id: int, data: dict):
             duration_seconds = int((end - start).total_seconds())
             step2_time = f"{duration_seconds // 60}:{str(duration_seconds % 60).zfill(2)}"
         
+        role_names = {
+            'contractor': 'Подрядчик',
+            'customer': 'Конечный заказчик',
+            'design': 'Проектная организация'
+        }
+        
         message = f"""✅ <b>Заявка #{request_id} завершена</b>
-<b>Шаг 2/2: Дополнительная информация</b>
+
+👤 <b>Контактное лицо:</b> {data.get('fullName')}
+📞 <b>Телефон:</b> {data.get('phone')}
+✉️ <b>Email:</b> {data.get('email')}
+
+🏢 <b>Предприятие:</b> {data.get('company')}
+👔 <b>Роль:</b> {role_names.get(data.get('role'), data.get('role'))}
+
+🏊 <b>Объект:</b> {data.get('objectName')}
+📍 <b>Адрес:</b> {data.get('objectAddress')}
 
 ⏱ <b>Время заполнения:</b>
 • Шаг 1: {step1_time}
 • Шаг 2: {step2_time}
 
-📊 <b>Посетители:</b>
+📊 <b>Информация о посетителях:</b>
 {data.get('visitorsInfo') or 'Не указано'}
 
 📏 <b>Параметры бассейна:</b>
 {data.get('poolSize') or 'Не указано'}
 
-📅 <b>Сроки:</b>
+📅 <b>Сроки поставки:</b>
 {data.get('deadline') or 'Не указано'}
 """
         
