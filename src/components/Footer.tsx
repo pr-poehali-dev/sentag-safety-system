@@ -16,6 +16,13 @@ export default function Footer({ scrollToSection }: FooterProps) {
     }
   }, []);
 
+  const handleEmailClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    trackClick('Email (футер)', 'footer');
+    navigator.clipboard.writeText('info@meridian-t.ru');
+    alert('Email скопирован в буфер обмена');
+  };
+
   return (
     <footer className="bg-slate-900 text-white py-8 md:py-12">
       <div className="container mx-auto px-4">
@@ -72,14 +79,13 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 </a>
               </li>
               <li>
-                <a 
-                  href="mailto:info@meridian-t.ru" 
-                  onClick={() => trackClick('Email (футер)', 'footer')}
-                  className="hover:text-white transition break-all flex items-center gap-1"
+                <button 
+                  onClick={handleEmailClick}
+                  className="hover:text-white transition break-all flex items-center gap-1 text-left"
                 >
                   <Icon name="Mail" size={14} />
                   info@meridian-t.ru
-                </a>
+                </button>
               </li>
             </ul>
           </div>
