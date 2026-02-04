@@ -138,29 +138,39 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
 
   return (
     <Card className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-slate-800">Статистика</h2>
-        <div className="flex gap-2">
-          <Button 
-            variant="default" 
-            size="sm"
-            onClick={handleSendToTelegram}
-            disabled={isSending || loading}
-            className="gap-2"
-          >
-            <Icon name="Send" size={16} />
-            {isSending ? 'Отправка...' : 'Отправить в Telegram'}
-          </Button>
-          <Button 
-            variant="destructive" 
-            size="sm"
-            onClick={handleClearStats}
-            disabled={isClearing || loading}
-            className="gap-2"
-          >
-            <Icon name="Trash2" size={16} />
-            {isClearing ? 'Удаление...' : 'Очистить'}
-          </Button>
+      <div className="mb-6">
+        <div className="flex justify-between items-start">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800">Статистика</h2>
+            <p className="text-sm text-slate-500 mt-1">Данные о посетителях и активности на сайте</p>
+          </div>
+          <div className="flex gap-2">
+            <div className="flex flex-col items-end gap-2">
+              <Button 
+                variant="default" 
+                size="sm"
+                onClick={handleSendToTelegram}
+                disabled={isSending || loading}
+                className="gap-2"
+              >
+                <Icon name="Send" size={16} />
+                {isSending ? 'Отправка...' : 'Отправить в Telegram'}
+              </Button>
+              <p className="text-xs text-slate-500 max-w-xs text-right">
+                Отправит сводку за последние 7 дней: заявки, конверсию, время заполнения и клики по кнопкам
+              </p>
+            </div>
+            <Button 
+              variant="destructive" 
+              size="sm"
+              onClick={handleClearStats}
+              disabled={isClearing || loading}
+              className="gap-2"
+            >
+              <Icon name="Trash2" size={16} />
+              {isClearing ? 'Удаление...' : 'Очистить'}
+            </Button>
+          </div>
         </div>
       </div>
       
