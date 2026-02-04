@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
+import { trackClick } from '@/utils/trackClick';
 
 interface FooterProps {
   scrollToSection: (id: string) => void;
@@ -48,9 +49,38 @@ export default function Footer({ scrollToSection }: FooterProps) {
           <div>
             <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg">Контакты</h4>
             <ul className="space-y-2 text-sm md:text-base text-slate-400">
-              <li>г. Тюмень, ул. 30 лет Победы, д. 60А</li>
-              <li><a href="tel:+73452568286" className="hover:text-white transition">+7 (3452) 56-82-86</a></li>
-              <li><a href="mailto:info@meridian-t.ru" className="hover:text-white transition break-all">info@meridian-t.ru</a></li>
+              <li>
+                <a 
+                  href="https://yandex.ru/maps/?text=г.+Тюмень,+ул.+30+лет+Победы,+д.+60А" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={() => trackClick('Адрес (футер)', 'footer')}
+                  className="hover:text-white transition flex items-center gap-1"
+                >
+                  <Icon name="MapPin" size={14} />
+                  г. Тюмень, ул. 30 лет Победы, д. 60А
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="tel:+73452568286" 
+                  onClick={() => trackClick('Телефон (футер)', 'footer')}
+                  className="hover:text-white transition flex items-center gap-1"
+                >
+                  <Icon name="Phone" size={14} />
+                  +7 (3452) 56-82-86
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="mailto:info@meridian-t.ru" 
+                  onClick={() => trackClick('Email (футер)', 'footer')}
+                  className="hover:text-white transition break-all flex items-center gap-1"
+                >
+                  <Icon name="Mail" size={14} />
+                  info@meridian-t.ru
+                </a>
+              </li>
             </ul>
           </div>
         </div>
