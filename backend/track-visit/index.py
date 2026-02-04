@@ -54,9 +54,17 @@ def handler(event: dict, context) -> dict:
         cursor = conn.cursor()
         
         cursor.execute(
-            "INSERT INTO page_visits (visitor_id, user_agent, ip_address) VALUES (%s, %s, %s)",
+            "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address) VALUES (%s, %s, %s)",
             (visitor_id, user_agent, ip_address)
         )
+        
+        # Создаём или обновляем запись в таблице visitors для статистики
+        cursor.execute("""
+            INSERT INTO t_p28851569_sentag_safety_system.visitors (visitor_id, user_agent, first_visit, last_activity)
+            VALUES (%s, %s, NOW(), NOW())
+            ON CONFLICT (visitor_id) 
+            DO UPDATE SET last_activity = NOW(), user_agent = EXCLUDED.user_agent
+        """, (visitor_id, user_agent))
         
         conn.commit()
         cursor.close()

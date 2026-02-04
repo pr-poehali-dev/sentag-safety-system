@@ -126,7 +126,7 @@ def handler(event: dict, context) -> dict:
                         # Получаем клики до начала заполнения формы
                         cur.execute("""
                             SELECT button_name, button_location, clicked_at
-                            FROM button_clicks
+                            FROM t_p28851569_sentag_safety_system.button_clicks
                             WHERE visitor_id = %s
                             ORDER BY clicked_at ASC
                         """, (visitor_id,))
@@ -228,7 +228,7 @@ def handler(event: dict, context) -> dict:
             if visitor_id:
                 try:
                     cur.execute("""
-                        SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
+                        SELECT first_visit, last_activity FROM t_p28851569_sentag_safety_system.visitors WHERE visitor_id = %s
                     """, (visitor_id,))
                     visitor_row = cur.fetchone()
                     
@@ -242,7 +242,7 @@ def handler(event: dict, context) -> dict:
                         
                         cur.execute("""
                             SELECT button_name, button_location, clicked_at
-                            FROM button_clicks
+                            FROM t_p28851569_sentag_safety_system.button_clicks
                             WHERE visitor_id = %s AND clicked_at < %s
                             ORDER BY clicked_at ASC
                         """, (visitor_id, row[7]))
