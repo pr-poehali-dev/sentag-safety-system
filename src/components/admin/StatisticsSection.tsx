@@ -50,6 +50,18 @@ interface StatisticsSectionProps {
 export default function StatisticsSection({ users, requests }: StatisticsSectionProps) {
   const [clickStats, setClickStats] = useState<ClickStats | null>(null);
   const [loading, setLoading] = useState(true);
+  
+  // Функция для получения цвета для графика
+  const getBarColor = (index: number) => {
+    const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500', 'bg-cyan-500'];
+    return colors[index % colors.length];
+  };
+  
+  // Функция для расчета ширины бара в процентах
+  const getBarWidth = (value: number, maxValue: number) => {
+    if (maxValue === 0) return 0;
+    return Math.round((value / maxValue) * 100);
+  };
 
   useEffect(() => {
     fetch('https://functions.poehali.dev/49b6c391-335d-4b83-a4e4-02430a757ab9')
@@ -84,48 +96,99 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
         </div>
       </div>
 
-      {/* Статистика кликов по кнопкам */}
+      {/* Статистика кликов по кнопкам с графиком */}
       <div className="mt-6">
         <h3 className="text-xl font-bold text-slate-800 mb-4">Клики по кнопкам (за месяц)</h3>
         {loading ? (
           <p className="text-slate-600">Загрузка...</p>
         ) : clickStats && clickStats.total_stats.length > 0 ? (
           <div className="space-y-4">
-            {clickStats.total_stats.map((stat, idx) => (
-              <div key={idx} className="p-4 bg-slate-50 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <div>
-                    <p className="font-semibold text-slate-800">{stat.button_name}</p>
-                    <p className="text-sm text-slate-600">Расположение: {stat.button_location}</p>
+            {(() => {
+              const maxClicks = Math.max(...clickStats.total_stats.map(s => s.total_clicks || 0));
+              return clickStats.total_stats.map((stat, idx) => (
+                <div key={idx} className="p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
+                  <div className="flex justify-between items-center mb-3">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="font-semibold text-slate-800">{stat.button_name}</p>
+                        <span className="px-2 py-0.5 bg-slate-200 text-slate-600 text-xs rounded-full">{stat.button_location}</span>
+                      </div>
+                    </div>
+                    <p className="text-2xl font-bold text-primary ml-4">{stat.total_clicks}</p>
                   </div>
-                  <p className="text-2xl font-bold text-primary">{stat.total_clicks}</p>
+                  {/* График баром */}
+                  <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                    <div 
+                      className={`h-full ${getBarColor(idx)} transition-all duration-500 flex items-center justify-end pr-2`}
+                      style={{ width: `${getBarWidth(stat.total_clicks || 0, maxClicks)}%` }}
+                    >
+                      {stat.total_clicks && stat.total_clicks > 0 && (
+                        <span className="text-[10px] font-bold text-white">
+                          {getBarWidth(stat.total_clicks, maxClicks)}%
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         ) : (
           <p className="text-slate-600">Пока нет данных по кликам</p>
         )}
       </div>
 
-      {/* Статистика по дням */}
+      {/* Статистика по дням с детализацией */}
       {clickStats && Object.keys(clickStats.stats_by_day).length > 0 && (
         <div className="mt-8">
-          <h3 className="text-xl font-bold text-slate-800 mb-4">Клики по дням</h3>
-          <div className="space-y-4 max-h-96 overflow-y-auto">
-            {Object.entries(clickStats.stats_by_day).map(([date, stats]) => (
-              <div key={date} className="p-4 bg-white border border-slate-200 rounded-lg">
-                <p className="font-semibold text-slate-800 mb-2">{new Date(date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                <div className="space-y-2">
-                  {stats.map((stat, idx) => (
-                    <div key={idx} className="flex justify-between items-center text-sm">
-                      <span className="text-slate-700">{stat.button_name} ({stat.button_location})</span>
-                      <span className="font-semibold text-primary">{stat.count}</span>
+          <h3 className="text-xl font-bold text-slate-800 mb-4">Детализация по дням</h3>
+          <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
+            {Object.entries(clickStats.stats_by_day).map(([date, stats]) => {
+              const dayTotal = stats.reduce((sum, s) => sum + (s.count || 0), 0);
+              const maxDayClicks = Math.max(...stats.map(s => s.count || 0));
+              
+              return (
+                <div key={date} className="p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md transition">
+                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+                    <div className="flex items-center gap-3">
+                      <Icon name="Calendar" className="text-primary" size={20} />
+                      <p className="font-semibold text-slate-800">
+                        {new Date(date).toLocaleDateString('ru-RU', { 
+                          weekday: 'short',
+                          day: 'numeric', 
+                          month: 'long', 
+                          year: 'numeric' 
+                        })}
+                      </p>
                     </div>
-                  ))}
+                    <div className="px-3 py-1 bg-primary/10 text-primary font-semibold rounded-full text-sm">
+                      {dayTotal} {dayTotal === 1 ? 'клик' : dayTotal < 5 ? 'клика' : 'кликов'}
+                    </div>
+                  </div>
+                  <div className="space-y-3 mt-3">
+                    {stats.map((stat, idx) => (
+                      <div key={idx} className="space-y-1">
+                        <div className="flex justify-between items-center text-sm">
+                          <div className="flex items-center gap-2">
+                            <Icon name="MousePointerClick" className="text-slate-400" size={14} />
+                            <span className="text-slate-700 font-medium">{stat.button_name}</span>
+                            <span className="text-xs text-slate-500">• {stat.button_location}</span>
+                          </div>
+                          <span className="font-bold text-primary">{stat.count}</span>
+                        </div>
+                        {/* Мини-график для каждой кнопки в дне */}
+                        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden ml-5">
+                          <div 
+                            className={`h-full ${getBarColor(idx)} transition-all duration-300`}
+                            style={{ width: `${getBarWidth(stat.count || 0, maxDayClicks)}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
