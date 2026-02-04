@@ -61,9 +61,9 @@ def handler(event: dict, context) -> dict:
                 cur.execute("""
                     INSERT INTO request_forms (
                         phone, email, company, role, full_name, 
-                        object_name, object_address, consent, status,
+                        object_name, object_address, consent, marketing_consent, status,
                         step1_started_at, step1_completed_at, visitor_id
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s, NOW(), %s)
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s, NOW(), %s)
                     RETURNING id
                 """, (
                     body.get('phone'),
@@ -74,6 +74,7 @@ def handler(event: dict, context) -> dict:
                     body.get('objectName'),
                     body.get('objectAddress'),
                     body.get('consent', False),
+                    body.get('marketingConsent', False),
                     step1_started,
                     visitor_id
                 ))
@@ -81,8 +82,8 @@ def handler(event: dict, context) -> dict:
                 cur.execute("""
                     INSERT INTO request_forms (
                         phone, email, company, role, full_name, 
-                        object_name, object_address, consent, status, visitor_id
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s)
+                        object_name, object_address, consent, marketing_consent, status, visitor_id
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s)
                     RETURNING id
                 """, (
                     body.get('phone'),
@@ -93,6 +94,7 @@ def handler(event: dict, context) -> dict:
                     body.get('objectName'),
                     body.get('objectAddress'),
                     body.get('consent', False),
+                    body.get('marketingConsent', False),
                     visitor_id
                 ))
             request_id = cur.fetchone()[0]
@@ -210,12 +212,13 @@ def handler(event: dict, context) -> dict:
                 SELECT phone, email, company, role, full_name,
                        object_name, object_address,
                        step1_started_at, step1_completed_at,
-                       step2_started_at, step2_completed_at, visitor_id
+                       step2_started_at, step2_completed_at, visitor_id, marketing_consent
                 FROM request_forms WHERE id = %s
             """, (request_id,))
             row = cur.fetchone()
             
             visitor_id = row[11]
+            marketing_consent = row[12]
             user_activity = None
             
             if visitor_id:
@@ -264,6 +267,7 @@ def handler(event: dict, context) -> dict:
                 'step1_completed_at': row[8],
                 'step2_started_at': row[9],
                 'step2_completed_at': row[10],
+                'marketingConsent': marketing_consent,
                 'visitorsInfo': body.get('visitorsInfo'),
                 'poolSize': body.get('poolSize'),
                 'deadline': body.get('deadline'),
@@ -338,6 +342,8 @@ def send_telegram_step1(request_id: int, data: dict, user_activity: dict = None)
             'design': 'Проектная организация'
         }
         
+        marketing_consent_text = "✅ Да" if data.get('marketingConsent', False) else "❌ Нет"
+        
         message = f"""🔔 <b>Новая заявка #{request_id}</b>
 <b>Шаг 1/2: Контактные данные</b>
 
@@ -350,6 +356,8 @@ def send_telegram_step1(request_id: int, data: dict, user_activity: dict = None)
 
 🏊 <b>Объект:</b> {data.get('objectName')}
 📍 <b>Адрес:</b> {data.get('objectAddress')}
+
+📬 <b>Согласие на рекламу:</b> {marketing_consent_text}
 """
         
         # Добавляем активность пользователя если есть
@@ -445,6 +453,8 @@ def send_telegram_step2(request_id: int, data: dict):
             'design': 'Проектная организация'
         }
         
+        marketing_consent_text = "✅ Да" if data.get('marketingConsent', False) else "❌ Нет"
+        
         message = f"""✅ <b>Заявка #{request_id} завершена</b>
 
 👤 <b>Контактное лицо:</b> {data.get('fullName')}
@@ -456,6 +466,8 @@ def send_telegram_step2(request_id: int, data: dict):
 
 🏊 <b>Объект:</b> {data.get('objectName')}
 📍 <b>Адрес:</b> {data.get('objectAddress')}
+
+📬 <b>Согласие на рекламу:</b> {marketing_consent_text}
 
 ⏱ <b>Время заполнения:</b>
 • Шаг 1: {step1_time}

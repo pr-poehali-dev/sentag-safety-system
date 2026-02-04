@@ -44,6 +44,7 @@ interface RequestForm {
   full_name: string;
   object_name: string;
   object_address: string;
+  marketing_consent: boolean;
   visitors_info: string | null;
   pool_size: string | null;
   deadline: string | null;

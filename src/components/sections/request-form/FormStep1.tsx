@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { trackClick } from '@/utils/trackClick';
 import { useState } from 'react';
 import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
@@ -17,6 +18,7 @@ interface FormStep1Props {
     objectName: string;
     objectAddress: string;
     consent: boolean;
+    marketingConsent: boolean;
   };
   errors: Record<string, boolean>;
   showConsentText: boolean;
@@ -37,6 +39,7 @@ export default function FormStep1({
 }: FormStep1Props) {
   const isTopFieldsFilled = formData.phone && formData.email && formData.company && formData.role && formData.fullName;
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [showMarketingConsent, setShowMarketingConsent] = useState(false);
   
   return (
     <div className="space-y-6 animate-fade-in">
@@ -218,7 +221,48 @@ export default function FormStep1({
         {errors.consent && <p className="text-sm text-red-500 mt-2">Необходимо дать согласие на обработку данных</p>}
       </div>
 
+      <div>
+        <div className="flex items-start gap-3">
+          <Checkbox 
+            id="marketingConsent"
+            checked={formData.marketingConsent}
+            onCheckedChange={(checked) => onFormChange('marketingConsent', checked)}
+          />
+          <Label htmlFor="marketingConsent" className="text-sm cursor-pointer">
+            Согласие на получение рекламных рассылок{' '}
+            <button
+              type="button"
+              onClick={() => setShowMarketingConsent(true)}
+              className="text-primary underline hover:text-primary/80"
+            >
+              (подробнее)
+            </button>
+          </Label>
+        </div>
+      </div>
+
       <PrivacyPolicyModal open={showPrivacyPolicy} onOpenChange={setShowPrivacyPolicy} />
+      
+      <Dialog open={showMarketingConsent} onOpenChange={setShowMarketingConsent}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Согласие на получение рекламных рассылок</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
+            <p>
+              Даю согласие <strong>ООО «Меридиан»</strong> (ИНН 7203519186, ОГРН 1217200006760, адрес: 625016, ТЮМЕНСКАЯ ОБЛАСТЬ, Г.О. ГОРОД ТЮМЕНЬ, Г ТЮМЕНЬ, УЛ 30 ЛЕТ ПОБЕДЫ, Д. 60А, ОФИС 302) на получение информационных и рекламных рассылок о продуктах, услугах, специальных предложениях и акциях.
+            </p>
+            <p className="mb-2">Рассылки могут осуществляться любым из указанных мной способов:</p>
+            <ul className="list-disc list-inside space-y-1 ml-4">
+              <li>посредством сетей электросвязи (SMS-сообщения, мессенджеры);</li>
+              <li>по электронной почте (e-mail).</li>
+            </ul>
+            <p>
+              Настоящее согласие действует до момента его отзыва. Я уведомлен, что имею право в любой момент отказаться от рассылок, направив запрос на e-mail: <strong>info@meridian-t.ru</strong>, либо нажав ссылку «Отписаться» в тексте электронного письма. Оператор обязан немедленно прекратить рассылку в мой адрес с момента получения требования.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Button 
         className="w-full" 

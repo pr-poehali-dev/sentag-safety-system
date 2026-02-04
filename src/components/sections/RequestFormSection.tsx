@@ -31,6 +31,7 @@ export default function RequestFormSection() {
     objectName: '',
     objectAddress: '',
     consent: false,
+    marketingConsent: false,
   });
   const [step2Data, setStep2Data] = useState({
     visitorsInfo: '',
@@ -221,6 +222,7 @@ export default function RequestFormSection() {
             objectName: '',
             objectAddress: '',
             consent: false,
+            marketingConsent: false,
           });
           setStep2Data({
             visitorsInfo: '',

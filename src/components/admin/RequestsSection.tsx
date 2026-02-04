@@ -21,6 +21,7 @@ interface RequestForm {
   full_name: string;
   object_name: string;
   object_address: string;
+  marketing_consent: boolean;
   visitors_info: string | null;
   pool_size: string | null;
   deadline: string | null;
@@ -164,6 +165,10 @@ export default function RequestsSection({
                     <p className="text-sm text-slate-600 flex items-center gap-2 min-w-0">
                       <Icon name="Mail" size={14} className="text-slate-400 flex-shrink-0" />
                       <span className="truncate" title={request.email}>{request.email}</span>
+                    </p>
+                    <p className="text-xs text-slate-500 flex items-center gap-2 mt-2">
+                      <Icon name="MailPlus" size={14} className="text-slate-400 flex-shrink-0" />
+                      <span>Реклама: {request.marketing_consent ? '✅ Да' : '❌ Нет'}</span>
                     </p>
                   </div>
                 </div>

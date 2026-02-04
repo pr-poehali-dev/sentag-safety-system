@@ -58,6 +58,7 @@ def handler(event: dict, context) -> dict:
                 object_name,
                 object_address,
                 consent,
+                marketing_consent,
                 visitors_info,
                 pool_size,
                 deadline,
