@@ -41,6 +41,10 @@ interface ClickStat {
 interface ClickStats {
   stats_by_day: Record<string, ClickStat[]>;
   total_stats: ClickStat[];
+  unique_visitors: number;
+  step1_count: number;
+  step2_count: number;
+  conversion_rate: number;
 }
 
 interface StatisticsSectionProps {
@@ -130,10 +134,6 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
     }
   };
 
-  // Счётчики заполнения шагов
-  const step1Completed = requests.length; // Все заявки имеют шаг 1
-  const step2Completed = requests.filter(r => r.step2_completed_at !== null).length;
-
   return (
     <Card className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -163,21 +163,26 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
       </div>
       
       {/* Общая статистика */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <div className="p-4 bg-cyan-50 rounded-lg">
+          <Icon name="Users" className="text-cyan-600 mb-2" size={32} />
+          <p className="text-3xl font-bold text-slate-800">{clickStats?.unique_visitors || 0}</p>
+          <p className="text-slate-600">Уникальных посетителей</p>
+        </div>
         <div className="p-4 bg-orange-50 rounded-lg">
           <Icon name="FileText" className="text-orange-600 mb-2" size={32} />
-          <p className="text-3xl font-bold text-slate-800">{requests.length}</p>
-          <p className="text-slate-600">Заявок получено</p>
+          <p className="text-3xl font-bold text-slate-800">{clickStats?.step1_count || 0}</p>
+          <p className="text-slate-600">Начали заполнение</p>
         </div>
         <div className="p-4 bg-green-50 rounded-lg">
           <Icon name="ClipboardCheck" className="text-green-600 mb-2" size={32} />
-          <p className="text-3xl font-bold text-slate-800">{step1Completed}</p>
-          <p className="text-slate-600">Шаг 1 заполнен</p>
+          <p className="text-3xl font-bold text-slate-800">{clickStats?.step2_count || 0}</p>
+          <p className="text-slate-600">Завершили заявку</p>
         </div>
         <div className="p-4 bg-purple-50 rounded-lg">
-          <Icon name="ClipboardList" className="text-purple-600 mb-2" size={32} />
-          <p className="text-3xl font-bold text-slate-800">{step2Completed}</p>
-          <p className="text-slate-600">Шаг 2 заполнен</p>
+          <Icon name="TrendingUp" className="text-purple-600 mb-2" size={32} />
+          <p className="text-3xl font-bold text-slate-800">{clickStats?.conversion_rate || 0}%</p>
+          <p className="text-slate-600">Конверсия</p>
         </div>
         <div className="p-4 bg-blue-50 rounded-lg">
           <Icon name="MousePointerClick" className="text-primary mb-2" size={32} />

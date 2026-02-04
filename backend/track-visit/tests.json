@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "name": "Track page visit",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "visitor_id": "test-visitor-123"
+      },
+      "expectedStatus": 200
+    }
+  ]
+}
