@@ -239,9 +239,8 @@ export default function SiteSettingsSection({
                   </div>
                   
                   {faviconUrl && (
-                    <div className="mt-2 p-3 bg-slate-100 rounded-lg flex items-center gap-3">
+                    <div className="mt-2 p-3 bg-slate-100 rounded-lg flex items-center justify-center">
                       <img src={faviconUrl} alt="Favicon" className="w-8 h-8 object-contain" />
-                      <span className="text-xs text-slate-600">Предпросмотр текущего фавикона</span>
                     </div>
                   )}
                 </div>
