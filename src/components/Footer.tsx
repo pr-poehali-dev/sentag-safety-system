@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 import { trackClick } from '@/utils/trackClick';
+import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
 
 interface FooterProps {
   scrollToSection: (id: string) => void;
@@ -8,6 +9,7 @@ interface FooterProps {
 
 export default function Footer({ scrollToSection }: FooterProps) {
   const [showDocuments, setShowDocuments] = useState(true);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
   useEffect(() => {
     const savedState = localStorage.getItem('show_documents_section');
@@ -51,6 +53,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 <li><button onClick={() => scrollToSection('documents')} className="hover:text-white transition">Документы</button></li>
               )}
               <li><button onClick={() => scrollToSection('contacts')} className="hover:text-white transition">Контакты</button></li>
+              <li><button onClick={() => setShowPrivacyPolicy(true)} className="hover:text-white transition">Политика конфиденциальности</button></li>
             </ul>
           </div>
           <div>
@@ -94,6 +97,8 @@ export default function Footer({ scrollToSection }: FooterProps) {
           <p>© 2024 Меридиан. Эксклюзивный дистрибьютор Sentag AB в России. Все права защищены.</p>
         </div>
       </div>
+      
+      <PrivacyPolicyModal open={showPrivacyPolicy} onOpenChange={setShowPrivacyPolicy} />
     </footer>
   );
 }
