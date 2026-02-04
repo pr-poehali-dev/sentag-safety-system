@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 
 interface User {
@@ -50,6 +51,7 @@ interface StatisticsSectionProps {
 export default function StatisticsSection({ users, requests }: StatisticsSectionProps) {
   const [clickStats, setClickStats] = useState<ClickStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isClearing, setIsClearing] = useState(false);
   
   // Функция для получения цвета для графика
   const getBarColor = (index: number) => {
@@ -63,7 +65,8 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
     return Math.round((value / maxValue) * 100);
   };
 
-  useEffect(() => {
+  const loadStats = () => {
+    setLoading(true);
     fetch('https://functions.poehali.dev/49b6c391-335d-4b83-a4e4-02430a757ab9')
       .then(res => res.json())
       .then(data => {
@@ -74,25 +77,81 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
         console.error('Error fetching click stats:', err);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadStats();
   }, []);
+
+  const handleClearStats = async () => {
+    if (!confirm('Вы уверены, что хотите удалить всю статистику кликов? Это действие нельзя отменить.')) {
+      return;
+    }
+
+    setIsClearing(true);
+    try {
+      const response = await fetch('https://functions.poehali.dev/fd0a1f7e-5e13-474c-a085-8fadf347d2c1', {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        alert(`Успешно удалено: ${result.message}`);
+        loadStats(); // Перезагружаем статистику
+      } else {
+        alert('Ошибка при удалении статистики');
+      }
+    } catch (error) {
+      console.error('Error clearing stats:', error);
+      alert('Ошибка при удалении статистики');
+    } finally {
+      setIsClearing(false);
+    }
+  };
+
+  // Счётчики заполнения шагов
+  const step1Completed = requests.length; // Все заявки имеют шаг 1
+  const step2Completed = requests.filter(r => r.step2_completed_at !== null).length;
 
   return (
     <Card className="p-6">
-      <h2 className="text-2xl font-bold text-slate-800 mb-6">Статистика</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-slate-800">Статистика</h2>
+        <Button 
+          variant="destructive" 
+          size="sm"
+          onClick={handleClearStats}
+          disabled={isClearing || loading}
+          className="gap-2"
+        >
+          <Icon name="Trash2" size={16} />
+          {isClearing ? 'Удаление...' : 'Очистить статистику'}
+        </Button>
+      </div>
       
       {/* Общая статистика */}
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="p-4 bg-orange-50 rounded-lg">
           <Icon name="FileText" className="text-orange-600 mb-2" size={32} />
           <p className="text-3xl font-bold text-slate-800">{requests.length}</p>
           <p className="text-slate-600">Заявок получено</p>
+        </div>
+        <div className="p-4 bg-green-50 rounded-lg">
+          <Icon name="ClipboardCheck" className="text-green-600 mb-2" size={32} />
+          <p className="text-3xl font-bold text-slate-800">{step1Completed}</p>
+          <p className="text-slate-600">Шаг 1 заполнен</p>
+        </div>
+        <div className="p-4 bg-purple-50 rounded-lg">
+          <Icon name="ClipboardList" className="text-purple-600 mb-2" size={32} />
+          <p className="text-3xl font-bold text-slate-800">{step2Completed}</p>
+          <p className="text-slate-600">Шаг 2 заполнен</p>
         </div>
         <div className="p-4 bg-blue-50 rounded-lg">
           <Icon name="MousePointerClick" className="text-primary mb-2" size={32} />
           <p className="text-3xl font-bold text-slate-800">
             {clickStats?.total_stats.reduce((sum, stat) => sum + (stat.total_clicks || 0), 0) || 0}
           </p>
-          <p className="text-slate-600">Всего кликов за месяц</p>
+          <p className="text-slate-600">Кликов за месяц</p>
         </div>
       </div>
 
