@@ -76,21 +76,33 @@ def handler(event: dict, context) -> dict:
         """, (week_ago,))
         new_requests = cursor.fetchone()[0]
         
-        # Заполненные шаги
+        # Заполненные шаги и среднее время
         cursor.execute("""
             SELECT 
                 COUNT(*) as total,
-                COUNT(CASE WHEN step2_completed_at IS NOT NULL THEN 1 END) as completed_step2
+                COUNT(CASE WHEN step2_completed_at IS NOT NULL THEN 1 END) as completed_step2,
+                AVG(EXTRACT(EPOCH FROM (step1_completed_at - step1_started_at))) as avg_step1_duration,
+                AVG(EXTRACT(EPOCH FROM (step2_completed_at - step2_started_at))) as avg_step2_duration
             FROM request_forms 
-            WHERE created_at >= %s
+            WHERE created_at >= %s AND step1_started_at IS NOT NULL
         """, (week_ago,))
         
         steps_data = cursor.fetchone()
         step1_count = steps_data[0]
         step2_count = steps_data[1]
+        avg_step1_seconds = int(steps_data[2]) if steps_data[2] else 0
+        avg_step2_seconds = int(steps_data[3]) if steps_data[3] else 0
         
         cursor.close()
         conn.close()
+        
+        # Форматирование времени
+        def format_time(seconds):
+            if seconds == 0:
+                return "н/д"
+            minutes = seconds // 60
+            secs = seconds % 60
+            return f"{minutes}:{str(secs).zfill(2)}"
         
         # Формируем сообщение
         message = f"""📊 <b>Статистика за неделю</b>
@@ -101,6 +113,10 @@ def handler(event: dict, context) -> dict:
 • Шаг 1 заполнен: {step1_count}
 • Шаг 2 завершён: {step2_count}
 {f"• Конверсия: {round(step2_count / step1_count * 100, 1)}%" if step1_count > 0 else ""}
+
+<b>⏱ Среднее время заполнения:</b>
+• Шаг 1: {format_time(avg_step1_seconds)}
+• Шаг 2: {format_time(avg_step2_seconds)}
 
 <b>🖱 Активность (всего {total_clicks} кликов):</b>
 """
