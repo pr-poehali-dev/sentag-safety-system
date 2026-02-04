@@ -7,7 +7,7 @@ export default function AboutSection() {
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-center mb-8 md:mb-12">
             <img 
-              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/d5c9cc72-6f46-4a5f-81b0-e6d17eb0dc48.jpg" 
+              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/f8b16601-3c21-4e50-9f84-e2b4378f7d09.png" 
               alt="Логотип Меридиан" 
               className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain"
             />
