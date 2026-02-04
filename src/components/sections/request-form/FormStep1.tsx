@@ -183,12 +183,12 @@ export default function FormStep1({
             }}
           />
           <Label htmlFor="consent" className="text-sm cursor-pointer">
-            Даю согласие на сбор и обработку персональных данных
+            Даю согласие на обработку персональных данных
           </Label>
         </div>
         {showConsentText && (
           <div className="mt-3 p-4 bg-slate-50 rounded-lg border border-slate-200 text-xs text-slate-600 leading-relaxed animate-fade-in">
-            <p className="font-semibold mb-2">Даю согласие на сбор и обработку персональных данных.</p>
+            <p className="font-semibold mb-2">Даю согласие на обработку персональных данных.</p>
             <p className="mb-2">
               Настоящим я, действуя своей волей и в своем интересе, даю своё согласие (далее – Согласие) на обработку моих персональных данных компанией <strong>ООО "Меридиан"</strong> ОГРН 1217200006760 ИНН/КПП 7203519186/720301001 (далее – Оператор) в соответствии со статьей 9 Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных».
             </p>

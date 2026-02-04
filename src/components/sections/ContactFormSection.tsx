@@ -122,7 +122,7 @@ export default function ContactFormSection({ formStep, formData, setFormStep, ha
                       onCheckedChange={(checked) => handleFormChange('consent', checked)}
                     />
                     <Label htmlFor="consent" className="text-sm cursor-pointer">
-                      Даю согласие на сбор и обработку персональных данных
+                      Даю согласие на обработку персональных данных
                     </Label>
                   </div>
                   <Button 
