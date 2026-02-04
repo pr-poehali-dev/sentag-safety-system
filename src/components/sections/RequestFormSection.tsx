@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import FormStep1 from './request-form/FormStep1';
 import FormStep2 from './request-form/FormStep2';
-import PrivacyPolicyDialog from './request-form/PrivacyPolicyDialog';
 
 export default function RequestFormSection() {
   const [formStep, setFormStep] = useState(1);
-  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [showConsentText, setShowConsentText] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [requestId, setRequestId] = useState<number | null>(null);
