@@ -1,0 +1,27 @@
+{
+  "tests": [
+    {
+      "name": "Track button click",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "button_name": "Получить консультацию",
+        "button_location": "hero"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Missing required fields",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "button_name": "Test"
+      },
+      "expectedStatus": 400
+    }
+  ]
+}

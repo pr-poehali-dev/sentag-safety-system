@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+import { trackClick } from '@/utils/trackClick';
 
 interface FormStep2Props {
   step2Data: {
@@ -238,7 +239,10 @@ export default function FormStep2({
         <Button 
           variant="outline" 
           className="flex-1"
-          onClick={onBackStep}
+          onClick={() => {
+            trackClick('Назад (Шаг 2)', 'request-form');
+            onBackStep();
+          }}
           disabled={isSubmitting}
         >
           Назад
@@ -246,7 +250,10 @@ export default function FormStep2({
         <Button 
           className="flex-1" 
           size="lg" 
-          onClick={onSubmitStep2} 
+          onClick={() => {
+            trackClick('Отправить заявку', 'request-form');
+            onSubmitStep2();
+          }} 
           disabled={!canSubmit || isSubmitting}
         >
           {isSubmitting ? 'Отправка...' : 'Отправить заявку'}

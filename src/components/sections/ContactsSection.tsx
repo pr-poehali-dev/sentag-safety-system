@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import { trackClick } from '@/utils/trackClick';
 
 interface ContactsSectionProps {
   scrollToSection?: (id: string) => void;
@@ -8,6 +9,7 @@ interface ContactsSectionProps {
 
 export default function ContactsSection({ scrollToSection }: ContactsSectionProps) {
   const handleCallRequest = () => {
+    trackClick('Заказать звонок', 'contacts');
     if (scrollToSection) {
       scrollToSection('request');
     } else {
@@ -16,6 +18,7 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
   };
 
   const handleCopyEmail = () => {
+    trackClick('Написать письмо', 'contacts');
     navigator.clipboard.writeText('info@meridian-t.ru');
     alert('Email скопирован в буфер обмена');
   };
@@ -32,7 +35,12 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
             <h3 className="font-bold text-lg mb-2 text-slate-800">Адрес</h3>
             <p className="text-slate-600">г. Тюмень, ул. 30 лет Победы,<br />д. 60А, офис 302</p>
             <Button variant="link" className="mt-4" asChild>
-              <a href="https://yandex.ru/maps/?text=г.+Тюмень,+ул.+30+лет+Победы,+д.+60А" target="_blank" rel="noopener noreferrer">
+              <a 
+                href="https://yandex.ru/maps/?text=г.+Тюмень,+ул.+30+лет+Победы,+д.+60А" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={() => trackClick('Открыть на карте', 'contacts')}
+              >
                 Открыть на карте
               </a>
             </Button>

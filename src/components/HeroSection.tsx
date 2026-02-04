@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
+import { trackClick } from '@/utils/trackClick';
 
 interface HeroSectionProps {
   scrollToSection: (id: string) => void;
@@ -35,10 +36,24 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center px-4">
-          <Button size="lg" onClick={() => scrollToSection('request')} className="bg-white text-primary hover:bg-blue-50 text-base md:text-lg px-6 md:px-8 py-5 md:py-6 font-semibold w-full sm:w-auto">
+          <Button 
+            size="lg" 
+            onClick={() => {
+              trackClick('Запросить расчет', 'hero');
+              scrollToSection('request');
+            }} 
+            className="bg-white text-primary hover:bg-blue-50 text-base md:text-lg px-6 md:px-8 py-5 md:py-6 font-semibold w-full sm:w-auto"
+          >
             Запросить расчет
           </Button>
-          <Button size="lg" onClick={() => scrollToSection('how-it-works')} className="bg-white text-primary hover:bg-blue-50 text-base md:text-lg px-6 md:px-8 py-5 md:py-6 font-semibold w-full sm:w-auto">
+          <Button 
+            size="lg" 
+            onClick={() => {
+              trackClick('Узнать больше', 'hero');
+              scrollToSection('how-it-works');
+            }} 
+            className="bg-white text-primary hover:bg-blue-50 text-base md:text-lg px-6 md:px-8 py-5 md:py-6 font-semibold w-full sm:w-auto"
+          >
             Узнать больше
           </Button>
         </div>

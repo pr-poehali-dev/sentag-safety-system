@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { trackClick } from '@/utils/trackClick';
 
 interface FormStep1Props {
   formData: {
@@ -200,7 +201,10 @@ export default function FormStep1({
       <Button 
         className="w-full" 
         size="lg"
-        onClick={onNextStep}
+        onClick={() => {
+          trackClick('Далее (Шаг 1)', 'request-form');
+          onNextStep();
+        }}
         disabled={isSubmitting}
       >
         {isSubmitting ? 'Сохранение...' : 'Далее'}

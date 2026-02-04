@@ -1,4 +1,6 @@
 {
+  "get-click-stats": "https://functions.poehali.dev/49b6c391-335d-4b83-a4e4-02430a757ab9",
+  "track-click": "https://functions.poehali.dev/ddc0d90d-3227-4104-ad7f-5a5b8c1374a7",
   "upload-file": "https://functions.poehali.dev/55e8594b-4257-4cbf-a5c4-ef2f2a03342b",
   "delete-request": "https://functions.poehali.dev/083d3fc1-3983-4501-8686-0e63931b991e",
   "get-requests": "https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c",
