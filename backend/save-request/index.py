@@ -289,8 +289,8 @@ def send_telegram_step1(request_id: int, data: dict):
         print(f'[Telegram] Sending step 1 notification for request #{request_id}')
         
         role_names = {
-            'contractor': 'Подрядчик',
-            'customer': 'Конечный заказчик',
+            'contractor': 'Монтажная организация',
+            'customer': 'Собственник объекта',
             'design': 'Проектная организация'
         }
         
@@ -372,8 +372,8 @@ def send_telegram_step2(request_id: int, data: dict):
             step2_time = f"{duration_seconds // 60}:{str(duration_seconds % 60).zfill(2)}"
         
         role_names = {
-            'contractor': 'Подрядчик',
-            'customer': 'Конечный заказчик',
+            'contractor': 'Монтажная организация',
+            'customer': 'Собственник объекта',
             'design': 'Проектная организация'
         }
         

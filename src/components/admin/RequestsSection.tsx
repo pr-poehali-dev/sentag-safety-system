@@ -48,8 +48,8 @@ export default function RequestsSection({
 }: RequestsSectionProps) {
   const getRoleLabel = (role: string) => {
     switch(role) {
-      case 'contractor': return 'Подрядчик';
-      case 'customer': return 'Конечный заказчик';
+      case 'contractor': return 'Монтажная организация';
+      case 'customer': return 'Собственник объекта';
       case 'design': return 'Проектная организация';
       default: return role;
     }

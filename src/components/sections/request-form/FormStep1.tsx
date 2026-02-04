@@ -103,8 +103,8 @@ export default function FormStep1({
             <SelectValue placeholder="Выберите" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="contractor">Подрядчик</SelectItem>
-            <SelectItem value="customer">Конечный заказчик</SelectItem>
+            <SelectItem value="contractor">Монтажная организация</SelectItem>
+            <SelectItem value="customer">Собственник объекта</SelectItem>
             <SelectItem value="design">Проектная организация</SelectItem>
           </SelectContent>
         </Select>
