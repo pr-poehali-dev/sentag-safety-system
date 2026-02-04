@@ -323,10 +323,6 @@ export default function RequestFormSection() {
               />
             )}
           </Card>
-
-          <p className="text-center text-sm text-slate-500 mt-6">
-            <PrivacyPolicyDialog open={privacyOpen} onOpenChange={setPrivacyOpen} />
-          </p>
         </div>
       </div>
     </section>
