@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "name": "Send statistics to Telegram",
+      "method": "POST",
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ]
+}

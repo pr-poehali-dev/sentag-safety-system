@@ -52,6 +52,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
   const [clickStats, setClickStats] = useState<ClickStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [isClearing, setIsClearing] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   
   // Функция для получения цвета для графика
   const getBarColor = (index: number) => {
@@ -109,6 +110,26 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
     }
   };
 
+  const handleSendToTelegram = async () => {
+    setIsSending(true);
+    try {
+      const response = await fetch('https://functions.poehali.dev/2d1524af-6da7-4f95-aca5-ba7fcaa723ba', {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        alert('Статистика успешно отправлена в Telegram!');
+      } else {
+        alert('Ошибка при отправке в Telegram');
+      }
+    } catch (error) {
+      console.error('Error sending to Telegram:', error);
+      alert('Ошибка при отправке в Telegram');
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   // Счётчики заполнения шагов
   const step1Completed = requests.length; // Все заявки имеют шаг 1
   const step2Completed = requests.filter(r => r.step2_completed_at !== null).length;
@@ -117,16 +138,28 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
     <Card className="p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-slate-800">Статистика</h2>
-        <Button 
-          variant="destructive" 
-          size="sm"
-          onClick={handleClearStats}
-          disabled={isClearing || loading}
-          className="gap-2"
-        >
-          <Icon name="Trash2" size={16} />
-          {isClearing ? 'Удаление...' : 'Очистить статистику'}
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="default" 
+            size="sm"
+            onClick={handleSendToTelegram}
+            disabled={isSending || loading}
+            className="gap-2"
+          >
+            <Icon name="Send" size={16} />
+            {isSending ? 'Отправка...' : 'Отправить в Telegram'}
+          </Button>
+          <Button 
+            variant="destructive" 
+            size="sm"
+            onClick={handleClearStats}
+            disabled={isClearing || loading}
+            className="gap-2"
+          >
+            <Icon name="Trash2" size={16} />
+            {isClearing ? 'Удаление...' : 'Очистить'}
+          </Button>
+        </div>
       </div>
       
       {/* Общая статистика */}
