@@ -93,6 +93,23 @@ def handler(event: dict, context) -> dict:
         avg_step1_seconds = int(steps_data[2]) if steps_data[2] else 0
         avg_step2_seconds = int(steps_data[3]) if steps_data[3] else 0
         
+        # Посещаемость за неделю
+        cursor.execute("""
+            SELECT COUNT(DISTINCT visitor_id) 
+            FROM visitors 
+            WHERE first_visit >= %s
+        """, (week_ago,))
+        unique_visitors = cursor.fetchone()[0]
+        
+        # Среднее время на сайте
+        cursor.execute("""
+            SELECT AVG(EXTRACT(EPOCH FROM (last_activity - first_visit)))
+            FROM visitors
+            WHERE first_visit >= %s AND last_activity IS NOT NULL
+        """, (week_ago,))
+        avg_time_on_site = cursor.fetchone()[0]
+        avg_time_seconds = int(avg_time_on_site) if avg_time_on_site else 0
+        
         cursor.close()
         conn.close()
         
@@ -107,6 +124,10 @@ def handler(event: dict, context) -> dict:
         # Формируем сообщение
         message = f"""📊 <b>Статистика за неделю</b>
 📅 {week_ago.strftime('%d.%m.%Y')} - {datetime.now().strftime('%d.%m.%Y')}
+
+<b>👥 Посещаемость:</b>
+• Уникальных посетителей: {unique_visitors}
+• Среднее время на сайте: {format_time(avg_time_seconds)}
 
 <b>📋 Заявки:</b>
 • Новых заявок: {new_requests}
