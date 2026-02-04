@@ -68,6 +68,9 @@ export default function RequestFormSection() {
     console.log('Step 1: Starting submission...', formData);
     
     try {
+      // Получаем visitor_id из localStorage
+      const visitorId = localStorage.getItem('visitor_id');
+      
       console.log('Step 1: Sending fetch request...');
       const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
         method: 'POST',
@@ -77,6 +80,7 @@ export default function RequestFormSection() {
         body: JSON.stringify({
           step: 1,
           step1StartTime: step1StartTime,
+          visitorId: visitorId,
           ...formData
         })
       });

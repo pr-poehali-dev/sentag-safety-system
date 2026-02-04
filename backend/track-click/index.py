@@ -33,6 +33,7 @@ def handler(event: dict, context) -> dict:
         body = json.loads(event.get('body', '{}'))
         button_name = body.get('button_name')
         button_location = body.get('button_location')
+        visitor_id = body.get('visitor_id')
         
         if not button_name or not button_location:
             return {
@@ -55,10 +56,10 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cursor = conn.cursor()
         
-        # Сохраняем клик
+        # Сохраняем клик с visitor_id
         cursor.execute(
-            "INSERT INTO button_clicks (button_name, button_location, user_agent, ip_address) VALUES (%s, %s, %s, %s)",
-            (button_name, button_location, user_agent, ip_address)
+            "INSERT INTO button_clicks (button_name, button_location, user_agent, ip_address, visitor_id) VALUES (%s, %s, %s, %s, %s)",
+            (button_name, button_location, user_agent, ip_address, visitor_id)
         )
         
         conn.commit()

@@ -56,13 +56,14 @@ def handler(event: dict, context) -> dict:
         
         if step == 1:
             step1_started = body.get('step1StartTime')
+            visitor_id = body.get('visitorId')
             if step1_started:
                 cur.execute("""
                     INSERT INTO request_forms (
                         phone, email, company, role, full_name, 
                         object_name, object_address, consent, status,
-                        step1_started_at, step1_completed_at
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s, NOW())
+                        step1_started_at, step1_completed_at, visitor_id
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s, NOW(), %s)
                     RETURNING id
                 """, (
                     body.get('phone'),
@@ -73,14 +74,15 @@ def handler(event: dict, context) -> dict:
                     body.get('objectName'),
                     body.get('objectAddress'),
                     body.get('consent', False),
-                    step1_started
+                    step1_started,
+                    visitor_id
                 ))
             else:
                 cur.execute("""
                     INSERT INTO request_forms (
                         phone, email, company, role, full_name, 
-                        object_name, object_address, consent, status
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed')
+                        object_name, object_address, consent, status, visitor_id
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s)
                     RETURNING id
                 """, (
                     body.get('phone'),
@@ -90,7 +92,8 @@ def handler(event: dict, context) -> dict:
                     body.get('fullName'),
                     body.get('objectName'),
                     body.get('objectAddress'),
-                    body.get('consent', False)
+                    body.get('consent', False),
+                    visitor_id
                 ))
             request_id = cur.fetchone()[0]
             print(f"Step 1: Created request_id={request_id}")

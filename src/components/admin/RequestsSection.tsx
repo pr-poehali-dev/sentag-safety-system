@@ -2,6 +2,16 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
+interface UserActivity {
+  clicks: Array<{
+    button_name: string;
+    button_location: string;
+    clicked_at: string;
+  }>;
+  first_visit: string | null;
+  time_on_site: number;
+}
+
 interface RequestForm {
   id: number;
   phone: string;
@@ -22,6 +32,7 @@ interface RequestForm {
   step2_started_at: string | null;
   step2_completed_at: string | null;
   created_at: string;
+  user_activity?: UserActivity;
 }
 
 interface RequestsSectionProps {
@@ -178,6 +189,48 @@ export default function RequestsSection({
                   </div>
                 )}
               </div>
+
+              {/* Активность пользователя на сайте */}
+              {request.user_activity && request.user_activity.clicks && request.user_activity.clicks.length > 0 && (
+                <div className="border-t pt-4 mb-4">
+                  <p className="text-xs font-semibold text-slate-500 uppercase mb-3 flex items-center gap-2">
+                    <Icon name="MousePointerClick" size={14} className="flex-shrink-0" />
+                    Активность на сайте перед заполнением формы
+                  </p>
+                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Icon name="Clock" className="text-purple-600" size={16} />
+                        <span className="text-slate-700">
+                          Время на сайте: <span className="font-semibold text-purple-700">
+                            {Math.floor(request.user_activity.time_on_site / 60)}:{String(request.user_activity.time_on_site % 60).padStart(2, '0')}
+                          </span>
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Icon name="MousePointerClick" className="text-purple-600" size={16} />
+                        <span className="text-slate-700">
+                          Кликов: <span className="font-semibold text-purple-700">{request.user_activity.clicks.length}</span>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
+                      {request.user_activity.clicks.map((click, idx) => (
+                        <div key={idx} className="flex items-center justify-between bg-white/50 rounded px-3 py-2 text-sm">
+                          <div className="flex items-center gap-2">
+                            <span className="text-purple-600 font-medium">{idx + 1}.</span>
+                            <span className="text-slate-800 font-medium">{click.button_name}</span>
+                            <span className="text-xs text-slate-500">({click.button_location})</span>
+                          </div>
+                          <span className="text-xs text-slate-400">
+                            {new Date(click.clicked_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {request.status === 'completed' && (
                 <div className="border-t pt-4 space-y-4">
