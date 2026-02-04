@@ -244,9 +244,9 @@ export default function FormStep1({
       <PrivacyPolicyModal open={showPrivacyPolicy} onOpenChange={setShowPrivacyPolicy} />
       
       <Dialog open={showMarketingConsent} onOpenChange={setShowMarketingConsent}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl">Согласие на получение рекламных рассылок</DialogTitle>
+            <DialogTitle className="text-2xl">Согласие на получение рекламных рассылок</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 text-sm text-slate-700 leading-relaxed">
             <p>
