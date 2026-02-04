@@ -25,6 +25,16 @@ interface CurrentUser {
   role: string;
 }
 
+interface UserActivity {
+  clicks: Array<{
+    button_name: string;
+    button_location: string;
+    clicked_at: string;
+  }>;
+  first_visit: string | null;
+  time_on_site: number;
+}
+
 interface RequestForm {
   id: number;
   phone: string;
@@ -43,6 +53,7 @@ interface RequestForm {
   step1_completed_at: string;
   step2_completed_at: string | null;
   created_at: string;
+  user_activity?: UserActivity;
 }
 
 export default function AdminPanel() {
@@ -189,6 +200,11 @@ export default function AdminPanel() {
       const response = await fetch('https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c');
       if (response.ok) {
         const data = await response.json();
+        console.log('Loaded requests data:', data.requests);
+        // Проверяем user_activity для первой заявки
+        if (data.requests && data.requests.length > 0) {
+          console.log('First request user_activity:', data.requests[0].user_activity);
+        }
         setRequests(data.requests || []);
       }
     } catch (error) {
