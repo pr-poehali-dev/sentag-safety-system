@@ -211,7 +211,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
                 <h4 className="font-semibold text-slate-800">Шаг 1 (Контактные данные)</h4>
               </div>
               <p className="text-3xl font-bold text-orange-600">
-                {Math.floor(clickStats.avg_step1_seconds / 60)}:{String(clickStats.avg_step1_seconds % 60).padStart(2, '0')}
+                {Math.floor(clickStats.avg_step1_seconds / 60)}:{String(Math.floor(clickStats.avg_step1_seconds % 60)).padStart(2, '0')}
               </p>
               <p className="text-sm text-slate-600 mt-1">минут:секунд</p>
             </div>
@@ -221,7 +221,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
                 <h4 className="font-semibold text-slate-800">Шаг 2 (Детали и файлы)</h4>
               </div>
               <p className="text-3xl font-bold text-green-600">
-                {Math.floor(clickStats.avg_step2_seconds / 60)}:{String(clickStats.avg_step2_seconds % 60).padStart(2, '0')}
+                {Math.floor(clickStats.avg_step2_seconds / 60)}:{String(Math.floor(clickStats.avg_step2_seconds % 60)).padStart(2, '0')}
               </p>
               <p className="text-sm text-slate-600 mt-1">минут:секунд</p>
             </div>
