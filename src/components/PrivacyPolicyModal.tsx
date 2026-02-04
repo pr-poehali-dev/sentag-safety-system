@@ -94,8 +94,8 @@ export default function PrivacyPolicyModal({ open, onOpenChange }: PrivacyPolicy
           </section>
 
           <section className="pt-4 border-t border-slate-200">
-            <p className="text-xs text-slate-500">
-              Настоящая Политика может быть изменена Оператором. При внесении изменений в Политике указывается дата последнего обновления. Новая редакция Политики вступает в силу с момента её размещения на Сайте.
+            <p className="text-sm text-slate-700">
+              Используя сайт, Вы подтверждаете своё согласие с условиями настоящей Политики.
             </p>
           </section>
         </div>
