@@ -100,9 +100,6 @@ def handler(event: dict, context) -> dict:
             conn.commit()
             print("Step 1: DB commit successful")
             
-            send_telegram_step1(request_id, body)
-            print("Step 1: Telegram notification sent (or skipped)")
-            
             response_data = {
                 'statusCode': 200,
                 'headers': {
