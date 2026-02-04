@@ -161,7 +161,9 @@ def handler(event: dict, context) -> dict:
             
             cur.execute("""
                 SELECT phone, email, company, role, full_name,
-                       object_name, object_address
+                       object_name, object_address,
+                       step1_started_at, step1_completed_at,
+                       step2_started_at, step2_completed_at
                 FROM request_forms WHERE id = %s
             """, (request_id,))
             row = cur.fetchone()
@@ -174,6 +176,10 @@ def handler(event: dict, context) -> dict:
                 'fullName': row[4],
                 'objectName': row[5],
                 'objectAddress': row[6],
+                'step1_started_at': row[7],
+                'step1_completed_at': row[8],
+                'step2_started_at': row[9],
+                'step2_completed_at': row[10],
                 'visitorsInfo': body.get('visitorsInfo'),
                 'poolSize': body.get('poolSize'),
                 'deadline': body.get('deadline'),
@@ -298,8 +304,38 @@ def send_telegram_step2(request_id: int, data: dict):
         
         print(f'[Telegram] Sending step 2 notification for request #{request_id}')
         
+        # Расчет времени заполнения
+        step1_time = "н/д"
+        step2_time = "н/д"
+        
+        if data.get('step1_started_at') and data.get('step1_completed_at'):
+            from datetime import datetime
+            start = data['step1_started_at']
+            end = data['step1_completed_at']
+            if isinstance(start, str):
+                start = datetime.fromisoformat(start.replace('Z', '+00:00'))
+            if isinstance(end, str):
+                end = datetime.fromisoformat(end.replace('Z', '+00:00'))
+            duration_seconds = int((end - start).total_seconds())
+            step1_time = f"{duration_seconds // 60}:{str(duration_seconds % 60).zfill(2)}"
+        
+        if data.get('step2_started_at') and data.get('step2_completed_at'):
+            from datetime import datetime
+            start = data['step2_started_at']
+            end = data['step2_completed_at']
+            if isinstance(start, str):
+                start = datetime.fromisoformat(start.replace('Z', '+00:00'))
+            if isinstance(end, str):
+                end = datetime.fromisoformat(end.replace('Z', '+00:00'))
+            duration_seconds = int((end - start).total_seconds())
+            step2_time = f"{duration_seconds // 60}:{str(duration_seconds % 60).zfill(2)}"
+        
         message = f"""✅ <b>Заявка #{request_id} завершена</b>
 <b>Шаг 2/2: Дополнительная информация</b>
+
+⏱ <b>Время заполнения:</b>
+• Шаг 1: {step1_time}
+• Шаг 2: {step2_time}
 
 📊 <b>Посетители:</b>
 {data.get('visitorsInfo') or 'Не указано'}
