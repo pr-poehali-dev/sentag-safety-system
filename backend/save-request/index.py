@@ -106,44 +106,48 @@ def handler(event: dict, context) -> dict:
             user_activity = None
             print(f"Step 1: visitor_id={visitor_id}")
             if visitor_id:
-                cur.execute("""
-                    SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
-                """, (visitor_id,))
-                visitor_row = cur.fetchone()
-                print(f"Step 1: visitor_row={visitor_row}")
-                
-                if visitor_row:
-                    first_visit = visitor_row[0]
-                    last_activity = visitor_row[1]
-                    
-                    time_on_site = 0
-                    if first_visit and last_activity:
-                        time_on_site = int((last_activity - first_visit).total_seconds())
-                    
-                    print(f"Step 1: time_on_site={time_on_site}")
-                    
-                    # Получаем клики до начала заполнения формы
+                try:
                     cur.execute("""
-                        SELECT button_name, button_location, clicked_at
-                        FROM button_clicks
-                        WHERE visitor_id = %s
-                        ORDER BY clicked_at ASC
+                        SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
                     """, (visitor_id,))
+                    visitor_row = cur.fetchone()
+                    print(f"Step 1: visitor_row={visitor_row}")
                     
-                    clicks = []
-                    for click_row in cur.fetchall():
-                        clicks.append({
-                            'button_name': click_row[0],
-                            'button_location': click_row[1],
-                            'clicked_at': click_row[2].isoformat()
-                        })
-                    
-                    print(f"Step 1: clicks count={len(clicks)}")
-                    
-                    user_activity = {
-                        'time_on_site': time_on_site,
-                        'clicks': clicks
-                    }
+                    if visitor_row:
+                        first_visit = visitor_row[0]
+                        last_activity = visitor_row[1]
+                        
+                        time_on_site = 0
+                        if first_visit and last_activity:
+                            time_on_site = int((last_activity - first_visit).total_seconds())
+                        
+                        print(f"Step 1: time_on_site={time_on_site}")
+                        
+                        # Получаем клики до начала заполнения формы
+                        cur.execute("""
+                            SELECT button_name, button_location, clicked_at
+                            FROM button_clicks
+                            WHERE visitor_id = %s
+                            ORDER BY clicked_at ASC
+                        """, (visitor_id,))
+                        
+                        clicks = []
+                        for click_row in cur.fetchall():
+                            clicks.append({
+                                'button_name': click_row[0],
+                                'button_location': click_row[1],
+                                'clicked_at': click_row[2].isoformat()
+                            })
+                        
+                        print(f"Step 1: clicks count={len(clicks)}")
+                        
+                        user_activity = {
+                            'time_on_site': time_on_site,
+                            'clicks': clicks
+                        }
+                except Exception as e:
+                    print(f"Step 1: Could not load user activity: {e}")
+                    user_activity = None
             
             print(f"Step 1: user_activity={user_activity}")
             send_telegram_step1(request_id, body, user_activity)
