@@ -6,8 +6,6 @@ import Label from '@/components/ui/Label';
 import Checkbox from '@/components/ui/Checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import Icon from '@/components/ui/Icon';
-import { useState } from 'react';
-import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
 
 interface ContactFormSectionProps {
   formStep: number;
@@ -17,8 +15,6 @@ interface ContactFormSectionProps {
 }
 
 export default function ContactFormSection({ formStep, formData, setFormStep, handleFormChange }: ContactFormSectionProps) {
-  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
-
   return (
     <>
       <section id="request" className="py-20 bg-white">
@@ -126,18 +122,9 @@ export default function ContactFormSection({ formStep, formData, setFormStep, ha
                       onCheckedChange={(checked) => handleFormChange('consent', checked)}
                     />
                     <Label htmlFor="consent" className="text-sm cursor-pointer">
-                      Даю согласие на обработку персональных данных в соответствии с{' '}
-                      <button
-                        type="button"
-                        onClick={() => setShowPrivacyPolicy(true)}
-                        className="text-primary font-semibold underline hover:text-primary/80 transition"
-                      >
-                        Политикой конфиденциальности
-                      </button>
+                      Даю согласие на обработку персональных данных
                     </Label>
                   </div>
-
-                  <PrivacyPolicyModal open={showPrivacyPolicy} onOpenChange={setShowPrivacyPolicy} />
                   <Button 
                     className="w-full" 
                     size="lg"
