@@ -100,7 +100,44 @@ def handler(event: dict, context) -> dict:
             conn.commit()
             print("Step 1: DB commit successful")
             
-            send_telegram_step1(request_id, body)
+            # Получаем активность пользователя для шага 1
+            user_activity = None
+            if visitor_id:
+                cur.execute("""
+                    SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
+                """, (visitor_id,))
+                visitor_row = cur.fetchone()
+                
+                if visitor_row:
+                    first_visit = visitor_row[0]
+                    last_activity = visitor_row[1]
+                    
+                    time_on_site = 0
+                    if first_visit and last_activity:
+                        time_on_site = int((last_activity - first_visit).total_seconds())
+                    
+                    # Получаем клики до начала заполнения формы (step1_started_at)
+                    cur.execute("""
+                        SELECT button_name, button_location, clicked_at
+                        FROM button_clicks
+                        WHERE visitor_id = %s AND clicked_at < NOW()
+                        ORDER BY clicked_at ASC
+                    """, (visitor_id,))
+                    
+                    clicks = []
+                    for click_row in cur.fetchall():
+                        clicks.append({
+                            'button_name': click_row[0],
+                            'button_location': click_row[1],
+                            'clicked_at': click_row[2].isoformat()
+                        })
+                    
+                    user_activity = {
+                        'time_on_site': time_on_site,
+                        'clicks': clicks
+                    }
+            
+            send_telegram_step1(request_id, body, user_activity)
             print("Step 1: Telegram notification sent (or skipped)")
             
             response_data = {
@@ -274,7 +311,7 @@ def handler(event: dict, context) -> dict:
         if 'conn' in locals():
             conn.close()
 
-def send_telegram_step1(request_id: int, data: dict):
+def send_telegram_step1(request_id: int, data: dict, user_activity: dict = None):
     """Отправка первого шага заявки в Telegram"""
     try:
         bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
@@ -306,8 +343,32 @@ def send_telegram_step1(request_id: int, data: dict):
 
 🏊 <b>Объект:</b> {data.get('objectName')}
 📍 <b>Адрес:</b> {data.get('objectAddress')}
-
-⏳ <i>Ожидается заполнение шага 2...</i>"""
+"""
+        
+        # Добавляем активность пользователя если есть
+        if user_activity:
+            time_on_site = user_activity.get('time_on_site', 0)
+            clicks = user_activity.get('clicks', [])
+            
+            minutes = time_on_site // 60
+            seconds = time_on_site % 60
+            time_formatted = f"{minutes}:{str(seconds).zfill(2)}"
+            
+            message += f"\n🎯 <b>Активность на сайте:</b>"
+            message += f"\n⏱ Время на сайте до заявки: {time_formatted}"
+            
+            if clicks:
+                message += f"\n🖱 Кликов: {len(clicks)}"
+                message += "\n\n<b>История кликов:</b>"
+                for i, click in enumerate(clicks, 1):
+                    from datetime import datetime
+                    clicked_time = click['clicked_at']
+                    if isinstance(clicked_time, str):
+                        clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
+                    time_str = clicked_time.strftime('%H:%M:%S')
+                    message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {time_str}"
+        
+        message += "\n\n⏳ <i>Ожидается заполнение шага 2...</i>"""
         
         response = requests.post(
             f'https://api.telegram.org/bot{bot_token}/sendMessage',
