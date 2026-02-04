@@ -33,6 +33,8 @@ export default function FormStep1({
   onSetShowConsentText,
   onNextStep
 }: FormStep1Props) {
+  const isTopFieldsFilled = formData.phone && formData.email && formData.company && formData.role && formData.fullName;
+  
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
@@ -127,44 +129,49 @@ export default function FormStep1({
         />
         {errors.fullName && <p className="text-sm text-red-500 mt-1">Необходимо заполнить ФИО и должность</p>}
       </div>
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <Label htmlFor="objectName">Наименование объекта *</Label>
-          <span className="text-xs text-slate-500">{formData.objectName.length}/30</span>
-        </div>
-        <Input 
-          id="objectName" 
-          placeholder="Бассейн «Название»"
-          value={formData.objectName}
-          onChange={(e) => {
-            if (e.target.value.length <= 30) {
-              onFormChange('objectName', e.target.value);
-            }
-          }}
-          maxLength={30}
-          className={errors.objectName ? 'border-red-500 focus-visible:ring-red-500' : ''}
-        />
-        {errors.objectName && <p className="text-sm text-red-500 mt-1">Необходимо заполнить наименование объекта</p>}
-      </div>
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <Label htmlFor="objectAddress">Адрес объекта *</Label>
-          <span className="text-xs text-slate-500">{formData.objectAddress.length}/30</span>
-        </div>
-        <Input 
-          id="objectAddress" 
-          placeholder="г. Город, ул. Улица, д. 1"
-          value={formData.objectAddress}
-          onChange={(e) => {
-            if (e.target.value.length <= 30) {
-              onFormChange('objectAddress', e.target.value);
-            }
-          }}
-          maxLength={30}
-          className={errors.objectAddress ? 'border-red-500 focus-visible:ring-red-500' : ''}
-        />
-        {errors.objectAddress && <p className="text-sm text-red-500 mt-1">Необходимо заполнить адрес объекта</p>}
-      </div>
+      
+      {isTopFieldsFilled && (
+        <>
+          <div className="animate-fade-in">
+            <div className="flex items-center justify-between mb-2">
+              <Label htmlFor="objectName">Наименование объекта *</Label>
+              <span className="text-xs text-slate-500">{formData.objectName.length}/30</span>
+            </div>
+            <Input 
+              id="objectName" 
+              placeholder="Бассейн «Название»"
+              value={formData.objectName}
+              onChange={(e) => {
+                if (e.target.value.length <= 30) {
+                  onFormChange('objectName', e.target.value);
+                }
+              }}
+              maxLength={30}
+              className={errors.objectName ? 'border-red-500 focus-visible:ring-red-500' : ''}
+            />
+            {errors.objectName && <p className="text-sm text-red-500 mt-1">Необходимо заполнить наименование объекта</p>}
+          </div>
+          <div className="animate-fade-in">
+            <div className="flex items-center justify-between mb-2">
+              <Label htmlFor="objectAddress">Адрес объекта *</Label>
+              <span className="text-xs text-slate-500">{formData.objectAddress.length}/30</span>
+            </div>
+            <Input 
+              id="objectAddress" 
+              placeholder="г. Город, ул. Улица, д. 1"
+              value={formData.objectAddress}
+              onChange={(e) => {
+                if (e.target.value.length <= 30) {
+                  onFormChange('objectAddress', e.target.value);
+                }
+              }}
+              maxLength={30}
+              className={errors.objectAddress ? 'border-red-500 focus-visible:ring-red-500' : ''}
+            />
+            {errors.objectAddress && <p className="text-sm text-red-500 mt-1">Необходимо заполнить адрес объекта</p>}
+          </div>
+        </>
+      )}
       <div>
         <div className="flex items-start gap-3">
           <Checkbox 
