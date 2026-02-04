@@ -34,7 +34,7 @@ export default function Header({ scrollToSection }: HeaderProps) {
           <div className="w-px h-8 md:h-10 bg-slate-300"></div>
           <button onClick={() => scrollToSection('about')} className="cursor-pointer transition hover:opacity-80">
             <img 
-              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg" 
+              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/f8b16601-3c21-4e50-9f84-e2b4378f7d09.png" 
               alt="Меридиан" 
               className="h-8 md:h-12 w-auto"
             />
