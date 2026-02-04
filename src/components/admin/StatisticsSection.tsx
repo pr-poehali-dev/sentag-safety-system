@@ -173,6 +173,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
           <Icon name="FileText" className="text-orange-600 mb-2" size={32} />
           <p className="text-3xl font-bold text-slate-800">{clickStats?.step1_count || 0}</p>
           <p className="text-slate-600">Начали заполнение</p>
+          <p className="text-xs text-slate-500 mt-1">Заполнили Шаг 1</p>
         </div>
         <div className="p-4 bg-green-50 rounded-lg">
           <Icon name="ClipboardCheck" className="text-green-600 mb-2" size={32} />
