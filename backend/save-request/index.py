@@ -166,10 +166,47 @@ def handler(event: dict, context) -> dict:
                 SELECT phone, email, company, role, full_name,
                        object_name, object_address,
                        step1_started_at, step1_completed_at,
-                       step2_started_at, step2_completed_at
+                       step2_started_at, step2_completed_at, visitor_id
                 FROM request_forms WHERE id = %s
             """, (request_id,))
             row = cur.fetchone()
+            
+            visitor_id = row[11]
+            user_activity = None
+            
+            if visitor_id:
+                cur.execute("""
+                    SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
+                """, (visitor_id,))
+                visitor_row = cur.fetchone()
+                
+                if visitor_row:
+                    first_visit = visitor_row[0]
+                    last_activity = visitor_row[1]
+                    
+                    time_on_site = 0
+                    if first_visit and last_activity:
+                        time_on_site = int((last_activity - first_visit).total_seconds())
+                    
+                    cur.execute("""
+                        SELECT button_name, button_location, clicked_at
+                        FROM button_clicks
+                        WHERE visitor_id = %s AND clicked_at < %s
+                        ORDER BY clicked_at ASC
+                    """, (visitor_id, row[7]))
+                    
+                    clicks = []
+                    for click_row in cur.fetchall():
+                        clicks.append({
+                            'button_name': click_row[0],
+                            'button_location': click_row[1],
+                            'clicked_at': click_row[2].isoformat()
+                        })
+                    
+                    user_activity = {
+                        'time_on_site': time_on_site,
+                        'clicks': clicks
+                    }
             
             send_telegram_step2(request_id, {
                 'phone': row[0],
@@ -187,7 +224,8 @@ def handler(event: dict, context) -> dict:
                 'poolSize': body.get('poolSize'),
                 'deadline': body.get('deadline'),
                 'companyCardUrl': company_card_url,
-                'poolSchemeUrls': pool_scheme_urls
+                'poolSchemeUrls': pool_scheme_urls,
+                'user_activity': user_activity
             })
             
             return {
@@ -365,8 +403,31 @@ def send_telegram_step2(request_id: int, data: dict):
 {data.get('deadline') or 'Не указано'}
 """
         
+        user_activity = data.get('user_activity')
+        if user_activity:
+            time_on_site = user_activity.get('time_on_site', 0)
+            clicks = user_activity.get('clicks', [])
+            
+            minutes = time_on_site // 60
+            seconds = time_on_site % 60
+            time_formatted = f"{minutes}:{str(seconds).zfill(2)}"
+            
+            message += f"\n\n🎯 <b>Активность на сайте:</b>"
+            message += f"\n⏱ Время на сайте до заявки: {time_formatted}"
+            
+            if clicks:
+                message += f"\n🖱 Кликов: {len(clicks)}"
+                message += "\n\n<b>История кликов:</b>"
+                for i, click in enumerate(clicks, 1):
+                    from datetime import datetime
+                    clicked_time = click['clicked_at']
+                    if isinstance(clicked_time, str):
+                        clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
+                    time_str = clicked_time.strftime('%H:%M:%S')
+                    message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {time_str}"
+        
         if data.get('companyCardUrl'):
-            message += f"\n📎 <b>Карточка предприятия:</b> <a href=\"{data.get('companyCardUrl')}\">Скачать</a>"
+            message += f"\n\n📎 <b>Карточка предприятия:</b> <a href=\"{data.get('companyCardUrl')}\">Скачать</a>"
         
         pool_schemes = data.get('poolSchemeUrls', [])
         if pool_schemes:
