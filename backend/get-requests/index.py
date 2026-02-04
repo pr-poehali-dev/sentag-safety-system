@@ -64,7 +64,9 @@ def handler(event: dict, context) -> dict:
                 company_card_url,
                 pool_scheme_urls,
                 status,
+                step1_started_at,
                 step1_completed_at,
+                step2_started_at,
                 step2_completed_at,
                 created_at,
                 updated_at

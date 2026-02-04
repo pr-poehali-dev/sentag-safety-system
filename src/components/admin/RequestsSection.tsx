@@ -17,7 +17,9 @@ interface RequestForm {
   company_card_url: string | null;
   pool_scheme_urls: string[] | null;
   status: string;
+  step1_started_at: string | null;
   step1_completed_at: string;
+  step2_started_at: string | null;
   step2_completed_at: string | null;
   created_at: string;
 }
@@ -40,6 +42,16 @@ export default function RequestsSection({
       case 'design': return 'Проектная организация';
       default: return role;
     }
+  };
+
+  const formatDuration = (startTime: string | null, endTime: string) => {
+    if (!startTime) return 'н/д';
+    const start = new Date(startTime).getTime();
+    const end = new Date(endTime).getTime();
+    const durationSeconds = Math.floor((end - start) / 1000);
+    const minutes = Math.floor(durationSeconds / 60);
+    const seconds = durationSeconds % 60;
+    return `${minutes}:${String(seconds).padStart(2, '0')}`;
   };
 
   return (
@@ -102,6 +114,18 @@ export default function RequestsSection({
                         minute: '2-digit'
                       })}
                     </p>
+                    <div className="flex gap-3 mt-2">
+                      <p className="text-xs text-slate-500 flex items-center gap-1">
+                        <Icon name="Timer" className="flex-shrink-0" size={12} />
+                        Шаг 1: <span className="font-semibold text-orange-600">{formatDuration(request.step1_started_at, request.step1_completed_at)}</span>
+                      </p>
+                      {request.step2_completed_at && (
+                        <p className="text-xs text-slate-500 flex items-center gap-1">
+                          <Icon name="Timer" className="flex-shrink-0" size={12} />
+                          Шаг 2: <span className="font-semibold text-green-600">{formatDuration(request.step2_started_at, request.step2_completed_at)}</span>
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <Button
