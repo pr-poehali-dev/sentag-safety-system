@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import FormStep1 from './request-form/FormStep1';
 import FormStep2 from './request-form/FormStep2';
+import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
 
 export default function RequestFormSection() {
   const [formStep, setFormStep] = useState(1);
   const [showConsentText, setShowConsentText] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [requestId, setRequestId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -323,8 +325,19 @@ export default function RequestFormSection() {
               />
             )}
           </Card>
+          
+          <p className="text-center text-sm text-slate-500 mt-6">
+            <button 
+              onClick={() => setShowPrivacyPolicy(true)}
+              className="underline hover:text-primary transition"
+            >
+              Политика конфиденциальности
+            </button>
+          </p>
         </div>
       </div>
+      
+      <PrivacyPolicyModal open={showPrivacyPolicy} onOpenChange={setShowPrivacyPolicy} />
     </section>
   );
 }
