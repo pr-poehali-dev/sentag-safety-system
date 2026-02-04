@@ -226,38 +226,42 @@ def handler(event: dict, context) -> dict:
             user_activity = None
             
             if visitor_id:
-                cur.execute("""
-                    SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
-                """, (visitor_id,))
-                visitor_row = cur.fetchone()
-                
-                if visitor_row:
-                    first_visit = visitor_row[0]
-                    last_activity = visitor_row[1]
-                    
-                    time_on_site = 0
-                    if first_visit and last_activity:
-                        time_on_site = int((last_activity - first_visit).total_seconds())
-                    
+                try:
                     cur.execute("""
-                        SELECT button_name, button_location, clicked_at
-                        FROM button_clicks
-                        WHERE visitor_id = %s AND clicked_at < %s
-                        ORDER BY clicked_at ASC
-                    """, (visitor_id, row[7]))
+                        SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
+                    """, (visitor_id,))
+                    visitor_row = cur.fetchone()
                     
-                    clicks = []
-                    for click_row in cur.fetchall():
-                        clicks.append({
-                            'button_name': click_row[0],
-                            'button_location': click_row[1],
-                            'clicked_at': click_row[2].isoformat()
-                        })
-                    
-                    user_activity = {
-                        'time_on_site': time_on_site,
-                        'clicks': clicks
-                    }
+                    if visitor_row:
+                        first_visit = visitor_row[0]
+                        last_activity = visitor_row[1]
+                        
+                        time_on_site = 0
+                        if first_visit and last_activity:
+                            time_on_site = int((last_activity - first_visit).total_seconds())
+                        
+                        cur.execute("""
+                            SELECT button_name, button_location, clicked_at
+                            FROM button_clicks
+                            WHERE visitor_id = %s AND clicked_at < %s
+                            ORDER BY clicked_at ASC
+                        """, (visitor_id, row[7]))
+                        
+                        clicks = []
+                        for click_row in cur.fetchall():
+                            clicks.append({
+                                'button_name': click_row[0],
+                                'button_location': click_row[1],
+                                'clicked_at': click_row[2].isoformat()
+                            })
+                        
+                        user_activity = {
+                            'time_on_site': time_on_site,
+                            'clicks': clicks
+                        }
+                except Exception as e:
+                    print(f"Step 2: Could not load user activity: {e}")
+                    user_activity = None
             
             send_telegram_step2(request_id, {
                 'phone': row[0],
