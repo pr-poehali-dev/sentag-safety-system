@@ -273,8 +273,7 @@ export default function SiteSettingsSection({
               <div>
                 <p className="text-slate-500 font-medium">Фавикон:</p>
                 <div className="flex items-center gap-2 mt-1">
-                  <img src={faviconUrl} alt="Favicon" className="w-6 h-6" />
-                  <p className="text-slate-600 text-xs break-all">{faviconUrl}</p>
+                  <img src={faviconUrl} alt="Favicon" className="w-6 h-6 object-contain" />
                 </div>
               </div>
             </div>
