@@ -191,10 +191,6 @@ export default function RequestsSection({
               </div>
 
               {/* Активность пользователя на сайте */}
-              {(() => {
-                console.log(`Request ${request.id} user_activity:`, request.user_activity);
-                return null;
-              })()}
               {request.user_activity && request.user_activity.clicks && request.user_activity.clicks.length > 0 && (
                 <div className="border-t pt-4 mb-4">
                   <p className="text-xs font-semibold text-slate-500 uppercase mb-3 flex items-center gap-2">
