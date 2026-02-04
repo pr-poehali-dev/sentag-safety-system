@@ -45,6 +45,8 @@ interface ClickStats {
   step1_count: number;
   step2_count: number;
   conversion_rate: number;
+  avg_step1_seconds: number;
+  avg_step2_seconds: number;
 }
 
 interface StatisticsSectionProps {
@@ -197,6 +199,35 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
           <p className="text-xs text-slate-500 mt-1">Все кнопки на сайте</p>
         </div>
       </div>
+
+      {/* Среднее время заполнения */}
+      {clickStats && (clickStats.avg_step1_seconds > 0 || clickStats.avg_step2_seconds > 0) && (
+        <div className="mt-6">
+          <h3 className="text-xl font-bold text-slate-800 mb-4">Среднее время заполнения</h3>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <Icon name="Clock" className="text-orange-600" size={24} />
+                <h4 className="font-semibold text-slate-800">Шаг 1 (Контактные данные)</h4>
+              </div>
+              <p className="text-3xl font-bold text-orange-600">
+                {Math.floor(clickStats.avg_step1_seconds / 60)}:{String(clickStats.avg_step1_seconds % 60).padStart(2, '0')}
+              </p>
+              <p className="text-sm text-slate-600 mt-1">минут:секунд</p>
+            </div>
+            <div className="p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <Icon name="Clock" className="text-green-600" size={24} />
+                <h4 className="font-semibold text-slate-800">Шаг 2 (Детали и файлы)</h4>
+              </div>
+              <p className="text-3xl font-bold text-green-600">
+                {Math.floor(clickStats.avg_step2_seconds / 60)}:{String(clickStats.avg_step2_seconds % 60).padStart(2, '0')}
+              </p>
+              <p className="text-sm text-slate-600 mt-1">минут:секунд</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Статистика кликов по кнопкам с графиком */}
       <div className="mt-6">

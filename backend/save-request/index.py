@@ -55,22 +55,43 @@ def handler(event: dict, context) -> dict:
         conn.commit()
         
         if step == 1:
-            cur.execute("""
-                INSERT INTO request_forms (
-                    phone, email, company, role, full_name, 
-                    object_name, object_address, consent, status
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed')
-                RETURNING id
-            """, (
-                body.get('phone'),
-                body.get('email'),
-                body.get('company'),
-                body.get('role'),
-                body.get('fullName'),
-                body.get('objectName'),
-                body.get('objectAddress'),
-                body.get('consent', False)
-            ))
+            step1_started = body.get('step1StartTime')
+            if step1_started:
+                cur.execute("""
+                    INSERT INTO request_forms (
+                        phone, email, company, role, full_name, 
+                        object_name, object_address, consent, status,
+                        step1_started_at, step1_completed_at
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed', %s, NOW())
+                    RETURNING id
+                """, (
+                    body.get('phone'),
+                    body.get('email'),
+                    body.get('company'),
+                    body.get('role'),
+                    body.get('fullName'),
+                    body.get('objectName'),
+                    body.get('objectAddress'),
+                    body.get('consent', False),
+                    step1_started
+                ))
+            else:
+                cur.execute("""
+                    INSERT INTO request_forms (
+                        phone, email, company, role, full_name, 
+                        object_name, object_address, consent, status
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'step1_completed')
+                    RETURNING id
+                """, (
+                    body.get('phone'),
+                    body.get('email'),
+                    body.get('company'),
+                    body.get('role'),
+                    body.get('fullName'),
+                    body.get('objectName'),
+                    body.get('objectAddress'),
+                    body.get('consent', False)
+                ))
             request_id = cur.fetchone()[0]
             print(f"Step 1: Created request_id={request_id}")
             conn.commit()
@@ -99,6 +120,7 @@ def handler(event: dict, context) -> dict:
             request_id = body.get('requestId')
             company_card_url = body.get('companyCardUrl')
             pool_scheme_urls = body.get('poolSchemeUrls', [])
+            step2_started = body.get('step2StartTime')
             
             cur.execute("""
                 UPDATE request_forms 
@@ -107,6 +129,7 @@ def handler(event: dict, context) -> dict:
                     deadline = %s,
                     company_card_url = %s,
                     pool_scheme_urls = %s,
+                    step2_started_at = %s,
                     step2_completed_at = NOW(),
                     updated_at = NOW(),
                     status = 'completed'
@@ -118,6 +141,7 @@ def handler(event: dict, context) -> dict:
                 body.get('deadline'),
                 company_card_url,
                 pool_scheme_urls,
+                step2_started,
                 request_id
             ))
             

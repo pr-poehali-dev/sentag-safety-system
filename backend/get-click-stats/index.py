@@ -109,6 +109,21 @@ def handler(event: dict, context) -> dict:
         # Считаем конверсию (процент завершивших форму от начавших)
         conversion_rate = round((step2_count / step1_count * 100), 1) if step1_count > 0 else 0
         
+        # Получаем среднее время заполнения шагов
+        cursor.execute("""
+            SELECT 
+                AVG(EXTRACT(EPOCH FROM (step1_completed_at - step1_started_at))) as avg_step1_duration,
+                AVG(EXTRACT(EPOCH FROM (step2_completed_at - step2_started_at))) as avg_step2_duration
+            FROM request_forms
+            WHERE created_at >= NOW() - INTERVAL '30 days'
+            AND step1_started_at IS NOT NULL
+            AND step2_started_at IS NOT NULL
+            AND step2_completed_at IS NOT NULL
+        """)
+        duration_stats = cursor.fetchone()
+        avg_step1_seconds = duration_stats[0] or 0
+        avg_step2_seconds = duration_stats[1] or 0
+        
         cursor.close()
         conn.close()
         
@@ -124,7 +139,9 @@ def handler(event: dict, context) -> dict:
                 'unique_visitors': unique_visitors,
                 'step1_count': step1_count,
                 'step2_count': step2_count,
-                'conversion_rate': conversion_rate
+                'conversion_rate': conversion_rate,
+                'avg_step1_seconds': round(avg_step1_seconds),
+                'avg_step2_seconds': round(avg_step2_seconds)
             }),
             'isBase64Encoded': False
         }

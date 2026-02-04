@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import FormStep1 from './request-form/FormStep1';
 import FormStep2 from './request-form/FormStep2';
@@ -16,6 +16,12 @@ export default function RequestFormSection() {
   const [poolSchemeFiles, setPoolSchemeFiles] = useState<File[]>([]);
   const [companyCardLoaded, setCompanyCardLoaded] = useState(false);
   const [poolSchemesLoaded, setPoolSchemesLoaded] = useState<boolean[]>([]);
+  const [step1StartTime, setStep1StartTime] = useState<string | null>(null);
+  const [step2StartTime, setStep2StartTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    setStep1StartTime(new Date().toISOString());
+  }, []);
   const [formData, setFormData] = useState({
     phone: '',
     email: '',
@@ -70,6 +76,7 @@ export default function RequestFormSection() {
         },
         body: JSON.stringify({
           step: 1,
+          step1StartTime: step1StartTime,
           ...formData
         })
       });
@@ -83,6 +90,7 @@ export default function RequestFormSection() {
       if (result.success) {
         console.log('Step 1: Success! RequestId:', result.requestId);
         setRequestId(result.requestId);
+        setStep2StartTime(new Date().toISOString());
         setFormStep(2);
       } else {
         console.error('Step 1: Server returned error:', result);
@@ -177,6 +185,7 @@ export default function RequestFormSection() {
         body: JSON.stringify({
           step: 2,
           requestId,
+          step2StartTime: step2StartTime,
           ...step2Data,
           companyCardUrl,
           poolSchemeUrls
