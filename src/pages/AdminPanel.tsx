@@ -71,10 +71,7 @@ export default function AdminPanel() {
   useEffect(() => {
     verifySession();
     loadRequests();
-    const savedState = localStorage.getItem('show_documents_section');
-    if (savedState !== null) {
-      setShowDocuments(savedState === 'true');
-    }
+    loadSiteSettings();
 
     const intervalId = setInterval(() => {
       loadRequests();
@@ -82,6 +79,26 @@ export default function AdminPanel() {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  const loadSiteSettings = async () => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.settings) {
+          const showDocs = data.settings.show_documents_section ?? true;
+          setShowDocuments(showDocs);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading site settings:', error);
+      // Fallback to localStorage
+      const savedState = localStorage.getItem('show_documents_section');
+      if (savedState !== null) {
+        setShowDocuments(savedState === 'true');
+      }
+    }
+  };
 
   const verifySession = async () => {
     const token = getToken();
@@ -275,15 +292,45 @@ export default function AdminPanel() {
     }
   };
 
-  const toggleDocumentsSection = () => {
+  const toggleDocumentsSection = async () => {
     const newState = !showDocuments;
-    setShowDocuments(newState);
-    localStorage.setItem('show_documents_section', String(newState));
-    window.dispatchEvent(new Event('documentsToggle'));
-    toast({ 
-      title: 'Успешно', 
-      description: newState ? 'Секция "Документы" включена' : 'Секция "Документы" отключена' 
-    });
+    
+    try {
+      // Сохраняем настройку в базу данных
+      const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          key: 'show_documents_section',
+          value: newState
+        })
+      });
+
+      if (response.ok) {
+        setShowDocuments(newState);
+        // Также сохраняем локально для совместимости
+        localStorage.setItem('show_documents_section', String(newState));
+        window.dispatchEvent(new Event('documentsToggle'));
+        toast({ 
+          title: 'Успешно', 
+          description: newState ? 'Секция "Документы" включена' : 'Секция "Документы" отключена' 
+        });
+      } else {
+        toast({ 
+          title: 'Ошибка', 
+          description: 'Не удалось обновить настройки', 
+          variant: 'destructive' 
+        });
+      }
+    } catch (error) {
+      toast({ 
+        title: 'Ошибка', 
+        description: 'Ошибка подключения', 
+        variant: 'destructive' 
+      });
+    }
   };
 
   const logout = () => {

@@ -15,30 +15,36 @@ export default function ContentSections({ scrollToSection }: ContentSectionsProp
   const [showDocuments, setShowDocuments] = useState(true);
 
   useEffect(() => {
-    const updateShowDocuments = () => {
-      const savedState = localStorage.getItem('show_documents_section');
-      if (savedState !== null) {
-        setShowDocuments(savedState === 'true');
+    // Загружаем настройки с сервера
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.settings) {
+            const showDocs = data.settings.show_documents_section ?? true;
+            setShowDocuments(showDocs);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading site settings:', error);
+        // Если не удалось загрузить с сервера, используем localStorage
+        const savedState = localStorage.getItem('show_documents_section');
+        if (savedState !== null) {
+          setShowDocuments(savedState === 'true');
+        }
       }
     };
 
-    updateShowDocuments();
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'show_documents_section') {
-        updateShowDocuments();
-      }
-    };
+    loadSettings();
 
     const handleCustomEvent = () => {
-      updateShowDocuments();
+      loadSettings();
     };
 
-    window.addEventListener('storage', handleStorageChange);
     window.addEventListener('documentsToggle', handleCustomEvent);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('documentsToggle', handleCustomEvent);
     };
   }, []);
