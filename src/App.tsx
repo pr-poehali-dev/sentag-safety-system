@@ -19,6 +19,30 @@ const App = () => {
     trackEvent(TrackingEvent.PAGE_VIEW, EventCategory.ENGAGEMENT);
     initScrollTracking();
     initTimeTracking();
+
+    const updateFavicon = () => {
+      const faviconUrl = localStorage.getItem('favicon_url') || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
+      let favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+      if (!favicon) {
+        favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        favicon.type = 'image/x-icon';
+        document.head.appendChild(favicon);
+      }
+      favicon.href = faviconUrl;
+    };
+
+    updateFavicon();
+
+    const handleFaviconChange = () => {
+      updateFavicon();
+    };
+
+    window.addEventListener('faviconUpdate', handleFaviconChange);
+
+    return () => {
+      window.removeEventListener('faviconUpdate', handleFaviconChange);
+    };
   }, []);
 
   return (

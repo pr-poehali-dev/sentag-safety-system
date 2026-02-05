@@ -82,6 +82,7 @@ export default function SiteSettingsSection({
     localStorage.setItem('favicon_url', faviconUrl);
     updateMetaTags(seoTitle, seoDescription, seoKeywords);
     updateFavicon(faviconUrl);
+    window.dispatchEvent(new Event('faviconUpdate'));
     setIsEditingSeo(false);
     alert('SEO настройки сохранены');
   };
