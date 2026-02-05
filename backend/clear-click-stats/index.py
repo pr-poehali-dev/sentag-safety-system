@@ -43,11 +43,15 @@ def handler(event: dict, context) -> dict:
         cursor.execute("DELETE FROM page_visits")
         visits_deleted = cursor.rowcount
         
+        # Удаляем все записи из таблицы visitors
+        cursor.execute("DELETE FROM visitors")
+        visitors_deleted = cursor.rowcount
+        
         conn.commit()
         cursor.close()
         conn.close()
         
-        total_deleted = clicks_deleted + visits_deleted
+        total_deleted = clicks_deleted + visits_deleted + visitors_deleted
         
         return {
             'statusCode': 200,
@@ -58,7 +62,7 @@ def handler(event: dict, context) -> dict:
             'body': json.dumps({
                 'success': True,
                 'deleted_count': total_deleted,
-                'message': f'Удалено {clicks_deleted} кликов и {visits_deleted} посещений'
+                'message': f'Удалено {clicks_deleted} кликов, {visits_deleted} посещений и {visitors_deleted} посетителей'
             }),
             'isBase64Encoded': False
         }
