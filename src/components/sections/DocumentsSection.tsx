@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import { trackClick } from '@/utils/trackVisit';
 
 export default function DocumentsSection() {
   return (
@@ -18,7 +19,11 @@ export default function DocumentsSection() {
             { icon: 'BookOpen', title: 'Руководства пользователя', description: 'Подробные инструкции для персонала' },
             { icon: 'Shield', title: 'Гарантийные документы', description: 'Условия гарантийного обслуживания' }
           ].map((item, idx) => (
-            <Card key={idx} className="p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer">
+            <Card 
+              key={idx} 
+              className="p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
+              onClick={() => trackClick(`Документ: ${item.title}`, 'documents')}
+            >
               <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                 <Icon name={item.icon} className="text-primary" size={32} />
               </div>

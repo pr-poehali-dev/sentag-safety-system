@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-import { trackClick } from '@/utils/trackClick';
+import { trackClick } from '@/utils/trackVisit';
 import { useState } from 'react';
 import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
 
@@ -209,7 +209,7 @@ export default function FormStep1({
               Обработка включает все действия от сбора до уничтожения (полный перечень указан в политике конфиденциальности). Я ознакомлен с{' '}
               <button
                 type="button"
-                onClick={() => setShowPrivacyPolicy(true)}
+                onClick={() => { trackClick('Политика конфиденциальности', 'request-form-step1'); setShowPrivacyPolicy(true); }}
                 className="text-primary font-semibold underline hover:text-primary/80 transition"
               >
                 Политикой конфиденциальности

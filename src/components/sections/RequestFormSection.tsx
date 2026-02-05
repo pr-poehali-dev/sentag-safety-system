@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import FormStep1 from './request-form/FormStep1';
 import FormStep2 from './request-form/FormStep2';
 import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
+import { trackClick } from '@/utils/trackVisit';
 
 export default function RequestFormSection() {
   const [formStep, setFormStep] = useState(1);
@@ -65,6 +66,7 @@ export default function RequestFormSection() {
   const handleNextStep = async () => {
     if (!validateStep1()) return;
     
+    trackClick('Перейти к шагу 2', 'request-form');
     setIsSubmitting(true);
     console.log('Step 1: Starting submission...', formData);
     
@@ -160,6 +162,7 @@ export default function RequestFormSection() {
       return;
     }
     
+    trackClick('Отправить заявку', 'request-form');
     setIsSubmitting(true);
     setUploadProgress('Начинаем загрузку файлов...');
     
@@ -335,7 +338,7 @@ export default function RequestFormSection() {
           
           <p className="text-center text-sm text-slate-500 mt-6">
             <button 
-              onClick={() => setShowPrivacyPolicy(true)}
+              onClick={() => { trackClick('Политика конфиденциальности', 'request-form'); setShowPrivacyPolicy(true); }}
               className="underline hover:text-primary transition"
             >
               Политика конфиденциальности

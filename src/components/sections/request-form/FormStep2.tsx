@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
-import { trackClick } from '@/utils/trackClick';
+import { trackClick } from '@/utils/trackVisit';
 
 interface FormStep2Props {
   step2Data: {
@@ -240,7 +240,7 @@ export default function FormStep2({
           variant="outline" 
           className="flex-1"
           onClick={() => {
-            trackClick('Назад (Шаг 2)', 'request-form');
+            trackClick('Назад (Шаг 2)', 'request-form-step2');
             onBackStep();
           }}
           disabled={isSubmitting}
