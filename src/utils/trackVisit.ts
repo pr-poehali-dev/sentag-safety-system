@@ -54,7 +54,7 @@ export const trackClick = (buttonName: string, location: string) => {
   const visitorId = getVisitorId();
   console.log('[trackClick] Visitor ID:', visitorId);
   
-  fetch('https://functions.poehali.dev/4de53ae4-cfe6-4e91-8b18-ee01f7dc2bee', {
+  fetch('https://functions.poehali.dev/ddc0d90d-3227-4104-ad7f-5a5b8c1374a7', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
