@@ -50,20 +50,24 @@ export const trackVisit = async () => {
  */
 export const trackClick = (buttonName: string, location: string) => {
   console.log('[trackClick] Tracking click:', { buttonName, location });
-  try {
-    const visitorId = getVisitorId();
-    console.log('[trackClick] Visitor ID:', visitorId);
-    
-    const data = JSON.stringify({
+  
+  const visitorId = getVisitorId();
+  console.log('[trackClick] Visitor ID:', visitorId);
+  
+  fetch('https://functions.poehali.dev/4de53ae4-cfe6-4e91-8b18-ee01f7dc2bee', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
       visitor_id: visitorId,
       button_name: buttonName,
       button_location: location,
-    });
-    
-    const blob = new Blob([data], { type: 'application/json' });
-    const sent = navigator.sendBeacon('https://functions.poehali.dev/4de53ae4-cfe6-4e91-8b18-ee01f7dc2bee', blob);
-    console.log('[trackClick] Beacon sent:', sent);
-  } catch (error) {
-    console.error('Error tracking click:', error);
-  }
+    }),
+    keepalive: true,
+  }).then(response => {
+    console.log('[trackClick] Response status:', response.status);
+  }).catch(error => {
+    console.error('[trackClick] Error:', error);
+  });
 };
