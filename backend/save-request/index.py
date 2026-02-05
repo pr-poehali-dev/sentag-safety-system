@@ -398,17 +398,20 @@ def send_telegram_step1(request_id: int, data: dict, user_activity: dict = None)
                 message += f"\n🖱 Кликов: {len(clicks)}"
                 message += "\n\n<b>История кликов:</b>"
                 for i, click in enumerate(clicks, 1):
-                    from datetime import datetime
+                    from datetime import datetime, timezone, timedelta
                     clicked_time = click['clicked_at']
                     if isinstance(clicked_time, str):
                         clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
                     
-                    # Форматирование: ЧЧ:ММ, ДД месяц (время уже в UTC, просто форматируем)
+                    # Конвертация в часовой пояс Екатеринбурга (UTC+5)
+                    ekb_tz = timezone(timedelta(hours=5))
+                    clicked_time_ekb = clicked_time.astimezone(ekb_tz)
+                    
                     months_ru = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
                                  'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
-                    time_str = clicked_time.strftime('%H:%M')
-                    day = clicked_time.day
-                    month_name = months_ru[clicked_time.month - 1]
+                    time_str = clicked_time_ekb.strftime('%H:%M')
+                    day = clicked_time_ekb.day
+                    month_name = months_ru[clicked_time_ekb.month - 1]
                     date_str = f"{time_str}, {day} {month_name}"
                     
                     message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {date_str}"
@@ -556,17 +559,20 @@ def send_telegram_step2(request_id: int, data: dict):
                 message += f"\n🖱 Кликов: {len(clicks)}"
                 message += "\n\n<b>История кликов:</b>"
                 for i, click in enumerate(clicks, 1):
-                    from datetime import datetime
+                    from datetime import datetime, timezone, timedelta
                     clicked_time = click['clicked_at']
                     if isinstance(clicked_time, str):
                         clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
                     
-                    # Форматирование: ЧЧ:ММ, ДД месяц (время уже в UTC, просто форматируем)
+                    # Конвертация в часовой пояс Екатеринбурга (UTC+5)
+                    ekb_tz = timezone(timedelta(hours=5))
+                    clicked_time_ekb = clicked_time.astimezone(ekb_tz)
+                    
                     months_ru = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
                                  'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
-                    time_str = clicked_time.strftime('%H:%M')
-                    day = clicked_time.day
-                    month_name = months_ru[clicked_time.month - 1]
+                    time_str = clicked_time_ekb.strftime('%H:%M')
+                    day = clicked_time_ekb.day
+                    month_name = months_ru[clicked_time_ekb.month - 1]
                     date_str = f"{time_str}, {day} {month_name}"
                     
                     message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {date_str}"
