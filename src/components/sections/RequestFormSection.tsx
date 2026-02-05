@@ -72,7 +72,6 @@ export default function RequestFormSection() {
     
     trackClick('Перейти к шагу 2', 'request-form');
     setIsSubmitting(true);
-    console.log('Step 1: Starting submission...', formData);
     
     try {
       // Получаем visitor_id из localStorage, генерируем если нет
@@ -82,8 +81,6 @@ export default function RequestFormSection() {
         localStorage.setItem('visitor_id', visitorId);
       }
       
-      console.log('Step 1: Visitor ID:', visitorId);
-      console.log('Step 1: Sending fetch request...');
       const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
         method: 'POST',
         headers: {
@@ -97,14 +94,9 @@ export default function RequestFormSection() {
         })
       });
       
-      console.log('Step 1: Response received, status:', response.status);
-      console.log('Step 1: Response headers:', response.headers);
-      
       const result = await response.json();
-      console.log('Step 1: Response body:', result);
       
       if (result.success) {
-        console.log('Step 1: Success! RequestId:', result.requestId);
         setRequestId(result.requestId);
         setStep2StartTime(new Date().toISOString());
         trackEvent(TrackingEvent.COMPLETE_STEP_1, EventCategory.FORM, {
@@ -113,15 +105,11 @@ export default function RequestFormSection() {
         });
         setFormStep(2);
       } else {
-        console.error('Step 1: Server returned error:', result);
         alert('Ошибка при сохранении данных');
       }
     } catch (error) {
-      console.error('Step 1: Fetch error:', error);
-      console.error('Step 1: Error type:', error instanceof TypeError ? 'TypeError (network/CORS)' : typeof error);
       alert(`Ошибка при сохранении данных: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
-      console.log('Step 1: Submission completed');
       setIsSubmitting(false);
     }
   };
@@ -216,10 +204,8 @@ export default function RequestFormSection() {
       console.log('Response status:', response.status);
       
       const result = await response.json();
-      console.log('Response body:', result);
       
       if (!response.ok) {
-        console.error('Server error:', result);
         alert(`Ошибка сервера: ${result.error || 'Неизвестная ошибка'}`);
         return;
       }
@@ -268,7 +254,6 @@ export default function RequestFormSection() {
         alert(`Ошибка при отправке заявки: ${result.error || 'Неизвестная ошибка'}`);
       }
     } catch (error) {
-      console.error('Error saving step 2:', error);
       setUploadProgress('');
       if (error instanceof Error) {
         alert(`Ошибка при отправке заявки: ${error.message}`);

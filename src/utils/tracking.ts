@@ -61,10 +61,7 @@ const sendToYandexMetrika = (event: string, params?: Record<string, any>) => {
   if (typeof window.ym !== 'undefined') {
     try {
       window.ym(101026698, 'reachGoal', event, params);
-      console.log('[YM] Event sent:', event, params);
-    } catch (error) {
-      console.error('[YM] Error:', error);
-    }
+    } catch (error) {}
   }
 };
 
@@ -75,10 +72,7 @@ const sendToGoogleAnalytics = (event: string, params?: Record<string, any>) => {
   if (typeof window.gtag !== 'undefined') {
     try {
       window.gtag('event', event, params);
-      console.log('[GA] Event sent:', event, params);
-    } catch (error) {
-      console.error('[GA] Error:', error);
-    }
+    } catch (error) {}
   }
 };
 
@@ -99,9 +93,7 @@ const sendToFacebookPixel = (event: string, params?: Record<string, any>) => {
       
       const fbEvent = fbStandardEvents[event] || event;
       window.fbq('track', fbEvent, params);
-      console.log('[FB] Event sent:', fbEvent, params);
-    } catch (error) {
-      console.error('[FB] Error:', error);
+    } catch (error) {}
     }
   }
 };
@@ -123,9 +115,7 @@ const sendToVKPixel = (event: string, params?: Record<string, any>) => {
       
       const vkEvent = vkStandardEvents[event] || event;
       window.vkPixel(vkEvent, params);
-      console.log('[VK] Event sent:', vkEvent, params);
-    } catch (error) {
-      console.error('[VK] Error:', error);
+    } catch (error) {}
     }
   }
 };

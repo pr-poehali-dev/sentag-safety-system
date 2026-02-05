@@ -49,10 +49,7 @@ export const trackVisit = async () => {
  * Отслеживание клика по элементу на сайте
  */
 export const trackClick = (buttonName: string, location: string) => {
-  console.log('[trackClick] Tracking click:', { buttonName, location });
-  
   const visitorId = getVisitorId();
-  console.log('[trackClick] Visitor ID:', visitorId);
   
   fetch('https://functions.poehali.dev/ddc0d90d-3227-4104-ad7f-5a5b8c1374a7', {
     method: 'POST',
@@ -65,9 +62,5 @@ export const trackClick = (buttonName: string, location: string) => {
       button_location: location,
     }),
     keepalive: true,
-  }).then(response => {
-    console.log('[trackClick] Response status:', response.status);
-  }).catch(error => {
-    console.error('[trackClick] Error:', error);
-  });
+  }).catch(() => {});
 };
