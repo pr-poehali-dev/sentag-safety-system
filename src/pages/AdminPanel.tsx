@@ -213,30 +213,14 @@ export default function AdminPanel() {
       console.log('[AdminPanel] Loading requests...');
       const response = await fetch('https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c');
       console.log('[AdminPanel] Response status:', response.status);
-      console.log('[AdminPanel] Response headers:', Object.fromEntries(response.headers.entries()));
-      
       if (response.ok) {
-        const text = await response.text();
-        console.log('[AdminPanel] Response text (first 500 chars):', text.substring(0, 500));
-        
-        try {
-          const data = JSON.parse(text);
-          console.log('[AdminPanel] Parsed data:', data);
-          console.log('[AdminPanel] Requests count:', data.requests?.length || 0);
-          setRequests(data.requests || []);
-          console.log('[AdminPanel] State updated with requests');
-        } catch (parseError) {
-          console.error('[AdminPanel] JSON parse error:', parseError);
-          console.error('[AdminPanel] Raw response:', text);
-          toast({ 
-            title: 'Ошибка', 
-            description: 'Неверный формат ответа от сервера', 
-            variant: 'destructive' 
-          });
-        }
+        const data = await response.json();
+        console.log('[AdminPanel] Received data:', data);
+        console.log('[AdminPanel] Requests count:', data.requests?.length || 0);
+        setRequests(data.requests || []);
+        console.log('[AdminPanel] State updated with requests');
       } else {
-        const errorText = await response.text();
-        console.error('[AdminPanel] Failed to load requests:', response.status, errorText);
+        console.error('[AdminPanel] Failed to load requests:', response.status);
         toast({ 
           title: 'Ошибка', 
           description: `Не удалось загрузить заявки (код ${response.status})`, 
@@ -244,12 +228,10 @@ export default function AdminPanel() {
         });
       }
     } catch (error) {
-      console.error('[AdminPanel] Network/Fetch error:', error);
-      console.error('[AdminPanel] Error type:', error instanceof TypeError ? 'TypeError' : error instanceof Error ? error.constructor.name : 'Unknown');
-      console.error('[AdminPanel] Error message:', error instanceof Error ? error.message : String(error));
+      console.error('[AdminPanel] Error loading requests:', error);
       toast({ 
-        title: 'Ошибка сети', 
-        description: `Не удалось связаться с сервером: ${error instanceof Error ? error.message : 'Unknown error'}`, 
+        title: 'Ошибка', 
+        description: 'Ошибка при загрузке заявок', 
         variant: 'destructive' 
       });
     }

@@ -108,11 +108,7 @@ export default function RequestsSection({
         {requests.length === 0 ? (
           <div className="text-center py-12">
             <Icon name="Inbox" className="mx-auto mb-4 text-slate-300" size={64} />
-            <p className="text-slate-500 text-lg mb-4">Заявок пока нет</p>
-            <Button variant="outline" onClick={handleRefresh} size="sm">
-              <Icon name="RefreshCw" className="mr-2" size={14} />
-              Обновить список
-            </Button>
+            <p className="text-slate-500 text-lg">Заявок пока нет</p>
           </div>
         ) : (
           requests.map((request) => (
