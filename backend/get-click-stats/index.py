@@ -92,8 +92,8 @@ def handler(event: dict, context) -> dict:
         # Если пользователь очистит cookies/localStorage или зайдёт с другого устройства - будет считаться новым посетителем
         cursor.execute("""
             SELECT COUNT(DISTINCT visitor_id) 
-            FROM page_visits 
-            WHERE visited_at >= NOW() - INTERVAL '30 days'
+            FROM visitors 
+            WHERE first_visit >= NOW() - INTERVAL '30 days'
         """)
         unique_visitors = cursor.fetchone()[0] or 0
         
