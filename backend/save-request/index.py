@@ -150,7 +150,18 @@ def handler(event: dict, context) -> dict:
                     user_activity = None
             
             print(f"Step 1: user_activity={user_activity}")
-            send_telegram_step1(request_id, body, user_activity)
+            message_id = send_telegram_step1(request_id, body, user_activity)
+            
+            # Сохраняем message_id для последующего удаления
+            if message_id:
+                cur.execute("""
+                    UPDATE request_forms 
+                    SET telegram_step1_message_id = %s 
+                    WHERE id = %s
+                """, (message_id, request_id))
+                conn.commit()
+                print(f"Step 1: Saved telegram_step1_message_id={message_id}")
+            
             print("Step 1: Telegram notification sent (or skipped)")
             
             response_data = {
@@ -216,13 +227,15 @@ def handler(event: dict, context) -> dict:
                 SELECT phone, email, company, role, full_name,
                        object_name, object_address,
                        step1_started_at, step1_completed_at,
-                       step2_started_at, step2_completed_at, visitor_id, marketing_consent
+                       step2_started_at, step2_completed_at, visitor_id, marketing_consent,
+                       telegram_step1_message_id
                 FROM request_forms WHERE id = %s
             """, (request_id,))
             row = cur.fetchone()
             
             visitor_id = row[11]
             marketing_consent = row[12]
+            telegram_step1_message_id = row[13]
             user_activity = None
             
             if visitor_id:
@@ -281,7 +294,8 @@ def handler(event: dict, context) -> dict:
                 'deadline': body.get('deadline'),
                 'companyCardUrl': company_card_url,
                 'poolSchemeUrls': pool_scheme_urls,
-                'user_activity': user_activity
+                'user_activity': user_activity,
+                'telegram_step1_message_id': telegram_step1_message_id
             })
             
             return {
@@ -407,13 +421,19 @@ def send_telegram_step1(request_id: int, data: dict, user_activity: dict = None)
         
         if response.status_code != 200:
             print(f'[Telegram] Step 1 error response: {response.text}')
+            return None
         else:
             print('[Telegram] Step 1 notification sent successfully')
+            result = response.json()
+            message_id = result.get('result', {}).get('message_id')
+            print(f'[Telegram] Step 1 message_id: {message_id}')
+            return message_id
             
     except Exception as e:
         print(f'[Telegram] Error sending step 1: {type(e).__name__}: {e}')
         import traceback
         print(f'[Telegram] Traceback: {traceback.format_exc()}')
+        return None
 
 def send_telegram_step2(request_id: int, data: dict):
     """Отправка второго шага заявки в Telegram"""
@@ -428,6 +448,27 @@ def send_telegram_step2(request_id: int, data: dict):
             return
         
         print(f'[Telegram] Sending step 2 notification for request #{request_id}')
+        
+        # Удаляем первое сообщение если оно есть
+        telegram_step1_message_id = data.get('telegram_step1_message_id')
+        if telegram_step1_message_id:
+            try:
+                print(f'[Telegram] Deleting step 1 message with id: {telegram_step1_message_id}')
+                delete_response = requests.post(
+                    f'https://api.telegram.org/bot{bot_token}/deleteMessage',
+                    json={
+                        'chat_id': chat_id,
+                        'message_id': telegram_step1_message_id
+                    },
+                    timeout=10
+                )
+                print(f'[Telegram] Delete message response: {delete_response.status_code}')
+                if delete_response.status_code == 200:
+                    print('[Telegram] Step 1 message deleted successfully')
+                else:
+                    print(f'[Telegram] Failed to delete step 1 message: {delete_response.text}')
+            except Exception as delete_error:
+                print(f'[Telegram] Error deleting step 1 message: {delete_error}')
         
         # Расчет времени заполнения
         step1_time = "н/д"

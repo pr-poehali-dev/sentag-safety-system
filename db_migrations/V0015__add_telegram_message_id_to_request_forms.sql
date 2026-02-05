@@ -1,0 +1,2 @@
+ALTER TABLE t_p28851569_sentag_safety_system.request_forms 
+ADD COLUMN telegram_step1_message_id INTEGER NULL;
