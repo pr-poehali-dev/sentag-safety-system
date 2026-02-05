@@ -75,6 +75,13 @@ export default function AdminPanel() {
     if (savedState !== null) {
       setShowDocuments(savedState === 'true');
     }
+
+    // Автообновление заявок каждые 30 секунд
+    const intervalId = setInterval(() => {
+      loadRequests();
+    }, 30000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const verifySession = async () => {
@@ -201,12 +208,9 @@ export default function AdminPanel() {
       const response = await fetch('https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c');
       if (response.ok) {
         const data = await response.json();
-        console.log('Loaded requests data:', data.requests);
-        // Проверяем user_activity для первой заявки
-        if (data.requests && data.requests.length > 0) {
-          console.log('First request user_activity:', data.requests[0].user_activity);
-        }
         setRequests(data.requests || []);
+      } else {
+        console.error('Failed to load requests:', response.status);
       }
     } catch (error) {
       console.error('Error loading requests:', error);
