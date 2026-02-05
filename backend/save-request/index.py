@@ -240,10 +240,12 @@ def handler(event: dict, context) -> dict:
             
             if visitor_id:
                 try:
+                    print(f"Step 2: Loading user activity for visitor_id={visitor_id}")
                     cur.execute("""
-                        SELECT first_visit, last_activity FROM t_p28851569_sentag_safety_system.visitors WHERE visitor_id = %s
+                        SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
                     """, (visitor_id,))
                     visitor_row = cur.fetchone()
+                    print(f"Step 2: visitor_row={visitor_row}")
                     
                     if visitor_row:
                         first_visit = visitor_row[0]
@@ -253,9 +255,11 @@ def handler(event: dict, context) -> dict:
                         if first_visit and last_activity:
                             time_on_site = int((last_activity - first_visit).total_seconds())
                         
+                        print(f"Step 2: time_on_site={time_on_site}")
+                        
                         cur.execute("""
                             SELECT button_name, button_location, clicked_at
-                            FROM t_p28851569_sentag_safety_system.button_clicks
+                            FROM button_clicks
                             WHERE visitor_id = %s AND clicked_at < %s
                             ORDER BY clicked_at ASC
                         """, (visitor_id, row[7]))
@@ -268,13 +272,20 @@ def handler(event: dict, context) -> dict:
                                 'clicked_at': click_row[2].isoformat()
                             })
                         
+                        print(f"Step 2: clicks count={len(clicks)}")
+                        
                         user_activity = {
                             'time_on_site': time_on_site,
                             'clicks': clicks
                         }
+                        print(f"Step 2: user_activity={user_activity}")
                 except Exception as e:
-                    print(f"Step 2: Could not load user activity: {e}")
+                    print(f"Step 2: Could not load user activity: {type(e).__name__}: {e}")
+                    import traceback
+                    print(f"Step 2: Traceback: {traceback.format_exc()}")
                     user_activity = None
+            
+            print(f"Step 2: Final user_activity before telegram={'SET' if user_activity else 'NONE'}")
             
             send_telegram_step2(request_id, {
                 'phone': row[0],
