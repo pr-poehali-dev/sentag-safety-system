@@ -266,6 +266,7 @@ export default function AdminPanel() {
     const newState = !showDocuments;
     setShowDocuments(newState);
     localStorage.setItem('show_documents_section', String(newState));
+    window.dispatchEvent(new Event('documentsToggle'));
     toast({ 
       title: 'Успешно', 
       description: newState ? 'Секция "Документы" включена' : 'Секция "Документы" отключена' 

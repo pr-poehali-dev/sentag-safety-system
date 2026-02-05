@@ -15,10 +15,32 @@ export default function ContentSections({ scrollToSection }: ContentSectionsProp
   const [showDocuments, setShowDocuments] = useState(true);
 
   useEffect(() => {
-    const savedState = localStorage.getItem('show_documents_section');
-    if (savedState !== null) {
-      setShowDocuments(savedState === 'true');
-    }
+    const updateShowDocuments = () => {
+      const savedState = localStorage.getItem('show_documents_section');
+      if (savedState !== null) {
+        setShowDocuments(savedState === 'true');
+      }
+    };
+
+    updateShowDocuments();
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'show_documents_section') {
+        updateShowDocuments();
+      }
+    };
+
+    const handleCustomEvent = () => {
+      updateShowDocuments();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('documentsToggle', handleCustomEvent);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('documentsToggle', handleCustomEvent);
+    };
   }, []);
 
   return (
