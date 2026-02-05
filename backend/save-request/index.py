@@ -402,8 +402,16 @@ def send_telegram_step1(request_id: int, data: dict, user_activity: dict = None)
                     clicked_time = click['clicked_at']
                     if isinstance(clicked_time, str):
                         clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
-                    time_str = clicked_time.strftime('%H:%M:%S')
-                    message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {time_str}"
+                    
+                    # Форматирование: ЧЧ:ММ, ДД месяц
+                    months_ru = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+                                 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
+                    time_str = clicked_time.strftime('%H:%M')
+                    day = clicked_time.day
+                    month_name = months_ru[clicked_time.month - 1]
+                    date_str = f"{time_str}, {day} {month_name}"
+                    
+                    message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {date_str}"
         
         message += "\n\n⏳ <i>Ожидается заполнение шага 2...</i>"""
         
@@ -552,8 +560,16 @@ def send_telegram_step2(request_id: int, data: dict):
                     clicked_time = click['clicked_at']
                     if isinstance(clicked_time, str):
                         clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
-                    time_str = clicked_time.strftime('%H:%M:%S')
-                    message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {time_str}"
+                    
+                    # Форматирование: ЧЧ:ММ, ДД месяц
+                    months_ru = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+                                 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
+                    time_str = clicked_time.strftime('%H:%M')
+                    day = clicked_time.day
+                    month_name = months_ru[clicked_time.month - 1]
+                    date_str = f"{time_str}, {day} {month_name}"
+                    
+                    message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {date_str}"
         
         if data.get('companyCardUrl'):
             message += f"\n\n📎 <b>Карточка предприятия:</b> <a href=\"{data.get('companyCardUrl')}\">Скачать</a>"
