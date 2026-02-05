@@ -40,12 +40,14 @@ interface RequestsSectionProps {
   requests: RequestForm[];
   onLoadRequests: () => Promise<void>;
   onDeleteRequest: (requestId: number) => Promise<void>;
+  onDeleteAll: () => Promise<void>;
 }
 
 export default function RequestsSection({ 
   requests, 
   onLoadRequests, 
-  onDeleteRequest 
+  onDeleteRequest,
+  onDeleteAll
 }: RequestsSectionProps) {
   const getRoleLabel = (role: string) => {
     switch(role) {
@@ -73,10 +75,22 @@ export default function RequestsSection({
           <h2 className="text-2xl font-bold text-slate-800">Заявки на расчет</h2>
           <p className="text-slate-600">Всего заявок: {requests.length}</p>
         </div>
-        <Button variant="outline" onClick={onLoadRequests}>
-          <Icon name="RefreshCw" className="mr-2" size={16} />
-          Обновить
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={onLoadRequests}>
+            <Icon name="RefreshCw" className="mr-2" size={16} />
+            Обновить
+          </Button>
+          {requests.length > 0 && (
+            <Button 
+              variant="destructive" 
+              onClick={onDeleteAll}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              <Icon name="Trash2" className="mr-2" size={16} />
+              Удалить все ({requests.length})
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-4">

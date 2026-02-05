@@ -235,6 +235,33 @@ export default function AdminPanel() {
     }
   };
 
+  const deleteAllRequests = async () => {
+    const firstConfirm = confirm(`Вы действительно хотите удалить ВСЕ заявки (${requests.length} шт.)?`);
+    if (!firstConfirm) {
+      return;
+    }
+
+    const secondConfirm = confirm('⚠️ ЭТО НЕОБРАТИМОЕ ДЕЙСТВИЕ! Вы абсолютно уверены?');
+    if (!secondConfirm) {
+      return;
+    }
+
+    try {
+      const deletePromises = requests.map(request =>
+        fetch(`https://functions.poehali.dev/083d3fc1-3983-4501-8686-0e63931b991e?id=${request.id}`, {
+          method: 'DELETE'
+        })
+      );
+
+      await Promise.all(deletePromises);
+      
+      toast({ title: 'Успешно', description: 'Все заявки удалены' });
+      loadRequests();
+    } catch (error) {
+      toast({ title: 'Ошибка', description: 'Не удалось удалить все заявки', variant: 'destructive' });
+    }
+  };
+
   const toggleDocumentsSection = () => {
     const newState = !showDocuments;
     setShowDocuments(newState);
@@ -313,6 +340,7 @@ export default function AdminPanel() {
               requests={requests}
               onLoadRequests={loadRequests}
               onDeleteRequest={deleteRequest}
+              onDeleteAll={deleteAllRequests}
             />
 
             <StatisticsSection 
