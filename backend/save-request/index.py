@@ -543,13 +543,13 @@ def send_telegram_step2(request_id: int, data: dict):
 • Шаг 2: {step2_time}
 
 📊 <b>Информация о посетителях:</b>
-{data.get('visitorsInfo') if data.get('visitorsInfo') and data.get('visitorsInfo').strip() else 'Не указано'}
+{data.get('visitorsInfo') or 'Не указано'}
 
 📏 <b>Параметры бассейна:</b>
-{data.get('poolSize') if data.get('poolSize') and data.get('poolSize').strip() else 'Не указано'}
+{data.get('poolSize') or 'Не указано'}
 
 📅 <b>Сроки поставки:</b>
-{data.get('deadline') if data.get('deadline') and data.get('deadline').strip() else 'Не указано'}
+{data.get('deadline') or 'Не указано'}
 """
         
         user_activity = data.get('user_activity')

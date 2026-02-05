@@ -69,24 +69,12 @@ export default function AdminPanel() {
   const getToken = () => localStorage.getItem('admin_token') || '';
 
   useEffect(() => {
-    console.log('[AdminPanel] Component mounted, starting initialization...');
     verifySession();
     loadRequests();
     const savedState = localStorage.getItem('show_documents_section');
     if (savedState !== null) {
       setShowDocuments(savedState === 'true');
     }
-
-    // Автообновление заявок каждые 30 секунд
-    const intervalId = setInterval(() => {
-      console.log('[AdminPanel] Auto-refresh triggered');
-      loadRequests();
-    }, 30000);
-
-    return () => {
-      console.log('[AdminPanel] Component unmounting, clearing interval');
-      clearInterval(intervalId);
-    };
   }, []);
 
   const verifySession = async () => {
@@ -210,30 +198,18 @@ export default function AdminPanel() {
 
   const loadRequests = async () => {
     try {
-      console.log('[AdminPanel] Loading requests...');
       const response = await fetch('https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c');
-      console.log('[AdminPanel] Response status:', response.status);
       if (response.ok) {
         const data = await response.json();
-        console.log('[AdminPanel] Received data:', data);
-        console.log('[AdminPanel] Requests count:', data.requests?.length || 0);
+        console.log('Loaded requests data:', data.requests);
+        // Проверяем user_activity для первой заявки
+        if (data.requests && data.requests.length > 0) {
+          console.log('First request user_activity:', data.requests[0].user_activity);
+        }
         setRequests(data.requests || []);
-        console.log('[AdminPanel] State updated with requests');
-      } else {
-        console.error('[AdminPanel] Failed to load requests:', response.status);
-        toast({ 
-          title: 'Ошибка', 
-          description: `Не удалось загрузить заявки (код ${response.status})`, 
-          variant: 'destructive' 
-        });
       }
     } catch (error) {
-      console.error('[AdminPanel] Error loading requests:', error);
-      toast({ 
-        title: 'Ошибка', 
-        description: 'Ошибка при загрузке заявок', 
-        variant: 'destructive' 
-      });
+      console.error('Error loading requests:', error);
     }
   };
 
@@ -313,10 +289,6 @@ export default function AdminPanel() {
       </div>
     );
   }
-
-  console.log('[AdminPanel] Render - currentUser:', currentUser);
-  console.log('[AdminPanel] Render - requests.length:', requests.length);
-  console.log('[AdminPanel] Render - loading:', loading);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
