@@ -17,29 +17,20 @@ declare global {
  * События для отслеживания конверсий
  */
 export enum TrackingEvent {
-  // Просмотры
   PAGE_VIEW = 'page_view',
-  
-  // Вовлечение
   VIEW_CONTENT = 'view_content',
   SCROLL_DEPTH_25 = 'scroll_25',
   SCROLL_DEPTH_50 = 'scroll_50',
   SCROLL_DEPTH_75 = 'scroll_75',
   SCROLL_DEPTH_100 = 'scroll_100',
-  
-  // Взаимодействие с контентом
   CLICK_PHONE = 'click_phone',
   CLICK_EMAIL = 'click_email',
   VIEW_DOCUMENT = 'view_document',
   CLICK_MAP = 'click_map',
-  
-  // Форма
   START_FORM = 'start_form',
   COMPLETE_STEP_1 = 'complete_step_1',
   COMPLETE_STEP_2 = 'complete_step_2',
   SUBMIT_FORM = 'submit_form',
-  
-  // Конверсия
   LEAD = 'lead',
   REQUEST_CALL = 'request_call',
 }
@@ -54,9 +45,6 @@ export enum EventCategory {
   CONVERSION = 'conversion',
 }
 
-/**
- * Отправка события в Яндекс.Метрику
- */
 const sendToYandexMetrika = (event: string, params?: Record<string, any>) => {
   if (typeof window.ym !== 'undefined') {
     try {
@@ -65,9 +53,6 @@ const sendToYandexMetrika = (event: string, params?: Record<string, any>) => {
   }
 };
 
-/**
- * Отправка события в Google Analytics
- */
 const sendToGoogleAnalytics = (event: string, params?: Record<string, any>) => {
   if (typeof window.gtag !== 'undefined') {
     try {
@@ -76,13 +61,9 @@ const sendToGoogleAnalytics = (event: string, params?: Record<string, any>) => {
   }
 };
 
-/**
- * Отправка события в Facebook Pixel
- */
 const sendToFacebookPixel = (event: string, params?: Record<string, any>) => {
   if (typeof window.fbq !== 'undefined') {
     try {
-      // Стандартные события Facebook
       const fbStandardEvents: Record<string, string> = {
         [TrackingEvent.PAGE_VIEW]: 'PageView',
         [TrackingEvent.VIEW_CONTENT]: 'ViewContent',
@@ -90,21 +71,15 @@ const sendToFacebookPixel = (event: string, params?: Record<string, any>) => {
         [TrackingEvent.LEAD]: 'Lead',
         [TrackingEvent.SUBMIT_FORM]: 'CompleteRegistration',
       };
-      
       const fbEvent = fbStandardEvents[event] || event;
       window.fbq('track', fbEvent, params);
     } catch (error) {}
-    }
   }
 };
 
-/**
- * Отправка события в VK Pixel
- */
 const sendToVKPixel = (event: string, params?: Record<string, any>) => {
   if (typeof window.vkPixel !== 'undefined') {
     try {
-      // Стандартные события VK
       const vkStandardEvents: Record<string, string> = {
         [TrackingEvent.PAGE_VIEW]: 'page_view',
         [TrackingEvent.VIEW_CONTENT]: 'view_content',
@@ -112,18 +87,12 @@ const sendToVKPixel = (event: string, params?: Record<string, any>) => {
         [TrackingEvent.LEAD]: 'lead',
         [TrackingEvent.SUBMIT_FORM]: 'complete_registration',
       };
-      
       const vkEvent = vkStandardEvents[event] || event;
       window.vkPixel(vkEvent, params);
     } catch (error) {}
-    }
   }
 };
 
-/**
- * Универсальная функция отслеживания событий
- * Отправляет событие во все подключенные системы аналитики
- */
 export const trackEvent = (
   event: TrackingEvent,
   category: EventCategory,
@@ -134,16 +103,12 @@ export const trackEvent = (
     ...params,
   };
 
-  // Отправляем во все платформы
   sendToYandexMetrika(event, eventParams);
   sendToGoogleAnalytics(event, eventParams);
   sendToFacebookPixel(event, eventParams);
   sendToVKPixel(event, eventParams);
 };
 
-/**
- * Отслеживание прокрутки страницы
- */
 let scrollTracked = {
   25: false,
   50: false,
@@ -198,14 +163,10 @@ export const initScrollTracking = () => {
   window.addEventListener('scroll', onScroll, { passive: true });
 };
 
-/**
- * Отслеживание времени на сайте
- */
 export const initTimeTracking = () => {
   const startTime = Date.now();
   
-  // Отправляем событие каждые 30 секунд
-  const intervals = [30, 60, 120, 300]; // 30s, 1min, 2min, 5min
+  const intervals = [30, 60, 120, 300];
   
   intervals.forEach(seconds => {
     setTimeout(() => {
@@ -218,9 +179,6 @@ export const initTimeTracking = () => {
   });
 };
 
-/**
- * Сброс отслеживания прокрутки (для SPA навигации)
- */
 export const resetScrollTracking = () => {
   scrollTracked = {
     25: false,
