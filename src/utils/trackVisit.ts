@@ -44,3 +44,26 @@ export const trackVisit = async () => {
     console.error('Error tracking visit:', error);
   }
 };
+
+/**
+ * Отслеживание клика по элементу на сайте
+ */
+export const trackClick = async (buttonName: string, location: string) => {
+  try {
+    const visitorId = getVisitorId();
+    
+    await fetch('https://functions.poehali.dev/4de53ae4-cfe6-4e91-8b18-ee01f7dc2bee', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        visitor_id: visitorId,
+        button_name: buttonName,
+        button_location: location,
+      }),
+    });
+  } catch (error) {
+    console.error('Error tracking click:', error);
+  }
+};

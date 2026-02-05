@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { trackClick } from '@/utils/trackVisit';
 
 interface HeaderProps {
   scrollToSection: (id: string) => void;
@@ -18,9 +19,21 @@ export default function Header({ scrollToSection }: HeaderProps) {
     }
   }, []);
 
-  const handleMobileNavClick = (id: string) => {
+  const handleNavClick = (id: string, label: string) => {
+    trackClick(`Меню: ${label}`, 'header');
+    scrollToSection(id);
+  };
+
+  const handleMobileNavClick = (id: string, label: string) => {
+    trackClick(`Меню (моб): ${label}`, 'header-mobile');
     scrollToSection(id);
     setMobileMenuOpen(false);
+  };
+
+  const handleRequestClick = (isMobile: boolean = false) => {
+    trackClick('Оставить заявку', isMobile ? 'header-mobile' : 'header');
+    scrollToSection('request');
+    if (isMobile) setMobileMenuOpen(false);
   };
   return (
     <header className="fixed top-0 w-full bg-[#f5f5f5] shadow-sm z-50">
@@ -41,17 +54,17 @@ export default function Header({ scrollToSection }: HeaderProps) {
           </button>
         </div>
         <nav className="hidden xl:flex gap-4 2xl:gap-6 text-sm 2xl:text-base">
-          <button onClick={() => scrollToSection('system')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">О системе</button>
-          <button onClick={() => scrollToSection('how-it-works')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Как работает</button>
-          <button onClick={() => scrollToSection('advantages')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Преимущества</button>
-          <button onClick={() => scrollToSection('components')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Компоненты</button>
-          <button onClick={() => scrollToSection('about')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">О компании</button>
+          <button onClick={() => handleNavClick('system', 'О системе')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">О системе</button>
+          <button onClick={() => handleNavClick('how-it-works', 'Как работает')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Как работает</button>
+          <button onClick={() => handleNavClick('advantages', 'Преимущества')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Преимущества</button>
+          <button onClick={() => handleNavClick('components', 'Компоненты')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Компоненты</button>
+          <button onClick={() => handleNavClick('about', 'О компании')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">О компании</button>
           {showDocuments && (
-            <button onClick={() => scrollToSection('documents')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Документы</button>
+            <button onClick={() => handleNavClick('documents', 'Документы')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Документы</button>
           )}
-          <button onClick={() => scrollToSection('contacts')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Контакты</button>
+          <button onClick={() => handleNavClick('contacts', 'Контакты')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Контакты</button>
         </nav>
-        <Button onClick={() => scrollToSection('request')} className="hidden xl:flex text-sm 2xl:text-base whitespace-nowrap">
+        <Button onClick={() => handleRequestClick()} className="hidden xl:flex text-sm 2xl:text-base whitespace-nowrap">
           Оставить заявку
         </Button>
         
@@ -63,16 +76,16 @@ export default function Header({ scrollToSection }: HeaderProps) {
           </SheetTrigger>
           <SheetContent side="right" className="w-[280px]">
             <nav className="flex flex-col gap-4 mt-8">
-              <button onClick={() => handleMobileNavClick('system')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">О системе</button>
-              <button onClick={() => handleMobileNavClick('how-it-works')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Как работает</button>
-              <button onClick={() => handleMobileNavClick('advantages')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Преимущества</button>
-              <button onClick={() => handleMobileNavClick('components')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Компоненты</button>
-              <button onClick={() => handleMobileNavClick('about')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">О компании</button>
+              <button onClick={() => handleMobileNavClick('system', 'О системе')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">О системе</button>
+              <button onClick={() => handleMobileNavClick('how-it-works', 'Как работает')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Как работает</button>
+              <button onClick={() => handleMobileNavClick('advantages', 'Преимущества')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Преимущества</button>
+              <button onClick={() => handleMobileNavClick('components', 'Компоненты')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Компоненты</button>
+              <button onClick={() => handleMobileNavClick('about', 'О компании')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">О компании</button>
               {showDocuments && (
-                <button onClick={() => handleMobileNavClick('documents')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Документы</button>
+                <button onClick={() => handleMobileNavClick('documents', 'Документы')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Документы</button>
               )}
-              <button onClick={() => handleMobileNavClick('contacts')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Контакты</button>
-              <Button onClick={() => handleMobileNavClick('request')} className="mt-4 w-full">
+              <button onClick={() => handleMobileNavClick('contacts', 'Контакты')} className="text-left text-lg text-slate-600 hover:text-primary transition py-2">Контакты</button>
+              <Button onClick={() => handleRequestClick(true)} className="mt-4 w-full">
                 Оставить заявку
               </Button>
             </nav>

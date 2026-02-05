@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
-import { trackClick } from '@/utils/trackClick';
+import { trackClick } from '@/utils/trackVisit';
 import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
 
 interface FooterProps {
@@ -40,20 +40,20 @@ export default function Footer({ scrollToSection }: FooterProps) {
           <div>
             <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg">Навигация</h4>
             <ul className="space-y-2 text-sm md:text-base text-slate-400">
-              <li><button onClick={() => scrollToSection('system')} className="hover:text-white transition">О системе</button></li>
-              <li><button onClick={() => scrollToSection('advantages')} className="hover:text-white transition">Преимущества</button></li>
-              <li><button onClick={() => scrollToSection('components')} className="hover:text-white transition">Компоненты</button></li>
+              <li><button onClick={() => { trackClick('О системе (футер)', 'footer'); scrollToSection('system'); }} className="hover:text-white transition">О системе</button></li>
+              <li><button onClick={() => { trackClick('Преимущества (футер)', 'footer'); scrollToSection('advantages'); }} className="hover:text-white transition">Преимущества</button></li>
+              <li><button onClick={() => { trackClick('Компоненты (футер)', 'footer'); scrollToSection('components'); }} className="hover:text-white transition">Компоненты</button></li>
             </ul>
           </div>
           <div>
             <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg">Компания</h4>
             <ul className="space-y-2 text-sm md:text-base text-slate-400">
-              <li><button onClick={() => scrollToSection('about')} className="hover:text-white transition">О нас</button></li>
+              <li><button onClick={() => { trackClick('О нас (футер)', 'footer'); scrollToSection('about'); }} className="hover:text-white transition">О нас</button></li>
               {showDocuments && (
-                <li><button onClick={() => scrollToSection('documents')} className="hover:text-white transition">Документы</button></li>
+                <li><button onClick={() => { trackClick('Документы (футер)', 'footer'); scrollToSection('documents'); }} className="hover:text-white transition">Документы</button></li>
               )}
-              <li><button onClick={() => scrollToSection('contacts')} className="hover:text-white transition">Контакты</button></li>
-              <li><button onClick={() => setShowPrivacyPolicy(true)} className="hover:text-white transition">Политика конфиденциальности</button></li>
+              <li><button onClick={() => { trackClick('Контакты (футер)', 'footer'); scrollToSection('contacts'); }} className="hover:text-white transition">Контакты</button></li>
+              <li><button onClick={() => { trackClick('Политика конфиденциальности', 'footer'); setShowPrivacyPolicy(true); }} className="hover:text-white transition">Политика конфиденциальности</button></li>
             </ul>
           </div>
           <div>

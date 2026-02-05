@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
-import { trackClick } from '@/utils/trackClick';
+import { trackClick } from '@/utils/trackVisit';
 
 interface ContactsSectionProps {
   scrollToSection?: (id: string) => void;

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
-import { trackClick } from '@/utils/trackClick';
+import { trackClick } from '@/utils/trackVisit';
 
 interface HeroSectionProps {
   scrollToSection: (id: string) => void;

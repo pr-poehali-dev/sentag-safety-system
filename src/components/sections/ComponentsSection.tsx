@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
+import { trackClick } from '@/utils/trackVisit';
 
 export default function ComponentsSection() {
   const [expandedComponent, setExpandedComponent] = useState<string | null>(null);
 
-  const toggleComponent = (id: string) => {
+  const toggleComponent = (id: string, label: string) => {
+    const isExpanding = expandedComponent !== id;
+    trackClick(`${isExpanding ? 'Подробнее' : 'Скрыть'}: ${label}`, 'components');
     setExpandedComponent(expandedComponent === id ? null : id);
   };
 
@@ -55,7 +58,7 @@ export default function ComponentsSection() {
             )}
             
             <Button 
-              onClick={() => toggleComponent('bracelet')}
+              onClick={() => toggleComponent('bracelet', 'Браслет')}
               variant="outline"
               className="w-full"
             >
@@ -92,7 +95,7 @@ export default function ComponentsSection() {
             )}
             
             <Button 
-              onClick={() => toggleComponent('control')}
+              onClick={() => toggleComponent('control', 'Блок управления')}
               variant="outline"
               className="w-full"
             >
@@ -130,7 +133,7 @@ export default function ComponentsSection() {
             )}
             
             <Button 
-              onClick={() => toggleComponent('wall')}
+              onClick={() => toggleComponent('wall', 'Настенный модуль')}
               variant="outline"
               className="w-full"
             >
@@ -168,7 +171,7 @@ export default function ComponentsSection() {
             )}
             
             <Button 
-              onClick={() => toggleComponent('sensor')}
+              onClick={() => toggleComponent('sensor', 'Сенсор для чаши бассейна')}
               variant="outline"
               className="w-full"
             >
@@ -206,7 +209,7 @@ export default function ComponentsSection() {
             )}
             
             <Button 
-              onClick={() => toggleComponent('iologik')}
+              onClick={() => toggleComponent('iologik', 'Блок ввода-вывода')}
               variant="outline"
               className="w-full"
             >
@@ -254,7 +257,7 @@ export default function ComponentsSection() {
             )}
             
             <Button 
-              onClick={() => toggleComponent('tester')}
+              onClick={() => toggleComponent('tester', 'Тестер-программатор браслетов')}
               variant="outline"
               className="w-full"
             >
