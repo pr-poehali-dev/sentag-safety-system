@@ -94,25 +94,6 @@ def handler(event: dict, context) -> dict:
                 if visitor_id and request_data.get('step1_started_at'):
                     form_start = request_data['step1_started_at']
                     
-                    # Получаем активность пользователя из таблицы visitors
-                    cur.execute("""
-                        SELECT first_visit, last_activity
-                        FROM visitors
-                        WHERE visitor_id = %s
-                    """, (visitor_id,))
-                    visitor_row = cur.fetchone()
-                    
-                    if visitor_row and visitor_row['first_visit']:
-                        first_visit = visitor_row['first_visit']
-                        last_activity = visitor_row['last_activity']
-                        
-                        user_activity['first_visit'] = first_visit.isoformat()
-                        
-                        # Время на сайте = от первого посещения до последней активности (или начала формы)
-                        if last_activity and first_visit:
-                            time_delta = (last_activity - first_visit).total_seconds()
-                            user_activity['time_on_site'] = int(time_delta)
-                    
                     # Получаем клики ДО начала заполнения формы
                     cur.execute("""
                         SELECT button_name, button_location, clicked_at
@@ -122,7 +103,7 @@ def handler(event: dict, context) -> dict:
                     """, (visitor_id, form_start))
                     click_rows = cur.fetchall()
                     
-                    user_activity['clicks'] = [
+                    clicks_list = [
                         {
                             'button_name': click['button_name'],
                             'button_location': click['button_location'],
@@ -130,6 +111,34 @@ def handler(event: dict, context) -> dict:
                         }
                         for click in click_rows
                     ]
+                    user_activity['clicks'] = clicks_list
+                    
+                    # Время на сайте = от первого клика до начала заполнения формы
+                    if clicks_list and len(clicks_list) > 0:
+                        first_click_time = click_rows[0]['clicked_at']
+                        user_activity['first_visit'] = first_click_time.isoformat()
+                        
+                        time_delta = (form_start - first_click_time).total_seconds()
+                        user_activity['time_on_site'] = int(time_delta)
+                    else:
+                        # Если кликов не было, используем данные из таблицы visitors
+                        cur.execute("""
+                            SELECT first_visit
+                            FROM visitors
+                            WHERE visitor_id = %s
+                        """, (visitor_id,))
+                        visitor_row = cur.fetchone()
+                        
+                        if visitor_row and visitor_row['first_visit']:
+                            first_visit = visitor_row['first_visit']
+                            user_activity['first_visit'] = first_visit.isoformat()
+                            
+                            if first_visit.tzinfo is None:
+                                from datetime import timezone
+                                first_visit = first_visit.replace(tzinfo=timezone.utc)
+                            
+                            time_delta = (form_start - first_visit).total_seconds()
+                            user_activity['time_on_site'] = int(time_delta)
             except Exception as activity_error:
                 print(f"Warning: Could not load user activity for request {request_data.get('id')}: {activity_error}")
                 import traceback

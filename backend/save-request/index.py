@@ -105,48 +105,65 @@ def handler(event: dict, context) -> dict:
             # Получаем активность пользователя для шага 1
             user_activity = None
             print(f"Step 1: visitor_id={visitor_id}")
-            if visitor_id:
+            if visitor_id and step1_started:
                 try:
-                    cur.execute("""
-                        SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
-                    """, (visitor_id,))
-                    visitor_row = cur.fetchone()
-                    print(f"Step 1: visitor_row={visitor_row}")
+                    from datetime import datetime, timezone
                     
-                    if visitor_row:
-                        first_visit = visitor_row[0]
-                        last_activity = visitor_row[1]
-                        
-                        time_on_site = 0
-                        if first_visit and last_activity:
-                            time_on_site = int((last_activity - first_visit).total_seconds())
-                        
-                        print(f"Step 1: time_on_site={time_on_site}")
-                        
-                        # Получаем клики до начала заполнения формы
-                        cur.execute("""
-                            SELECT button_name, button_location, clicked_at
-                            FROM t_p28851569_sentag_safety_system.button_clicks
-                            WHERE visitor_id = %s
-                            ORDER BY clicked_at ASC
+                    # Преобразуем step1_started в datetime
+                    form_start = datetime.fromisoformat(step1_started.replace('Z', '+00:00'))
+                    
+                    # Получаем клики до начала заполнения формы
+                    cur.execute("""
+                        SELECT button_name, button_location, clicked_at
+                        FROM button_clicks
+                        WHERE visitor_id = %s
+                        ORDER BY clicked_at ASC
+                    """, (visitor_id,))
+                    
+                    clicks = []
+                    for click_row in cur.fetchall():
+                        clicks.append({
+                            'button_name': click_row[0],
+                            'button_location': click_row[1],
+                            'clicked_at': click_row[2].isoformat()
+                        })
+                    
+                    print(f"Step 1: clicks count={len(clicks)}")
+                    
+                    # Время на сайте = от первого клика до начала заполнения формы
+                    time_on_site = 0
+                    if len(clicks) > 0:
+                        first_click_time = cur.execute("""
+                            SELECT MIN(clicked_at) FROM button_clicks WHERE visitor_id = %s
                         """, (visitor_id,))
-                        
-                        clicks = []
-                        for click_row in cur.fetchall():
-                            clicks.append({
-                                'button_name': click_row[0],
-                                'button_location': click_row[1],
-                                'clicked_at': click_row[2].isoformat()
-                            })
-                        
-                        print(f"Step 1: clicks count={len(clicks)}")
-                        
-                        user_activity = {
-                            'time_on_site': time_on_site,
-                            'clicks': clicks
-                        }
+                        first_click = cur.fetchone()
+                        if first_click and first_click[0]:
+                            first_click_time = first_click[0]
+                            if first_click_time.tzinfo is None:
+                                first_click_time = first_click_time.replace(tzinfo=timezone.utc)
+                            time_on_site = int((form_start - first_click_time).total_seconds())
+                    else:
+                        # Если кликов не было, используем данные из таблицы visitors
+                        cur.execute("""
+                            SELECT first_visit FROM visitors WHERE visitor_id = %s
+                        """, (visitor_id,))
+                        visitor_row = cur.fetchone()
+                        if visitor_row and visitor_row[0]:
+                            first_visit = visitor_row[0]
+                            if first_visit.tzinfo is None:
+                                first_visit = first_visit.replace(tzinfo=timezone.utc)
+                            time_on_site = int((form_start - first_visit).total_seconds())
+                    
+                    print(f"Step 1: time_on_site={time_on_site}")
+                    
+                    user_activity = {
+                        'time_on_site': time_on_site,
+                        'clicks': clicks
+                    }
                 except Exception as e:
                     print(f"Step 1: Could not load user activity: {e}")
+                    import traceback
+                    print(f"Step 1: Traceback: {traceback.format_exc()}")
                     user_activity = None
             
             print(f"Step 1: user_activity={user_activity}")
@@ -240,45 +257,65 @@ def handler(event: dict, context) -> dict:
             
             if visitor_id:
                 try:
-                    print(f"Step 2: Loading user activity for visitor_id={visitor_id}")
-                    cur.execute("""
-                        SELECT first_visit, last_activity FROM visitors WHERE visitor_id = %s
-                    """, (visitor_id,))
-                    visitor_row = cur.fetchone()
-                    print(f"Step 2: visitor_row={visitor_row}")
+                    from datetime import timezone
                     
-                    if visitor_row:
-                        first_visit = visitor_row[0]
-                        last_activity = visitor_row[1]
-                        
-                        time_on_site = 0
-                        if first_visit and last_activity:
-                            time_on_site = int((last_activity - first_visit).total_seconds())
-                        
-                        print(f"Step 2: time_on_site={time_on_site}")
-                        
+                    print(f"Step 2: Loading user activity for visitor_id={visitor_id}")
+                    step1_started_at = row[7]  # step1_started_at из request_forms
+                    
+                    # Получаем клики ДО начала заполнения формы
+                    cur.execute("""
+                        SELECT button_name, button_location, clicked_at
+                        FROM button_clicks
+                        WHERE visitor_id = %s AND clicked_at < %s
+                        ORDER BY clicked_at ASC
+                    """, (visitor_id, step1_started_at))
+                    
+                    clicks = []
+                    for click_row in cur.fetchall():
+                        clicks.append({
+                            'button_name': click_row[0],
+                            'button_location': click_row[1],
+                            'clicked_at': click_row[2].isoformat()
+                        })
+                    
+                    print(f"Step 2: clicks count={len(clicks)}")
+                    
+                    # Время на сайте = от первого клика до начала заполнения формы
+                    time_on_site = 0
+                    if len(clicks) > 0:
                         cur.execute("""
-                            SELECT button_name, button_location, clicked_at
-                            FROM button_clicks
+                            SELECT MIN(clicked_at) FROM button_clicks 
                             WHERE visitor_id = %s AND clicked_at < %s
-                            ORDER BY clicked_at ASC
-                        """, (visitor_id, row[7]))
-                        
-                        clicks = []
-                        for click_row in cur.fetchall():
-                            clicks.append({
-                                'button_name': click_row[0],
-                                'button_location': click_row[1],
-                                'clicked_at': click_row[2].isoformat()
-                            })
-                        
-                        print(f"Step 2: clicks count={len(clicks)}")
-                        
-                        user_activity = {
-                            'time_on_site': time_on_site,
-                            'clicks': clicks
-                        }
-                        print(f"Step 2: user_activity={user_activity}")
+                        """, (visitor_id, step1_started_at))
+                        first_click = cur.fetchone()
+                        if first_click and first_click[0]:
+                            first_click_time = first_click[0]
+                            if first_click_time.tzinfo is None:
+                                first_click_time = first_click_time.replace(tzinfo=timezone.utc)
+                            if step1_started_at.tzinfo is None:
+                                step1_started_at = step1_started_at.replace(tzinfo=timezone.utc)
+                            time_on_site = int((step1_started_at - first_click_time).total_seconds())
+                    else:
+                        # Если кликов не было, используем данные из таблицы visitors
+                        cur.execute("""
+                            SELECT first_visit FROM visitors WHERE visitor_id = %s
+                        """, (visitor_id,))
+                        visitor_row = cur.fetchone()
+                        if visitor_row and visitor_row[0]:
+                            first_visit = visitor_row[0]
+                            if first_visit.tzinfo is None:
+                                first_visit = first_visit.replace(tzinfo=timezone.utc)
+                            if step1_started_at.tzinfo is None:
+                                step1_started_at = step1_started_at.replace(tzinfo=timezone.utc)
+                            time_on_site = int((step1_started_at - first_visit).total_seconds())
+                    
+                    print(f"Step 2: time_on_site={time_on_site}")
+                    
+                    user_activity = {
+                        'time_on_site': time_on_site,
+                        'clicks': clicks
+                    }
+                    print(f"Step 2: user_activity={user_activity}")
                 except Exception as e:
                     print(f"Step 2: Could not load user activity: {type(e).__name__}: {e}")
                     import traceback
