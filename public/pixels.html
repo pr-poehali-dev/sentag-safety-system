@@ -1,0 +1,139 @@
+<!-- 
+  Инструкция по настройке пикселей для рекламных платформ
+  
+  ВАЖНО: Этот файл содержит шаблоны для подключения пикселей отслеживания.
+  Раскомментируйте и настройте нужные блоки после получения ID пикселей.
+-->
+
+<!-- Google Analytics 4 -->
+<!-- 
+Для подключения:
+1. Создайте аккаунт Google Analytics 4
+2. Получите MEASUREMENT_ID (формат: G-XXXXXXXXXX)
+3. Замените YOUR_MEASUREMENT_ID на ваш ID
+4. Раскомментируйте блок ниже
+-->
+<!--
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'YOUR_MEASUREMENT_ID');
+</script>
+-->
+
+<!-- Facebook Pixel -->
+<!-- 
+Для подключения:
+1. Создайте пиксель в Facebook Events Manager
+2. Получите PIXEL_ID
+3. Замените YOUR_PIXEL_ID на ваш ID
+4. Раскомментируйте блок ниже
+-->
+<!--
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'YOUR_PIXEL_ID');
+  fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+</noscript>
+-->
+
+<!-- VK Pixel -->
+<!-- 
+Для подключения:
+1. Создайте пиксель ВКонтакте в рекламном кабинете
+2. Получите VK_PIXEL_ID
+3. Замените YOUR_VK_PIXEL_ID на ваш ID
+4. Раскомментируйте блок ниже
+-->
+<!--
+<script type="text/javascript">
+!function(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src='https://vk.com/js/api/openapi.js?169',t.onload=function(){VK.Retargeting.Init("YOUR_VK_PIXEL_ID"),VK.Retargeting.Hit()},document.head.appendChild(t)}();
+</script>
+<noscript>
+  <img src="https://vk.com/rtrg?p=YOUR_VK_PIXEL_ID" style="position:fixed; left:-999px;" alt=""/>
+</noscript>
+-->
+
+<!-- myTarget (Mail.ru) Pixel -->
+<!-- 
+Для подключения:
+1. Создайте счетчик в myTarget
+2. Получите COUNTER_ID
+3. Замените YOUR_COUNTER_ID на ваш ID
+4. Раскомментируйте блок ниже
+-->
+<!--
+<script type="text/javascript">
+var _tmr = window._tmr || (window._tmr = []);
+_tmr.push({id: "YOUR_COUNTER_ID", type: "pageView", start: (new Date()).getTime()});
+(function (d, w, id) {
+  if (d.getElementById(id)) return;
+  var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+  ts.src = "https://top-fwz1.mail.ru/js/code.js";
+  var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+  if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+})(document, window, "tmr-code");
+</script>
+<noscript>
+  <div><img src="https://top-fwz1.mail.ru/counter?id=YOUR_COUNTER_ID;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div>
+</noscript>
+-->
+
+<!-- TikTok Pixel -->
+<!-- 
+Для подключения:
+1. Создайте пиксель в TikTok Ads Manager
+2. Получите PIXEL_ID
+3. Замените YOUR_TIKTOK_PIXEL_ID на ваш ID
+4. Раскомментируйте блок ниже
+-->
+<!--
+<script>
+!function (w, d, t) {
+  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+  ttq.load('YOUR_TIKTOK_PIXEL_ID');
+  ttq.page();
+}(window, document, 'ttq');
+</script>
+-->
+
+<!-- 
+  ИНСТРУКЦИЯ ПО ИСПОЛЬЗОВАНИЮ:
+  
+  1. Выберите нужные рекламные платформы
+  2. Создайте аккаунты и получите ID пикселей
+  3. Замените YOUR_*_ID на реальные значения
+  4. Раскомментируйте соответствующие блоки
+  5. Добавьте этот файл в index.html перед закрывающим тегом </head>
+  
+  ВАЖНО: После настройки пикселей, события будут автоматически отправляться
+  из системы отслеживания (src/utils/tracking.ts)
+  
+  События, которые отслеживаются:
+  - PAGE_VIEW - просмотр страницы
+  - VIEW_CONTENT - просмотр контента
+  - SCROLL_DEPTH - глубина прокрутки (25%, 50%, 75%, 100%)
+  - CLICK_PHONE - клик по телефону
+  - CLICK_EMAIL - клик по email
+  - CLICK_MAP - клик по карте
+  - VIEW_DOCUMENT - просмотр документа
+  - START_FORM - начало заполнения формы
+  - COMPLETE_STEP_1 - завершение 1 шага формы
+  - COMPLETE_STEP_2 - завершение 2 шага формы
+  - SUBMIT_FORM - отправка формы
+  - LEAD - лид (конверсия)
+  - REQUEST_CALL - запрос обратного звонка
+-->

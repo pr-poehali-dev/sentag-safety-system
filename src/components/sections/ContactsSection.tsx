@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { trackClick } from '@/utils/trackVisit';
+import { trackEvent, TrackingEvent, EventCategory } from '@/utils/tracking';
 
 interface ContactsSectionProps {
   scrollToSection?: (id: string) => void;
@@ -10,6 +11,9 @@ interface ContactsSectionProps {
 export default function ContactsSection({ scrollToSection }: ContactsSectionProps) {
   const handleCallRequest = () => {
     trackClick('Заказать звонок', 'contacts');
+    trackEvent(TrackingEvent.REQUEST_CALL, EventCategory.CONVERSION, {
+      contact_method: 'phone_callback',
+    });
     if (scrollToSection) {
       scrollToSection('request');
     } else {
@@ -19,6 +23,9 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
 
   const handleCopyEmail = () => {
     trackClick('Написать письмо', 'contacts');
+    trackEvent(TrackingEvent.CLICK_EMAIL, EventCategory.CONTACT, {
+      contact_method: 'email',
+    });
     navigator.clipboard.writeText('info@meridian-t.ru');
     alert('Email скопирован в буфер обмена');
   };
@@ -39,7 +46,12 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
                 href="https://yandex.ru/maps/?text=г.+Тюмень,+ул.+30+лет+Победы,+д.+60А" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                onClick={() => trackClick('Открыть на карте', 'contacts')}
+                onClick={() => {
+                  trackClick('Открыть на карте', 'contacts');
+                  trackEvent(TrackingEvent.CLICK_MAP, EventCategory.CONTACT, {
+                    contact_method: 'map',
+                  });
+                }}
               >
                 Открыть на карте
               </a>
@@ -54,7 +66,12 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
               <a 
                 href="tel:+73452568286" 
                 className="hover:text-primary transition"
-                onClick={() => trackClick('Клик по телефону', 'contacts')}
+                onClick={() => {
+                  trackClick('Клик по телефону', 'contacts');
+                  trackEvent(TrackingEvent.CLICK_PHONE, EventCategory.CONTACT, {
+                    contact_method: 'phone_direct',
+                  });
+                }}
               >
                 +7 (3452) 56-82-86
               </a>
@@ -70,10 +87,7 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
             <h3 className="font-bold text-lg mb-2 text-slate-800">Email</h3>
             <p className="text-slate-600">
               <button 
-                onClick={() => {
-                  trackClick('Клик по email', 'contacts');
-                  handleCopyEmail();
-                }} 
+                onClick={handleCopyEmail}
                 className="hover:text-primary transition cursor-pointer"
               >
                 info@meridian-t.ru

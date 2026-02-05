@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { trackClick } from '@/utils/trackVisit';
+import { trackEvent, TrackingEvent, EventCategory } from '@/utils/tracking';
 
 export default function DocumentsSection() {
   return (
@@ -22,7 +23,12 @@ export default function DocumentsSection() {
             <Card 
               key={idx} 
               className="p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
-              onClick={() => trackClick(`Документ: ${item.title}`, 'documents')}
+              onClick={() => {
+                trackClick(`Документ: ${item.title}`, 'documents');
+                trackEvent(TrackingEvent.VIEW_DOCUMENT, EventCategory.ENGAGEMENT, {
+                  document_title: item.title,
+                });
+              }}
             >
               <div className="w-16 h-16 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                 <Icon name={item.icon} className="text-primary" size={32} />

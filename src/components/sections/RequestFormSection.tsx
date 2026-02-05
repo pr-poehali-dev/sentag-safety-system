@@ -4,6 +4,7 @@ import FormStep1 from './request-form/FormStep1';
 import FormStep2 from './request-form/FormStep2';
 import PrivacyPolicyModal from '@/components/PrivacyPolicyModal';
 import { trackClick } from '@/utils/trackVisit';
+import { trackEvent, TrackingEvent, EventCategory } from '@/utils/tracking';
 
 export default function RequestFormSection() {
   const [formStep, setFormStep] = useState(1);
@@ -22,6 +23,9 @@ export default function RequestFormSection() {
 
   useEffect(() => {
     setStep1StartTime(new Date().toISOString());
+    trackEvent(TrackingEvent.START_FORM, EventCategory.FORM, {
+      form_name: 'request_calculation',
+    });
   }, []);
   const [formData, setFormData] = useState({
     phone: '',
@@ -103,6 +107,10 @@ export default function RequestFormSection() {
         console.log('Step 1: Success! RequestId:', result.requestId);
         setRequestId(result.requestId);
         setStep2StartTime(new Date().toISOString());
+        trackEvent(TrackingEvent.COMPLETE_STEP_1, EventCategory.FORM, {
+          form_name: 'request_calculation',
+          request_id: result.requestId,
+        });
         setFormStep(2);
       } else {
         console.error('Step 1: Server returned error:', result);
@@ -218,6 +226,19 @@ export default function RequestFormSection() {
       
       if (result.success) {
         setUploadProgress('Заявка успешно отправлена!');
+        trackEvent(TrackingEvent.COMPLETE_STEP_2, EventCategory.FORM, {
+          form_name: 'request_calculation',
+          request_id: requestId,
+        });
+        trackEvent(TrackingEvent.SUBMIT_FORM, EventCategory.CONVERSION, {
+          form_name: 'request_calculation',
+          request_id: requestId,
+        });
+        trackEvent(TrackingEvent.LEAD, EventCategory.CONVERSION, {
+          form_name: 'request_calculation',
+          request_id: requestId,
+          lead_type: 'request_calculation',
+        });
         setTimeout(() => {
           alert('Заявка успешно отправлена!');
           setFormStep(1);
