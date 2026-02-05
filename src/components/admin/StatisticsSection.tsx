@@ -56,6 +56,7 @@ interface StatisticsSectionProps {
 
 export default function StatisticsSection({ users, requests }: StatisticsSectionProps) {
   const [clickStats, setClickStats] = useState<ClickStats | null>(null);
+  const [onlineVisitors, setOnlineVisitors] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [isClearing, setIsClearing] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -86,8 +87,27 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
       });
   };
 
+  const loadOnlineVisitors = () => {
+    fetch('https://functions.poehali.dev/e68367dd-bf35-454c-bee2-9625e5a28fe4')
+      .then(res => res.json())
+      .then(data => {
+        setOnlineVisitors(data.online_visitors || 0);
+      })
+      .catch(err => {
+        console.error('Error fetching online visitors:', err);
+      });
+  };
+
   useEffect(() => {
     loadStats();
+    loadOnlineVisitors();
+    
+    // Обновляем онлайн-посетителей каждые 10 секунд
+    const intervalId = setInterval(() => {
+      loadOnlineVisitors();
+    }, 10000);
+    
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleClearStats = async () => {
@@ -174,6 +194,34 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
         </div>
       </div>
       
+      {/* Онлайн-посетители */}
+      <div className="mb-6">
+        <div className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <Icon name="Users" className="text-green-600" size={40} />
+                <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+                </span>
+              </div>
+              <div>
+                <p className="text-4xl font-bold text-green-700">{onlineVisitors}</p>
+                <p className="text-slate-700 font-medium">На сайте сейчас</p>
+                <p className="text-xs text-slate-500 mt-1">Активность за последние 5 минут</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 rounded-full">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-semibold text-green-700">ОНЛАЙН</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Общая статистика */}
       <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         <div className="p-4 bg-cyan-50 rounded-lg">
