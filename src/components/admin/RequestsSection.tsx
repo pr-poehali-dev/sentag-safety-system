@@ -152,12 +152,13 @@ export default function RequestsSection({
                     </p>
                     <p className="text-xs text-slate-400">
                       <Icon name="Calendar" className="inline mr-1 flex-shrink-0" size={12} />
-                      {new Date(request.created_at).toLocaleString('ru-RU', {
+                      {new Date(request.step1_completed_at).toLocaleString('ru-RU', {
                         day: '2-digit',
                         month: 'long',
                         year: 'numeric',
                         hour: '2-digit',
-                        minute: '2-digit'
+                        minute: '2-digit',
+                        timeZone: 'Asia/Yekaterinburg'
                       })}
                     </p>
                     <div className="flex gap-3 mt-2">
@@ -266,7 +267,12 @@ export default function RequestsSection({
                             <span className="text-xs text-slate-500">({click.button_location})</span>
                           </div>
                           <span className="text-xs text-slate-400">
-                            {new Date(click.clicked_at).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                            {new Date(click.clicked_at).toLocaleTimeString('ru-RU', { 
+                              hour: '2-digit', 
+                              minute: '2-digit', 
+                              second: '2-digit',
+                              timeZone: 'Asia/Yekaterinburg'
+                            })}
                           </span>
                         </div>
                       ))}
