@@ -395,9 +395,18 @@ def send_telegram_step1(request_id: int, data: dict, user_activity: dict = None)
             message += f"\n⏱ Время на сайте до заявки: {time_formatted}"
             
             if clicks:
-                message += f"\n🖱 Кликов: {len(clicks)}"
-                message += "\n\n<b>История кликов:</b>"
-                for i, click in enumerate(clicks, 1):
+                total_clicks = len(clicks)
+                message += f"\n🖱 Кликов: {total_clicks}"
+                
+                # Показываем только последние 15 кликов, чтобы не превысить лимит Telegram (4096 символов)
+                display_clicks = clicks[-15:] if total_clicks > 15 else clicks
+                
+                if total_clicks > 15:
+                    message += f"\n\n<b>История кликов (последние 15 из {total_clicks}):</b>"
+                else:
+                    message += "\n\n<b>История кликов:</b>"
+                
+                for i, click in enumerate(display_clicks, 1):
                     from datetime import datetime, timezone, timedelta
                     clicked_time = click['clicked_at']
                     if isinstance(clicked_time, str):
@@ -556,9 +565,18 @@ def send_telegram_step2(request_id: int, data: dict):
             message += f"\n⏱ Время на сайте до заявки: {time_formatted}"
             
             if clicks:
-                message += f"\n🖱 Кликов: {len(clicks)}"
-                message += "\n\n<b>История кликов:</b>"
-                for i, click in enumerate(clicks, 1):
+                total_clicks = len(clicks)
+                message += f"\n🖱 Кликов: {total_clicks}"
+                
+                # Показываем только последние 15 кликов, чтобы не превысить лимит Telegram (4096 символов)
+                display_clicks = clicks[-15:] if total_clicks > 15 else clicks
+                
+                if total_clicks > 15:
+                    message += f"\n\n<b>История кликов (последние 15 из {total_clicks}):</b>"
+                else:
+                    message += "\n\n<b>История кликов:</b>"
+                
+                for i, click in enumerate(display_clicks, 1):
                     from datetime import datetime, timezone, timedelta
                     clicked_time = click['clicked_at']
                     if isinstance(clicked_time, str):
