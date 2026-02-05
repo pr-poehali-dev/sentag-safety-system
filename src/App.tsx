@@ -8,6 +8,7 @@ import { useEffect, lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { trackEvent, TrackingEvent, EventCategory, initScrollTracking, initTimeTracking } from "@/utils/tracking";
+import { trackVisit, updateActivity } from "@/utils/trackVisit";
 
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -19,6 +20,15 @@ const App = () => {
     trackEvent(TrackingEvent.PAGE_VIEW, EventCategory.ENGAGEMENT);
     initScrollTracking();
     initTimeTracking();
+    
+    // Отслеживание первого посещения
+    trackVisit();
+    
+    // Обновление активности каждые 2 минуты для онлайн-статистики
+    updateActivity();
+    const activityInterval = setInterval(() => {
+      updateActivity();
+    }, 2 * 60 * 1000); // 2 минуты
 
     const updateFavicon = () => {
       const faviconUrl = localStorage.getItem('favicon_url') || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
@@ -41,6 +51,7 @@ const App = () => {
     window.addEventListener('faviconUpdate', handleFaviconChange);
 
     return () => {
+      clearInterval(activityInterval);
       window.removeEventListener('faviconUpdate', handleFaviconChange);
     };
   }, []);
