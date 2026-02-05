@@ -51,7 +51,13 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
             </div>
             <h3 className="font-bold text-lg mb-2 text-slate-800">Телефон</h3>
             <p className="text-slate-600">
-              <a href="tel:+73452568286" className="hover:text-primary transition">+7 (3452) 56-82-86</a>
+              <a 
+                href="tel:+73452568286" 
+                className="hover:text-primary transition"
+                onClick={() => trackClick('Клик по телефону', 'contacts')}
+              >
+                +7 (3452) 56-82-86
+              </a>
             </p>
             <Button variant="link" className="mt-4" onClick={handleCallRequest}>
               Заказать звонок
@@ -63,7 +69,15 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
             </div>
             <h3 className="font-bold text-lg mb-2 text-slate-800">Email</h3>
             <p className="text-slate-600">
-              <button onClick={handleCopyEmail} className="hover:text-primary transition cursor-pointer">info@meridian-t.ru</button>
+              <button 
+                onClick={() => {
+                  trackClick('Клик по email', 'contacts');
+                  handleCopyEmail();
+                }} 
+                className="hover:text-primary transition cursor-pointer"
+              >
+                info@meridian-t.ru
+              </button>
             </p>
             <Button variant="link" className="mt-4" onClick={handleCopyEmail}>
               Написать письмо
