@@ -94,18 +94,24 @@ def handler(event: dict, context) -> dict:
                 if visitor_id and request_data.get('step1_started_at'):
                     form_start = request_data['step1_started_at']
                     
-                    # Получаем первое посещение
+                    # Получаем активность пользователя из таблицы visitors
                     cur.execute("""
-                        SELECT MIN(visited_at) as first_visit
-                        FROM page_visits
+                        SELECT first_visit, last_activity
+                        FROM visitors
                         WHERE visitor_id = %s
                     """, (visitor_id,))
-                    visit_row = cur.fetchone()
-                    if visit_row and visit_row['first_visit']:
-                        user_activity['first_visit'] = visit_row['first_visit'].isoformat()
-                        # Время на сайте = от первого посещения до начала формы
-                        time_delta = (form_start - visit_row['first_visit']).total_seconds()
-                        user_activity['time_on_site'] = int(time_delta)
+                    visitor_row = cur.fetchone()
+                    
+                    if visitor_row and visitor_row['first_visit']:
+                        first_visit = visitor_row['first_visit']
+                        last_activity = visitor_row['last_activity']
+                        
+                        user_activity['first_visit'] = first_visit.isoformat()
+                        
+                        # Время на сайте = от первого посещения до последней активности (или начала формы)
+                        if last_activity and first_visit:
+                            time_delta = (last_activity - first_visit).total_seconds()
+                            user_activity['time_on_site'] = int(time_delta)
                     
                     # Получаем клики ДО начала заполнения формы
                     cur.execute("""
@@ -126,6 +132,8 @@ def handler(event: dict, context) -> dict:
                     ]
             except Exception as activity_error:
                 print(f"Warning: Could not load user activity for request {request_data.get('id')}: {activity_error}")
+                import traceback
+                print(f"Traceback: {traceback.format_exc()}")
             
             request_data['user_activity'] = user_activity
             
