@@ -87,6 +87,9 @@ def handler(event: dict, context) -> dict:
         ]
         
         # Получаем количество уникальных посетителей за месяц
+        # Уникальность определяется по visitor_id (генерируется на фронтенде при первом заходе)
+        # Один visitor_id = один уникальный браузер/устройство (localStorage)
+        # Если пользователь очистит cookies/localStorage или зайдёт с другого устройства - будет считаться новым посетителем
         cursor.execute("""
             SELECT COUNT(DISTINCT visitor_id) 
             FROM page_visits 
