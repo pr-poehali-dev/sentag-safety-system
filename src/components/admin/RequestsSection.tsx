@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
@@ -49,6 +50,16 @@ export default function RequestsSection({
   onDeleteRequest,
   onDeleteAll
 }: RequestsSectionProps) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  console.log('[RequestsSection] Rendered with requests:', requests.length);
+  
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await onLoadRequests();
+    setIsRefreshing(false);
+  };
+  
   const getRoleLabel = (role: string) => {
     switch(role) {
       case 'contractor': return 'Монтажная организация';
@@ -76,9 +87,9 @@ export default function RequestsSection({
           <p className="text-slate-600">Всего заявок: {requests.length}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={onLoadRequests}>
-            <Icon name="RefreshCw" className="mr-2" size={16} />
-            Обновить
+          <Button variant="outline" onClick={handleRefresh} disabled={isRefreshing}>
+            <Icon name="RefreshCw" className={`mr-2 ${isRefreshing ? 'animate-spin' : ''}`} size={16} />
+            {isRefreshing ? 'Обновление...' : 'Обновить'}
           </Button>
           {requests.length > 0 && (
             <Button 
