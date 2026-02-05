@@ -69,9 +69,14 @@ export default function RequestFormSection() {
     console.log('Step 1: Starting submission...', formData);
     
     try {
-      // Получаем visitor_id из localStorage
-      const visitorId = localStorage.getItem('visitor_id');
+      // Получаем visitor_id из localStorage, генерируем если нет
+      let visitorId = localStorage.getItem('visitor_id');
+      if (!visitorId) {
+        visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem('visitor_id', visitorId);
+      }
       
+      console.log('Step 1: Visitor ID:', visitorId);
       console.log('Step 1: Sending fetch request...');
       const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
         method: 'POST',
