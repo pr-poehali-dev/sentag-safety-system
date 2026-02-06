@@ -94,13 +94,13 @@ def handler(event: dict, context) -> dict:
                 if visitor_id and request_data.get('step1_started_at'):
                     form_start = request_data['step1_started_at']
                     
-                    # Получаем клики ДО начала заполнения формы
+                    # Получаем ВСЕ клики пользователя
                     cur.execute("""
                         SELECT button_name, button_location, clicked_at
                         FROM button_clicks
-                        WHERE visitor_id = %s AND clicked_at < %s
+                        WHERE visitor_id = %s
                         ORDER BY clicked_at ASC
-                    """, (visitor_id, form_start))
+                    """, (visitor_id,))
                     click_rows = cur.fetchall()
                     
                     clicks_list = [

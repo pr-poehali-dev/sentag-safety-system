@@ -262,13 +262,13 @@ def handler(event: dict, context) -> dict:
                     print(f"Step 2: Loading user activity for visitor_id={visitor_id}")
                     step1_started_at = row[7]  # step1_started_at из request_forms
                     
-                    # Получаем клики ДО начала заполнения формы
+                    # Получаем ВСЕ клики пользователя
                     cur.execute("""
                         SELECT button_name, button_location, clicked_at
                         FROM button_clicks
-                        WHERE visitor_id = %s AND clicked_at < %s
+                        WHERE visitor_id = %s
                         ORDER BY clicked_at ASC
-                    """, (visitor_id, step1_started_at))
+                    """, (visitor_id,))
                     
                     clicks = []
                     for click_row in cur.fetchall():
@@ -280,13 +280,13 @@ def handler(event: dict, context) -> dict:
                     
                     print(f"Step 2: clicks count={len(clicks)}")
                     
-                    # Время на сайте = от первого клика до начала заполнения формы
+                    # Время на сайте = от первого клика до начала заполнения формы (или до последнего клика)
                     time_on_site = 0
                     if len(clicks) > 0:
                         cur.execute("""
                             SELECT MIN(clicked_at) FROM button_clicks 
-                            WHERE visitor_id = %s AND clicked_at < %s
-                        """, (visitor_id, step1_started_at))
+                            WHERE visitor_id = %s
+                        """, (visitor_id,))
                         first_click = cur.fetchone()
                         if first_click and first_click[0]:
                             first_click_time = first_click[0]
