@@ -97,13 +97,15 @@ export default function DocumentsSection() {
               className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
               onClick={() => handleDocumentClick(doc)}
             >
-              <div className="relative aspect-[3/4] bg-slate-100 overflow-hidden">
+              <div className="relative h-80 bg-slate-100 overflow-hidden">
                 {isPDF(doc.fileName) ? (
-                  <iframe
-                    src={`${doc.fileUrl}#toolbar=0&navpanes=0&scrollbar=0`}
-                    className="w-full h-full pointer-events-none scale-150 origin-top"
-                    title={doc.title}
-                  />
+                  <div className="w-full h-full flex items-center justify-center p-4">
+                    <iframe
+                      src={`${doc.fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                      className="w-full h-full pointer-events-none border-0"
+                      title={doc.title}
+                    />
+                  </div>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                     <Icon name={doc.iconName} className="text-primary" size={80} />
@@ -127,16 +129,16 @@ export default function DocumentsSection() {
       </div>
 
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
+        <DialogContent className="max-w-6xl w-[95vw] h-[95vh] flex flex-col p-6">
           <DialogHeader>
-            <DialogTitle>{selectedDoc?.title}</DialogTitle>
-            <p className="text-sm text-slate-600">{selectedDoc?.description}</p>
+            <DialogTitle className="text-2xl">{selectedDoc?.title}</DialogTitle>
+            <p className="text-sm text-slate-600 mt-1">{selectedDoc?.description}</p>
           </DialogHeader>
-          <div className="flex-1 overflow-hidden rounded-lg bg-slate-100 mt-4">
+          <div className="flex-1 overflow-hidden rounded-lg bg-slate-100 mt-4 min-h-0">
             {selectedDoc && isPDF(selectedDoc.fileName) ? (
               <iframe
-                src={selectedDoc.fileUrl}
-                className="w-full h-full"
+                src={`${selectedDoc.fileUrl}#view=FitH`}
+                className="w-full h-full border-0"
                 title={selectedDoc.title}
               />
             ) : (
