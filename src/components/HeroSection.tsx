@@ -16,7 +16,7 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
           className="w-full h-full object-cover object-center sm:object-[center_30%] md:object-center brightness-[1.2]"
         />
         <img 
-          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/db8a685c-ddf9-4f00-aad6-79bacfe19141.png" 
+          src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/b59fb4fe-6a56-4a2d-9c1b-4e1962831241.png" 
           alt="Браслет Sentag на руке" 
           className="absolute bottom-0 left-0 w-[150%] sm:w-[125%] md:w-[100%] lg:w-[87.5%] xl:w-[75%] h-auto object-contain brightness-[1.2]"
         />
