@@ -54,46 +54,46 @@ export default function Footer({ scrollToSection }: FooterProps) {
   };
 
   return (
-    <footer className="bg-slate-900 text-white py-8 md:py-12">
+    <footer className="bg-[#f5f5f5] py-8 md:py-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
           <div>
             <img 
-              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/bbb7b21a-5b12-4b3b-9d56-4f230ba9d0e6.jpg" 
+              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/dfa50620-cca3-4ff7-8b8d-c83d81e84f12.png" 
               alt="Sentag" 
               className="h-10 md:h-12 w-auto mb-3 md:mb-4"
             />
-            <p className="text-sm md:text-base text-slate-400">Безопасность вашего бассейна под контролем</p>
+            <p className="text-sm md:text-base text-slate-600">Безопасность вашего бассейна под контролем</p>
           </div>
           <div>
-            <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg">Навигация</h4>
-            <ul className="space-y-2 text-sm md:text-base text-slate-400">
-              <li><button onClick={() => { trackClick('О системе (футер)', 'footer'); scrollToSection('system'); }} className="hover:text-white transition">О системе</button></li>
-              <li><button onClick={() => { trackClick('Преимущества (футер)', 'footer'); scrollToSection('advantages'); }} className="hover:text-white transition">Преимущества</button></li>
-              <li><button onClick={() => { trackClick('Компоненты (футер)', 'footer'); scrollToSection('components'); }} className="hover:text-white transition">Компоненты</button></li>
+            <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg text-slate-900">Навигация</h4>
+            <ul className="space-y-2 text-sm md:text-base text-slate-600">
+              <li><button onClick={() => { trackClick('О системе (футер)', 'footer'); scrollToSection('system'); }} className="hover:text-primary transition">О системе</button></li>
+              <li><button onClick={() => { trackClick('Преимущества (футер)', 'footer'); scrollToSection('advantages'); }} className="hover:text-primary transition">Преимущества</button></li>
+              <li><button onClick={() => { trackClick('Компоненты (футер)', 'footer'); scrollToSection('components'); }} className="hover:text-primary transition">Компоненты</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg">Компания</h4>
-            <ul className="space-y-2 text-sm md:text-base text-slate-400">
-              <li><button onClick={() => { trackClick('О нас (футер)', 'footer'); scrollToSection('about'); }} className="hover:text-white transition">О нас</button></li>
+            <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg text-slate-900">Компания</h4>
+            <ul className="space-y-2 text-sm md:text-base text-slate-600">
+              <li><button onClick={() => { trackClick('О нас (футер)', 'footer'); scrollToSection('about'); }} className="hover:text-primary transition">О нас</button></li>
               {showDocuments && (
-                <li><button onClick={() => { trackClick('Документы (футер)', 'footer'); scrollToSection('documents'); }} className="hover:text-white transition">Документы</button></li>
+                <li><button onClick={() => { trackClick('Документы (футер)', 'footer'); scrollToSection('documents'); }} className="hover:text-primary transition">Документы</button></li>
               )}
-              <li><button onClick={() => { trackClick('Контакты (футер)', 'footer'); scrollToSection('contacts'); }} className="hover:text-white transition">Контакты</button></li>
-              <li><button onClick={() => { trackClick('Политика конфиденциальности', 'footer'); setShowPrivacyPolicy(true); }} className="hover:text-white transition">Политика конфиденциальности</button></li>
+              <li><button onClick={() => { trackClick('Контакты (футер)', 'footer'); scrollToSection('contacts'); }} className="hover:text-primary transition">Контакты</button></li>
+              <li><button onClick={() => { trackClick('Политика конфиденциальности', 'footer'); setShowPrivacyPolicy(true); }} className="hover:text-primary transition">Политика конфиденциальности</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg">Контакты</h4>
-            <ul className="space-y-2 text-sm md:text-base text-slate-400">
+            <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg text-slate-900">Контакты</h4>
+            <ul className="space-y-2 text-sm md:text-base text-slate-600">
               <li>
                 <a 
                   href="https://yandex.ru/maps/?text=г.+Тюмень,+ул.+30+лет+Победы,+д.+60А" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   onClick={() => trackClick('Адрес (футер)', 'footer')}
-                  className="hover:text-white transition flex items-center gap-1"
+                  className="hover:text-primary transition flex items-center gap-1"
                 >
                   <Icon name="MapPin" size={14} />
                   г. Тюмень, ул. 30 лет Победы, д. 60А
@@ -103,7 +103,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 <a 
                   href="tel:+73452568286" 
                   onClick={() => trackClick('Телефон (футер)', 'footer')}
-                  className="hover:text-white transition flex items-center gap-1"
+                  className="hover:text-primary transition flex items-center gap-1"
                 >
                   <Icon name="Phone" size={14} />
                   +7 (3452) 56-82-86
@@ -112,7 +112,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
               <li>
                 <button 
                   onClick={handleEmailClick}
-                  className="hover:text-white transition break-all flex items-center gap-1 text-left"
+                  className="hover:text-primary transition break-all flex items-center gap-1 text-left"
                 >
                   <Icon name="Mail" size={14} />
                   info@meridian-t.ru
@@ -121,7 +121,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
             </ul>
           </div>
         </div>
-        <div className="border-t border-slate-800 pt-6 md:pt-8 text-center text-xs md:text-sm text-slate-400">
+        <div className="border-t border-slate-300 pt-6 md:pt-8 text-center text-xs md:text-sm text-slate-600">
           <p>© 2024 Меридиан. Эксклюзивный дистрибьютор Sentag AB в России. Все права защищены.</p>
         </div>
       </div>
