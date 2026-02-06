@@ -120,8 +120,8 @@ export default function DocumentsSection() {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="text-lg font-bold mb-1 text-slate-800 line-clamp-1">{doc.title}</h3>
-                <p className="text-sm text-slate-600 line-clamp-2">{doc.description}</p>
+                <h3 className="text-lg font-bold mb-2 text-slate-800">{doc.title}</h3>
+                <p className="text-sm text-slate-600">{doc.description}</p>
               </div>
             </Card>
           ))}
