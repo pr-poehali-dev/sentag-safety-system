@@ -116,13 +116,19 @@ export default function DocumentsSection() {
         setDescription('');
         setIconName('FileText');
         setSelectedFile(null);
+        const input = document.getElementById('doc-file') as HTMLInputElement;
+        if (input) input.value = '';
         loadDocuments();
       } else {
-        const data = await response.json();
-        toast({ title: 'Ошибка', description: data.error || 'Не удалось загрузить', variant: 'destructive' });
+        const data = await response.json().catch(() => ({}));
+        const errorMsg = data.error || `Ошибка ${response.status}: ${response.statusText}`;
+        console.error('Upload error:', errorMsg, data);
+        toast({ title: 'Ошибка загрузки', description: errorMsg, variant: 'destructive' });
       }
     } catch (error) {
-      toast({ title: 'Ошибка', description: 'Ошибка загрузки', variant: 'destructive' });
+      const errorMsg = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      console.error('Upload exception:', error);
+      toast({ title: 'Ошибка', description: errorMsg, variant: 'destructive' });
     } finally {
       setUploading(false);
     }

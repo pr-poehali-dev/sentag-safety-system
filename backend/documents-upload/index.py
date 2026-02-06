@@ -115,12 +115,19 @@ def handler(event: dict, context) -> dict:
         }
         
     except Exception as e:
+        import traceback
+        error_details = {
+            'error': str(e),
+            'type': type(e).__name__,
+            'traceback': traceback.format_exc()
+        }
+        print(f"Upload error: {error_details}")
         return {
             'statusCode': 500,
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            'body': json.dumps({'error': str(e)}),
+            'body': json.dumps({'error': f"{type(e).__name__}: {str(e)}"}),
             'isBase64Encoded': False
         }
