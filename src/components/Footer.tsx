@@ -61,7 +61,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/bbb7b21a-5b12-4b3b-9d56-4f230ba9d0e6.jpg" 
               alt="Sentag" 
-              className="h-10 md:h-12 w-auto mb-3 md:mb-4"
+              className="h-10 md:h-12 w-auto mb-3 md:mb-4 mix-blend-lighten"
             />
             <p className="text-sm md:text-base text-slate-400">Безопасность вашего бассейна под контролем</p>
           </div>
