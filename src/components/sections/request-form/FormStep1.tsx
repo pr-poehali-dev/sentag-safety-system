@@ -102,20 +102,22 @@ export default function FormStep1({
         />
         {errors.company && <p className="text-sm text-red-500 mt-1">Необходимо заполнить наименование предприятия</p>}
       </div>
-      <div>
-        <Label htmlFor="role">Кем является *</Label>
-        <Select value={formData.role} onValueChange={(value) => onFormChange('role', value)}>
-          <SelectTrigger className={`mt-2 ${errors.role ? 'border-red-500 focus:ring-red-500' : ''}`}>
-            <SelectValue placeholder="Выберите" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="contractor">Монтажная организация</SelectItem>
-            <SelectItem value="customer">Собственник объекта</SelectItem>
-            <SelectItem value="design">Проектная организация</SelectItem>
-          </SelectContent>
-        </Select>
-        {errors.role && <p className="text-sm text-red-500 mt-1">Необходимо выбрать роль</p>}
-      </div>
+{formData.company && (
+        <div className="animate-fade-in">
+          <Label htmlFor="role">Кем является *</Label>
+          <Select value={formData.role} onValueChange={(value) => onFormChange('role', value)}>
+            <SelectTrigger className={`mt-2 ${errors.role ? 'border-red-500 focus:ring-red-500' : ''}`}>
+              <SelectValue placeholder="Выберите" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="contractor">Монтажная организация</SelectItem>
+              <SelectItem value="customer">Собственник объекта</SelectItem>
+              <SelectItem value="design">Проектная организация</SelectItem>
+            </SelectContent>
+          </Select>
+          {errors.role && <p className="text-sm text-red-500 mt-1">Необходимо выбрать роль</p>}
+        </div>
+      )}
       <div>
         <div className="flex items-center justify-between mb-2">
           <Label htmlFor="fullName">ФИО, должность *</Label>
