@@ -62,9 +62,10 @@ export default function DocumentsSection() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const maxSize = 10 * 1024 * 1024;
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        toast({ title: 'Ошибка', description: 'Размер файла не должен превышать 10 МБ', variant: 'destructive' });
+        toast({ title: 'Ошибка', description: 'Размер файла не должен превышать 5 МБ', variant: 'destructive' });
+        e.target.value = '';
         return;
       }
       setSelectedFile(file);
@@ -121,7 +122,12 @@ export default function DocumentsSection() {
         loadDocuments();
       } else {
         const data = await response.json().catch(() => ({}));
-        const errorMsg = data.error || `Ошибка ${response.status}: ${response.statusText}`;
+        let errorMsg = data.error || `Ошибка ${response.status}: ${response.statusText}`;
+        
+        if (response.status === 413) {
+          errorMsg = 'Файл слишком большой. Максимальный размер: 5 МБ. Попробуйте сжать файл или выбрать другой.';
+        }
+        
         console.error('Upload error:', errorMsg, data);
         toast({ title: 'Ошибка загрузки', description: errorMsg, variant: 'destructive' });
       }
@@ -210,7 +216,7 @@ export default function DocumentsSection() {
           </div>
 
           <div>
-            <Label htmlFor="doc-file">Файл (PDF, DOC, XLS, ZIP, до 10 МБ)</Label>
+            <Label htmlFor="doc-file">Файл (PDF, DOC, XLS, ZIP, до 5 МБ)</Label>
             <Input
               id="doc-file"
               type="file"
@@ -218,6 +224,7 @@ export default function DocumentsSection() {
               accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.rar"
               className="mt-2"
             />
+            <p className="text-xs text-slate-500 mt-1">⚠️ Максимальный размер файла: 5 МБ</p>
             {selectedFile && (
               <p className="text-sm text-slate-600 mt-2">
                 Выбран: {selectedFile.name} ({formatFileSize(selectedFile.size)})
