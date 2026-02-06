@@ -8,6 +8,7 @@ import UserManagementSection from '@/components/admin/UserManagementSection';
 import SiteSettingsSection from '@/components/admin/SiteSettingsSection';
 import RequestsSection from '@/components/admin/RequestsSection';
 import StatisticsSection from '@/components/admin/StatisticsSection';
+import DocumentsSection from '@/components/admin/DocumentsSection';
 
 const API_URL = 'https://functions.poehali.dev/cfaa29d5-c049-499c-b21d-9d21762b09c1';
 
@@ -396,6 +397,8 @@ export default function AdminPanel() {
               showDocuments={showDocuments}
               onToggleDocuments={toggleDocumentsSection}
             />
+
+            <DocumentsSection />
 
             <RequestsSection 
               requests={requests}
