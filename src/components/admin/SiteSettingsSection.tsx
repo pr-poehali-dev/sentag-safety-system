@@ -135,174 +135,150 @@ export default function SiteSettingsSection({
 
   return (
     <div className="space-y-6">
-        <Card className="p-4 bg-slate-50">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                <Icon name="Search" className="text-blue-600" size={20} />
-              </div>
-              <div>
-                <p className="font-semibold text-slate-800">SEO Сниппет</p>
-                <p className="text-sm text-slate-500">Заголовок и описание в поисковиках</p>
-              </div>
-            </div>
-            {!isEditingSeo && (
-              <Button variant="outline" onClick={() => setIsEditingSeo(true)}>
-                <Icon name="Edit" className="mr-2" size={16} />
-                Редактировать
-              </Button>
-            )}
-          </div>
-
-          {isEditingSeo ? (
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="seoTitle">Заголовок страницы (Title)</Label>
-                <Input
-                  id="seoTitle"
-                  value={seoTitle}
-                  onChange={(e) => setSeoTitle(e.target.value)}
-                  placeholder="Безопасность вашего бассейна под контролем"
-                  className="mt-2"
-                  maxLength={100}
-                />
-                <p className="text-xs text-slate-500 mt-1">{seoTitle.length}/100 символов</p>
-              </div>
-
-              <div>
-                <Label htmlFor="seoDescription">Описание (Description)</Label>
-                <Textarea
-                  id="seoDescription"
-                  value={seoDescription}
-                  onChange={(e) => setSeoDescription(e.target.value)}
-                  placeholder="Передовые системы защиты для посетителей бассейнов..."
-                  className="mt-2"
-                  rows={3}
-                  maxLength={300}
-                />
-                <p className="text-xs text-slate-500 mt-1">{seoDescription.length}/300 символов</p>
-              </div>
-
-              <div>
-                <Label htmlFor="seoKeywords">Ключевые слова (Keywords)</Label>
-                <Textarea
-                  id="seoKeywords"
-                  value={seoKeywords}
-                  onChange={(e) => setSeoKeywords(e.target.value)}
-                  placeholder="СООУ, система оповещения, безопасность в бассейне..."
-                  className="mt-2"
-                  rows={4}
-                />
-                <p className="text-xs text-slate-500 mt-1">Разделяйте ключевые слова запятыми</p>
-              </div>
-
-              <div>
-                <Label>Фавикон</Label>
-                <div className="mt-2 space-y-3">
-                  <input
-                    type="file"
-                    id="faviconUpload"
-                    accept=".jpg,.jpeg,.png"
-                    onChange={handleFaviconUpload}
-                    className="hidden"
-                    disabled={isUploadingFavicon}
-                  />
-                  <label
-                    htmlFor="faviconUpload"
-                    className="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:border-primary transition cursor-pointer block"
-                  >
-                    <Icon name="Upload" className="mx-auto mb-2 text-slate-400" size={24} />
-                    <p className="text-sm text-slate-600">
-                      {isUploadingFavicon ? 'Загрузка...' : 'Нажмите для загрузки фавикона'}
-                    </p>
-                    <p className="text-xs text-slate-400 mt-1">JPG или PNG до 5 МБ</p>
-                  </label>
-                  
-                  <div className="text-center text-xs text-slate-500">или</div>
-                  
-                  <div>
-                    <Label htmlFor="faviconUrl" className="text-xs">Вставить URL изображения</Label>
-                    <Input
-                      id="faviconUrl"
-                      value={faviconUrl}
-                      onChange={(e) => setFaviconUrl(e.target.value)}
-                      placeholder="https://cdn.poehali.dev/..."
-                      className="mt-1"
-                    />
-                  </div>
-                  
-                  {faviconUrl && (
-                    <div className="mt-2 p-3 bg-slate-100 rounded-lg flex items-center justify-center">
-                      <img src={faviconUrl} alt="Favicon" className="w-8 h-8 object-contain" />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button onClick={handleSaveSeo}>
-                  <Icon name="Check" className="mr-2" size={16} />
-                  Сохранить
-                </Button>
-                <Button variant="outline" onClick={handleCancelSeo}>
-                  Отмена
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-2 text-sm">
-              <div>
-                <p className="text-slate-500 font-medium">Заголовок:</p>
-                <p className="text-slate-800">{seoTitle}</p>
-              </div>
-              <div>
-                <p className="text-slate-500 font-medium">Описание:</p>
-                <p className="text-slate-600">{seoDescription}</p>
-              </div>
-              <div>
-                <p className="text-slate-500 font-medium">Ключевые слова:</p>
-                <p className="text-slate-600 text-xs">{seoKeywords.substring(0, 200)}{seoKeywords.length > 200 ? '...' : ''}</p>
-              </div>
-              <div>
-                <p className="text-slate-500 font-medium">Фавикон:</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <img src={faviconUrl} alt="Favicon" className="w-6 h-6 object-contain" />
-                </div>
-              </div>
-            </div>
-          )}
-        </Card>
-
-        <Card className="p-4 flex items-center justify-between bg-slate-50">
-          <div className="flex items-center gap-4">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${showDocuments ? 'bg-green-100' : 'bg-slate-200'}`}>
-              <Icon name="FileText" className={showDocuments ? 'text-green-600' : 'text-slate-400'} size={20} />
+      <Card className="p-4 bg-slate-50">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <Icon name="Search" className="text-blue-600" size={20} />
             </div>
             <div>
-              <p className="font-semibold text-slate-800">Документы и сертификаты</p>
-              <p className="text-sm text-slate-500">
-                {showDocuments ? 'Секция отображается на сайте' : 'Секция скрыта от посетителей'}
-              </p>
+              <p className="font-semibold text-slate-800">SEO Сниппет</p>
+              <p className="text-sm text-slate-500">Заголовок и описание в поисковиках</p>
             </div>
           </div>
-          <Button
-            variant={showDocuments ? 'outline' : 'default'}
-            onClick={onToggleDocuments}
-          >
-            {showDocuments ? (
-              <>
-                <Icon name="EyeOff" className="mr-2" size={16} />
-                Скрыть секцию
-              </>
-            ) : (
-              <>
-                <Icon name="Eye" className="mr-2" size={16} />
-                Показать секцию
-              </>
-            )}
-          </Button>
-        </Card>
-      </div>
+          {!isEditingSeo && (
+            <Button variant="outline" onClick={() => setIsEditingSeo(true)}>
+              <Icon name="Edit" className="mr-2" size={16} />
+              Редактировать
+            </Button>
+          )}
+        </div>
+
+        {isEditingSeo ? (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="seoTitle">Заголовок страницы (Title)</Label>
+              <Input
+                id="seoTitle"
+                value={seoTitle}
+                onChange={(e) => setSeoTitle(e.target.value)}
+                placeholder="Безопасность вашего бассейна под контролем"
+                className="mt-2"
+                maxLength={100}
+              />
+              <p className="text-xs text-slate-500 mt-1">{seoTitle.length}/100 символов</p>
+            </div>
+
+            <div>
+              <Label htmlFor="seoDescription">Описание (Description)</Label>
+              <Textarea
+                id="seoDescription"
+                value={seoDescription}
+                onChange={(e) => setSeoDescription(e.target.value)}
+                placeholder="Передовые системы защиты для посетителей бассейнов..."
+                className="mt-2"
+                rows={3}
+                maxLength={300}
+              />
+              <p className="text-xs text-slate-500 mt-1">{seoDescription.length}/300 символов</p>
+            </div>
+
+            <div>
+              <Label htmlFor="seoKeywords">Ключевые слова</Label>
+              <Textarea
+                id="seoKeywords"
+                value={seoKeywords}
+                onChange={(e) => setSeoKeywords(e.target.value)}
+                placeholder="СООУ, СРООУ, безопасность бассейна..."
+                className="mt-2"
+                rows={3}
+              />
+              <p className="text-xs text-slate-500 mt-1">{seoKeywords.length} символов</p>
+            </div>
+
+            <div>
+              <Label htmlFor="faviconUpload">Фавикон (JPG или PNG, до 5 МБ)</Label>
+              <div className="mt-2">
+                <Input
+                  id="faviconUpload"
+                  type="file"
+                  accept=".jpg,.jpeg,.png"
+                  onChange={handleFaviconUpload}
+                  disabled={isUploadingFavicon}
+                  className="mt-1"
+                />
+              </div>
+              
+              {faviconUrl && (
+                <div className="mt-2 p-3 bg-slate-100 rounded-lg flex items-center justify-center">
+                  <img src={faviconUrl} alt="Favicon" className="w-8 h-8 object-contain" />
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-2">
+              <Button onClick={handleSaveSeo}>
+                <Icon name="Check" className="mr-2" size={16} />
+                Сохранить
+              </Button>
+              <Button variant="outline" onClick={handleCancelSeo}>
+                Отмена
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-2 text-sm">
+            <div>
+              <p className="text-slate-500 font-medium">Заголовок:</p>
+              <p className="text-slate-800">{seoTitle}</p>
+            </div>
+            <div>
+              <p className="text-slate-500 font-medium">Описание:</p>
+              <p className="text-slate-600">{seoDescription}</p>
+            </div>
+            <div>
+              <p className="text-slate-500 font-medium">Ключевые слова:</p>
+              <p className="text-slate-600 text-xs">{seoKeywords.substring(0, 200)}{seoKeywords.length > 200 ? '...' : ''}</p>
+            </div>
+            <div>
+              <p className="text-slate-500 font-medium">Фавикон:</p>
+              <div className="flex items-center gap-2 mt-1">
+                <img src={faviconUrl} alt="Favicon" className="w-6 h-6 object-contain" />
+              </div>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      <Card className="p-4 flex items-center justify-between bg-slate-50">
+        <div className="flex items-center gap-4">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center ${showDocuments ? 'bg-green-100' : 'bg-slate-200'}`}>
+            <Icon name="FileText" className={showDocuments ? 'text-green-600' : 'text-slate-400'} size={20} />
+          </div>
+          <div>
+            <p className="font-semibold text-slate-800">Документы и сертификаты</p>
+            <p className="text-sm text-slate-500">
+              {showDocuments ? 'Секция отображается на сайте' : 'Секция скрыта от посетителей'}
+            </p>
+          </div>
+        </div>
+        <Button
+          variant={showDocuments ? 'outline' : 'default'}
+          onClick={onToggleDocuments}
+        >
+          {showDocuments ? (
+            <>
+              <Icon name="EyeOff" className="mr-2" size={16} />
+              Скрыть секцию
+            </>
+          ) : (
+            <>
+              <Icon name="Eye" className="mr-2" size={16} />
+              Показать секцию
+            </>
+          )}
+        </Button>
+      </Card>
     </div>
   );
 }
