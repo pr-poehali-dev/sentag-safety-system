@@ -53,10 +53,9 @@ export default function UserManagementSection({
   };
 
   return (
-    <Card className="p-6">
+    <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Управление пользователями</h2>
           <p className="text-slate-600">Добавляйте и управляйте доступом к админ-панели</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -149,6 +148,6 @@ export default function UserManagementSection({
           </Card>
         ))}
       </div>
-    </Card>
+    </div>
   );
 }

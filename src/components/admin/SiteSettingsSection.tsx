@@ -134,15 +134,7 @@ export default function SiteSettingsSection({
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl font-bold text-slate-800">Управление сайтом</h2>
-          <p className="text-slate-600">Настройки SEO и секций сайта</p>
-        </div>
-      </div>
-
-      <div className="space-y-6">
+    <div className="space-y-6">
         <Card className="p-4 bg-slate-50">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -311,6 +303,6 @@ export default function SiteSettingsSection({
           </Button>
         </Card>
       </div>
-    </Card>
+    </div>
   );
 }

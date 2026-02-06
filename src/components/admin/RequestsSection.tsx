@@ -81,10 +81,9 @@ export default function RequestsSection({
   };
 
   return (
-    <Card className="p-6">
+    <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Заявки на расчет</h2>
           <p className="text-slate-600">Всего заявок: {requests.length}</p>
         </div>
         <div className="flex gap-2">
@@ -356,6 +355,6 @@ export default function RequestsSection({
           ))
         )}
       </div>
-    </Card>
+    </div>
   );
 }

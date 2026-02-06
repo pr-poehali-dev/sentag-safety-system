@@ -9,6 +9,7 @@ import SiteSettingsSection from '@/components/admin/SiteSettingsSection';
 import RequestsSection from '@/components/admin/RequestsSection';
 import StatisticsSection from '@/components/admin/StatisticsSection';
 import DocumentsSection from '@/components/admin/DocumentsSection';
+import CollapsibleSection from '@/components/admin/CollapsibleSection';
 
 const API_URL = 'https://functions.poehali.dev/cfaa29d5-c049-499c-b21d-9d21762b09c1';
 
@@ -385,32 +386,42 @@ export default function AdminPanel() {
         </div>
 
         {currentUser?.role === 'admin' ? (
-          <div className="space-y-8">
-            <UserManagementSection 
-              users={users}
-              currentUser={currentUser}
-              onCreateUser={createUser}
-              onUpdateUser={updateUser}
-            />
+          <div className="space-y-4">
+            <CollapsibleSection title="Управление пользователями" defaultOpen={false}>
+              <UserManagementSection 
+                users={users}
+                currentUser={currentUser}
+                onCreateUser={createUser}
+                onUpdateUser={updateUser}
+              />
+            </CollapsibleSection>
 
-            <SiteSettingsSection 
-              showDocuments={showDocuments}
-              onToggleDocuments={toggleDocumentsSection}
-            />
+            <CollapsibleSection title="Управление сайтом" defaultOpen={false}>
+              <SiteSettingsSection 
+                showDocuments={showDocuments}
+                onToggleDocuments={toggleDocumentsSection}
+              />
+            </CollapsibleSection>
 
-            <DocumentsSection />
+            <CollapsibleSection title="Управление документами" defaultOpen={false}>
+              <DocumentsSection />
+            </CollapsibleSection>
 
-            <RequestsSection 
-              requests={requests}
-              onLoadRequests={loadRequests}
-              onDeleteRequest={deleteRequest}
-              onDeleteAll={deleteAllRequests}
-            />
+            <CollapsibleSection title="Заявки на расчет" defaultOpen={true}>
+              <RequestsSection 
+                requests={requests}
+                onLoadRequests={loadRequests}
+                onDeleteRequest={deleteRequest}
+                onDeleteAll={deleteAllRequests}
+              />
+            </CollapsibleSection>
 
-            <StatisticsSection 
-              users={users}
-              requests={requests}
-            />
+            <CollapsibleSection title="Статистика" defaultOpen={false}>
+              <StatisticsSection 
+                users={users}
+                requests={requests}
+              />
+            </CollapsibleSection>
           </div>
         ) : (
           <Card className="p-8 text-center">

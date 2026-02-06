@@ -157,11 +157,10 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
   };
 
   return (
-    <Card className="p-6">
+    <div>
       <div className="mb-6">
         <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-2xl font-bold text-slate-800">Статистика</h2>
             <p className="text-sm text-slate-500 mt-1">Данные о посетителях и активности на сайте</p>
           </div>
           <div className="flex gap-2">
@@ -384,6 +383,6 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 }

@@ -160,8 +160,6 @@ export default function DocumentsSection() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Управление документами</h2>
-
       <Card className="p-6">
         <h3 className="text-lg font-semibold mb-4">Добавить документ</h3>
         <div className="space-y-4">
