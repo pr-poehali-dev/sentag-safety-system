@@ -66,20 +66,12 @@ export default function Header({ scrollToSection }: HeaderProps) {
   return (
     <header className="fixed top-0 w-full bg-[#f5f5f5] shadow-sm z-50">
       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3 md:gap-6">
+        <div className="flex items-center">
           <img 
             src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/dfa50620-cca3-4ff7-8b8d-c83d81e84f12.png" 
             alt="Sentag" 
             className="h-8 md:h-12 w-auto"
           />
-          <div className="w-px h-8 md:h-10 bg-slate-300"></div>
-          <button onClick={() => scrollToSection('about')} className="cursor-pointer transition hover:opacity-80">
-            <img 
-              src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/f8b16601-3c21-4e50-9f84-e2b4378f7d09.png" 
-              alt="Меридиан" 
-              className="h-8 md:h-12 w-auto"
-            />
-          </button>
         </div>
         <nav className="hidden xl:flex gap-4 2xl:gap-6 text-sm 2xl:text-base">
           <button onClick={() => handleNavClick('system', 'О системе')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">О системе</button>
