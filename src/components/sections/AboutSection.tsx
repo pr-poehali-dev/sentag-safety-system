@@ -12,7 +12,7 @@ export default function AboutSection() {
               className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-contain"
             />
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6 md:mb-8 text-slate-800 px-2">О компании</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6 md:mb-8 text-slate-800 px-2">О компании - официальный дистрибьютор СООУ Sentag AB в России</h2>
           <div className="prose prose-base sm:prose-lg max-w-none text-slate-700 space-y-4 md:space-y-6">
             <p className="text-base sm:text-lg leading-relaxed">
               Компания <strong>«Меридиан»</strong> имеет эксклюзивное право на реализацию продукции шведских систем обнаружения опасности утопления производства «Sentag AB» в России. Мы сможем реализовать решения разных уровней сложности, начиная от маленьких частных бассейнов, до олимпийских объектов и аквапарков.

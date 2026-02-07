@@ -68,9 +68,10 @@ export default function Footer({ scrollToSection }: FooterProps) {
           <div>
             <h4 className="font-bold mb-3 md:mb-4 text-base md:text-lg text-slate-900">Навигация</h4>
             <ul className="space-y-2 text-sm md:text-base text-slate-600">
-              <li><button onClick={() => { trackClick('О системе (футер)', 'footer'); scrollToSection('system'); }} className="hover:text-primary transition">О системе</button></li>
-              <li><button onClick={() => { trackClick('Преимущества (футер)', 'footer'); scrollToSection('advantages'); }} className="hover:text-primary transition">Преимущества</button></li>
-              <li><button onClick={() => { trackClick('Компоненты (футер)', 'footer'); scrollToSection('components'); }} className="hover:text-primary transition">Компоненты</button></li>
+              <li><button onClick={() => { trackClick('О системе (футер)', 'footer'); scrollToSection('system'); }} className="hover:text-primary transition">СООУ для бассейнов</button></li>
+              <li><button onClick={() => { trackClick('Как работает (футер)', 'footer'); scrollToSection('how-it-works'); }} className="hover:text-primary transition">Как работает система</button></li>
+              <li><button onClick={() => { trackClick('Преимущества (футер)', 'footer'); scrollToSection('advantages'); }} className="hover:text-primary transition">Преимущества ГОСТ</button></li>
+              <li><button onClick={() => { trackClick('Компоненты (футер)', 'footer'); scrollToSection('components'); }} className="hover:text-primary transition">Компоненты системы</button></li>
             </ul>
           </div>
           <div>

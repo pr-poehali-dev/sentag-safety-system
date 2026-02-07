@@ -12,7 +12,7 @@ export default function SystemComponentsSection({ expandedComponent, toggleCompo
     <section id="components" className="py-20 bg-gradient-to-b from-slate-50 to-white">
       <div className="container mx-auto px-4">
         <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-slate-800">
-          Система оповещения опасности утопления
+          Система оповещения опасности утопления ГОСТ Р 59219-2020
         </h2>
         <p className="text-center text-xl text-slate-600 mb-16">состоит из 6 основных компонентов</p>
         
@@ -30,7 +30,7 @@ export default function SystemComponentsSection({ expandedComponent, toggleCompo
               <div className="flex items-center justify-center">
                 <img 
                   src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/9684c64f-f412-4dff-afb0-b0f554bd549f.png?v=2" 
-                  alt="Браслет Sentag" 
+                  alt="Браслет безопасности Sentag СООУ с RFID меткой для бассейна - система оповещения опасности утопления" 
                   className="w-full max-w-sm h-auto object-contain rounded-lg"
                 />
               </div>

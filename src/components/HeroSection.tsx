@@ -12,12 +12,12 @@ export default function HeroSection({ scrollToSection }: HeroSectionProps) {
       <div className="absolute inset-0 z-0">
         <img 
           src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/d181a7ed-76ac-4ddf-9e5f-071e5bb2a3d2.png" 
-          alt="Бассейн" 
+          alt="Система безопасности бассейнов Sentag AB - СООУ для предотвращения утопления" 
           className="w-full h-full object-cover object-center sm:object-[center_30%] md:object-center brightness-[1.2]"
         />
         <img 
           src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/db8a685c-ddf9-4f00-aad6-79bacfe19141.png" 
-          alt="Браслет Sentag на руке" 
+          alt="Браслет безопасности Sentag СООУ для бассейна - система оповещения опасности утопления" 
           className="absolute bottom-0 left-0 w-[150%] sm:w-[125%] md:w-[100%] lg:w-[87.5%] xl:w-[75%] h-auto object-contain brightness-[1.2]"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/20 pointer-events-none" />
