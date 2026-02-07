@@ -37,16 +37,25 @@ const App = () => {
       updateActivity();
     }, 2 * 60 * 1000); // 2 минуты
 
-    const updateFavicon = () => {
-      const faviconUrl = localStorage.getItem('favicon_url') || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
-      let favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
-      if (!favicon) {
-        favicon = document.createElement('link');
-        favicon.rel = 'icon';
-        favicon.type = 'image/x-icon';
-        document.head.appendChild(favicon);
+    const updateFavicon = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
+        if (response.ok) {
+          const data = await response.json();
+          const faviconUrl = data.settings?.favicon_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
+          
+          let favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+          if (!favicon) {
+            favicon = document.createElement('link');
+            favicon.rel = 'icon';
+            favicon.type = 'image/x-icon';
+            document.head.appendChild(favicon);
+          }
+          favicon.href = faviconUrl;
+        }
+      } catch (error) {
+        console.error('Error loading favicon:', error);
       }
-      favicon.href = faviconUrl;
     };
 
     updateFavicon();

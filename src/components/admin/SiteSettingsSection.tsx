@@ -23,18 +23,33 @@ export default function SiteSettingsSection({
   const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
 
   useEffect(() => {
-    const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
-    const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
-    const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
-    const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
-    const savedFavicon = localStorage.getItem('favicon_url') || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
-    setSeoTitle(savedTitle);
-    setSeoDescription(savedDescription);
-    setSeoKeywords(savedKeywords);
-    setFaviconUrl(savedFavicon);
+    const loadSettings = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
+        if (response.ok) {
+          const data = await response.json();
+          const settings = data.settings || {};
+          
+          const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
+          const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
+          const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
+          const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
+          const faviconFromSettings = settings.favicon_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
+          
+          setSeoTitle(savedTitle);
+          setSeoDescription(savedDescription);
+          setSeoKeywords(savedKeywords);
+          setFaviconUrl(faviconFromSettings);
+          
+          updateMetaTags(savedTitle, savedDescription, savedKeywords);
+          updateFavicon(faviconFromSettings);
+        }
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      }
+    };
     
-    updateMetaTags(savedTitle, savedDescription, savedKeywords);
-    updateFavicon(savedFavicon);
+    loadSettings();
   }, []);
 
   const updateMetaTags = (title: string, description: string, keywords: string) => {
@@ -79,24 +94,32 @@ export default function SiteSettingsSection({
     localStorage.setItem('seo_title', seoTitle);
     localStorage.setItem('seo_description', seoDescription);
     localStorage.setItem('seo_keywords', seoKeywords);
-    localStorage.setItem('favicon_url', faviconUrl);
     updateMetaTags(seoTitle, seoDescription, seoKeywords);
-    updateFavicon(faviconUrl);
-    window.dispatchEvent(new Event('faviconUpdate'));
     setIsEditingSeo(false);
     alert('SEO настройки сохранены');
   };
 
-  const handleCancelSeo = () => {
-    const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
-    const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
-    const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
-    const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
-    const savedFavicon = localStorage.getItem('favicon_url') || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
-    setSeoTitle(savedTitle);
-    setSeoDescription(savedDescription);
-    setSeoKeywords(savedKeywords);
-    setFaviconUrl(savedFavicon);
+  const handleCancelSeo = async () => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
+      if (response.ok) {
+        const data = await response.json();
+        const settings = data.settings || {};
+        
+        const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
+        const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
+        const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
+        const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
+        const faviconFromSettings = settings.favicon_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
+        
+        setSeoTitle(savedTitle);
+        setSeoDescription(savedDescription);
+        setSeoKeywords(savedKeywords);
+        setFaviconUrl(faviconFromSettings);
+      }
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    }
     setIsEditingSeo(false);
   };
 
@@ -118,9 +141,32 @@ export default function SiteSettingsSection({
 
     try {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         const base64String = reader.result as string;
-        setFaviconUrl(base64String);
+        const base64Content = base64String.split(',')[1];
+        
+        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Auth-Token': localStorage.getItem('admin_token') || ''
+          },
+          body: JSON.stringify({
+            faviconContent: base64Content,
+            faviconFileName: file.name
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setFaviconUrl(data.favicon_url);
+          updateFavicon(data.favicon_url);
+          window.dispatchEvent(new Event('faviconUpdate'));
+          alert('Фавикон успешно загружен');
+        } else {
+          throw new Error('Ошибка загрузки на сервер');
+        }
+        
         setIsUploadingFavicon(false);
       };
       reader.readAsDataURL(file);
