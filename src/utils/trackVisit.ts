@@ -14,9 +14,22 @@ export const getVisitorId = (): string => {
 };
 
 /**
+ * Проверка, что трекинг разрешен (только для основного домена sentag.ru)
+ */
+const isTrackingAllowed = (): boolean => {
+  const hostname = window.location.hostname;
+  return hostname === 'sentag.ru' || hostname === 'www.sentag.ru';
+};
+
+/**
  * Отслеживание посещения страницы (только для уникальных пользователей)
  */
 export const trackVisit = async () => {
+  // Трекинг только на основном домене
+  if (!isTrackingAllowed()) {
+    return;
+  }
+  
   const VISIT_TRACKED_KEY = 'visit_tracked_today';
   const today = new Date().toDateString();
   const lastTracked = localStorage.getItem(VISIT_TRACKED_KEY);
@@ -50,6 +63,11 @@ export const trackVisit = async () => {
  * Вызывается каждые 2 минуты пока пользователь на сайте
  */
 export const updateActivity = async () => {
+  // Трекинг только на основном домене
+  if (!isTrackingAllowed()) {
+    return;
+  }
+  
   try {
     const visitorId = getVisitorId();
     
@@ -72,6 +90,11 @@ export const updateActivity = async () => {
  * Отслеживание клика по элементу на сайте
  */
 export const trackClick = (buttonName: string, location: string) => {
+  // Трекинг только на основном домене
+  if (!isTrackingAllowed()) {
+    return;
+  }
+  
   const visitorId = getVisitorId();
   
   fetch('https://functions.poehali.dev/ddc0d90d-3227-4104-ad7f-5a5b8c1374a7', {
