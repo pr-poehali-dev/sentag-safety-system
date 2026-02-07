@@ -35,12 +35,13 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cur = conn.cursor()
         
-        # Считаем уникальных посетителей, которые проявляли активность за последние 5 минут
+        # Считаем уникальных посетителей, которые проявляли активность за последние 5 минут только для sentag.ru
         # Активность = любая запись в visitors с last_activity за последние 5 минут
         cur.execute("""
             SELECT COUNT(DISTINCT visitor_id)
             FROM visitors
             WHERE last_activity >= NOW() - INTERVAL '5 minutes'
+            AND domain = 'sentag.ru'
         """)
         
         online_count = cur.fetchone()[0] or 0

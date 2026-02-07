@@ -49,6 +49,7 @@ export const trackVisit = async () => {
       },
       body: JSON.stringify({
         visitor_id: visitorId,
+        domain: window.location.hostname,
       }),
     });
     
@@ -78,6 +79,7 @@ export const updateActivity = async () => {
       },
       body: JSON.stringify({
         visitor_id: visitorId,
+        domain: window.location.hostname,
       }),
       keepalive: true,
     });
@@ -106,6 +108,7 @@ export const trackClick = (buttonName: string, location: string) => {
       visitor_id: visitorId,
       button_name: buttonName,
       button_location: location,
+      domain: window.location.hostname,
     }),
     keepalive: true,
   }).catch(() => {});

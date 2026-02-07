@@ -36,7 +36,7 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cursor = conn.cursor()
         
-        # Получаем статистику за последние 30 дней
+        # Получаем статистику за последние 30 дней только для sentag.ru
         cursor.execute("""
             SELECT 
                 DATE(clicked_at) as click_date,
@@ -45,6 +45,7 @@ def handler(event: dict, context) -> dict:
                 COUNT(*) as click_count
             FROM button_clicks
             WHERE clicked_at >= NOW() - INTERVAL '30 days'
+            AND domain = 'sentag.ru'
             GROUP BY DATE(clicked_at), button_name, button_location
             ORDER BY click_date DESC, click_count DESC
         """)
@@ -64,7 +65,7 @@ def handler(event: dict, context) -> dict:
                 'count': row[3]
             })
         
-        # Получаем общую статистику по кнопкам
+        # Получаем общую статистику по кнопкам только для sentag.ru
         cursor.execute("""
             SELECT 
                 button_name,
@@ -72,6 +73,7 @@ def handler(event: dict, context) -> dict:
                 COUNT(*) as total_clicks
             FROM button_clicks
             WHERE clicked_at >= NOW() - INTERVAL '30 days'
+            AND domain = 'sentag.ru'
             GROUP BY button_name, button_location
             ORDER BY total_clicks DESC
         """)
@@ -86,7 +88,7 @@ def handler(event: dict, context) -> dict:
             for row in total_rows
         ]
         
-        # Получаем количество уникальных посетителей за месяц
+        # Получаем количество уникальных посетителей за месяц только для sentag.ru
         # Уникальность: каждое устройство (visitor_id) считается один раз в сутки
         # Подсчет ведется по уникальным парам (visitor_id, дата посещения)
         cursor.execute("""
@@ -94,6 +96,7 @@ def handler(event: dict, context) -> dict:
                 SELECT DISTINCT visitor_id, DATE(visited_at) as visit_date
                 FROM page_visits
                 WHERE visited_at >= NOW() - INTERVAL '30 days'
+                AND domain = 'sentag.ru'
             ) as unique_daily_visitors
         """)
         unique_visitors = cursor.fetchone()[0] or 0

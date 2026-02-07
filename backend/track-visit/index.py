@@ -33,6 +33,7 @@ def handler(event: dict, context) -> dict:
     try:
         body = json.loads(event.get('body', '{}'))
         visitor_id = body.get('visitor_id')
+        domain = body.get('domain', 'sentag.ru')
         
         if not visitor_id:
             return {
@@ -53,30 +54,31 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cursor = conn.cursor()
         
-        # Проверяем, есть ли уже запись о посещении этого visitor_id сегодня
+        # Проверяем, есть ли уже запись о посещении этого visitor_id сегодня на этом домене
         cursor.execute("""
             SELECT id FROM t_p28851569_sentag_safety_system.page_visits
             WHERE visitor_id = %s 
+            AND domain = %s
             AND DATE(visited_at) = CURRENT_DATE
             LIMIT 1
-        """, (visitor_id,))
+        """, (visitor_id, domain))
         
         existing_visit = cursor.fetchone()
         
-        # Записываем посещение только если ещё не было сегодня
+        # Записываем посещение только если ещё не было сегодня на этом домене
         if not existing_visit:
             cursor.execute(
-                "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address) VALUES (%s, %s, %s)",
-                (visitor_id, user_agent, ip_address)
+                "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address, domain) VALUES (%s, %s, %s, %s)",
+                (visitor_id, user_agent, ip_address, domain)
             )
         
         # Создаём или обновляем запись в таблице visitors для статистики
         cursor.execute("""
-            INSERT INTO t_p28851569_sentag_safety_system.visitors (visitor_id, user_agent, first_visit, last_activity)
-            VALUES (%s, %s, NOW(), NOW())
+            INSERT INTO t_p28851569_sentag_safety_system.visitors (visitor_id, user_agent, first_visit, last_activity, domain)
+            VALUES (%s, %s, NOW(), NOW(), %s)
             ON CONFLICT (visitor_id) 
-            DO UPDATE SET last_activity = NOW(), user_agent = EXCLUDED.user_agent
-        """, (visitor_id, user_agent))
+            DO UPDATE SET last_activity = NOW(), user_agent = EXCLUDED.user_agent, domain = EXCLUDED.domain
+        """, (visitor_id, user_agent, domain))
         
         conn.commit()
         cursor.close()

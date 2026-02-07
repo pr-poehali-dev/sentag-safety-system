@@ -35,6 +35,7 @@ def handler(event: dict, context) -> dict:
         button_name = body.get('button_name')
         button_location = body.get('button_location')
         visitor_id = body.get('visitor_id')
+        domain = body.get('domain', 'sentag.ru')
         
         if not button_name or not button_location:
             return {
@@ -57,10 +58,10 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cursor = conn.cursor()
         
-        # Сохраняем клик с visitor_id
+        # Сохраняем клик с visitor_id и domain
         cursor.execute(
-            "INSERT INTO button_clicks (button_name, button_location, user_agent, ip_address, visitor_id) VALUES (%s, %s, %s, %s, %s)",
-            (button_name, button_location, user_agent, ip_address, visitor_id)
+            "INSERT INTO button_clicks (button_name, button_location, user_agent, ip_address, visitor_id, domain) VALUES (%s, %s, %s, %s, %s, %s)",
+            (button_name, button_location, user_agent, ip_address, visitor_id, domain)
         )
         
         conn.commit()
