@@ -31,17 +31,20 @@ export default function SiteSettingsSection({
           const settings = data.settings || {};
           
           const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
-          const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
-          const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
-          const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
+          const defaultTitle = 'Безопасность вашего бассейна под контролем';
+          const defaultDescription = 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
+          
+          const seoTitle = settings.seo_title || defaultTitle;
+          const seoDescription = settings.seo_description || defaultDescription;
+          const seoKeywords = settings.seo_keywords || defaultKeywords;
           const faviconFromSettings = settings.favicon_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
           
-          setSeoTitle(savedTitle);
-          setSeoDescription(savedDescription);
-          setSeoKeywords(savedKeywords);
+          setSeoTitle(seoTitle);
+          setSeoDescription(seoDescription);
+          setSeoKeywords(seoKeywords);
           setFaviconUrl(faviconFromSettings);
           
-          updateMetaTags(savedTitle, savedDescription, savedKeywords);
+          updateMetaTags(seoTitle, seoDescription, seoKeywords);
           updateFavicon(faviconFromSettings);
         }
       } catch (error) {
@@ -101,13 +104,41 @@ export default function SiteSettingsSection({
     }
   };
 
-  const handleSaveSeo = () => {
-    localStorage.setItem('seo_title', seoTitle);
-    localStorage.setItem('seo_description', seoDescription);
-    localStorage.setItem('seo_keywords', seoKeywords);
-    updateMetaTags(seoTitle, seoDescription, seoKeywords);
-    setIsEditingSeo(false);
-    alert('SEO настройки сохранены');
+  const handleSaveSeo = async () => {
+    try {
+      const settingsToSave = [
+        { key: 'seo_title', value: seoTitle },
+        { key: 'seo_description', value: seoDescription },
+        { key: 'seo_keywords', value: seoKeywords }
+      ];
+
+      for (const setting of settingsToSave) {
+        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(setting)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to save ${setting.key}`);
+        }
+      }
+
+      localStorage.setItem('seo_title', seoTitle);
+      localStorage.setItem('seo_description', seoDescription);
+      localStorage.setItem('seo_keywords', seoKeywords);
+      updateMetaTags(seoTitle, seoDescription, seoKeywords);
+      
+      window.dispatchEvent(new CustomEvent('seoUpdate'));
+      
+      setIsEditingSeo(false);
+      alert('SEO настройки успешно сохранены в базу данных!\n\nИзменения применятся для всех посетителей сайта.');
+    } catch (error) {
+      console.error('Error saving SEO settings:', error);
+      alert('Ошибка при сохранении SEO настроек. Попробуйте еще раз.');
+    }
   };
 
   const handleCancelSeo = async () => {
