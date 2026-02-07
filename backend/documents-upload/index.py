@@ -16,7 +16,7 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Authorization'
+                'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token'
             },
             'body': '',
             'isBase64Encoded': False
@@ -34,8 +34,8 @@ def handler(event: dict, context) -> dict:
         }
     
     try:
-        auth_header = event.get('headers', {}).get('X-Authorization', '')
-        if not auth_header or not auth_header.startswith('Bearer '):
+        token = event.get('headers', {}).get('X-Auth-Token', '')
+        if not token:
             return {
                 'statusCode': 401,
                 'headers': {

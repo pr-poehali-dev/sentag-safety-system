@@ -99,7 +99,7 @@ export default function DocumentsSection() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'X-Auth-Token': token
         },
         body: JSON.stringify({
           title,
@@ -148,7 +148,7 @@ export default function DocumentsSection() {
       const response = await fetch(`${DOCUMENTS_DELETE_URL}?id=${docId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'X-Auth-Token': token
         }
       });
 

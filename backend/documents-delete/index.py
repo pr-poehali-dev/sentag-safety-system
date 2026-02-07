@@ -13,7 +13,7 @@ def handler(event: dict, context) -> dict:
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'DELETE, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, X-Authorization'
+                'Access-Control-Allow-Headers': 'Content-Type, X-Auth-Token'
             },
             'body': '',
             'isBase64Encoded': False
@@ -33,10 +33,10 @@ def handler(event: dict, context) -> dict:
     try:
         print(f"[DELETE] Received event: {json.dumps(event)}")
         
-        auth_header = event.get('headers', {}).get('X-Authorization', '')
-        print(f"[DELETE] Auth header: {auth_header[:20] if auth_header else 'None'}...")
+        token = event.get('headers', {}).get('X-Auth-Token', '')
+        print(f"[DELETE] Auth token: {token[:20] if token else 'None'}...")
         
-        if not auth_header or not auth_header.startswith('Bearer '):
+        if not token:
             print("[DELETE] Unauthorized - missing or invalid auth header")
             return {
                 'statusCode': 401,
