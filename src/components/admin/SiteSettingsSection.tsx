@@ -173,7 +173,7 @@ export default function SiteSettingsSection({
           setFaviconUrl(data.favicon_url);
           updateFavicon(data.favicon_url);
           window.dispatchEvent(new Event('faviconUpdate'));
-          alert('Фавикон и OG-изображение успешно загружены');
+          alert('Фавикон и OG-изображение успешно загружены!\n\n⚠️ Важно: Чтобы изменения отобразились в Telegram и соцсетях, нажмите "Опубликовать" в редакторе poehali.dev');
         } else {
           throw new Error('Ошибка загрузки на сервер');
         }
