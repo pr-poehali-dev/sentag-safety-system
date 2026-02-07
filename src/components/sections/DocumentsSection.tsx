@@ -126,52 +126,54 @@ export default function DocumentsSection() {
         </div>
       </div>
 
-      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-6xl w-[95vw] h-[95vh] flex flex-col p-6">
-          <DialogHeader>
-            <DialogTitle className="text-2xl">{selectedDoc?.title}</DialogTitle>
-            <p className="text-sm text-slate-600 mt-1">{selectedDoc?.description}</p>
-          </DialogHeader>
-          <div className="flex-1 overflow-hidden rounded-lg bg-slate-100 mt-4 min-h-0">
-            {selectedDoc && isPDF(selectedDoc.fileName) && !isMobile ? (
-              <iframe
-                src={`${selectedDoc.fileUrl}#view=FitH`}
-                className="w-full h-full border-0"
-                title={selectedDoc.title}
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-6">
-                <Icon name="FileText" className="text-primary mb-4" size={80} />
-                <h3 className="text-xl font-bold mb-2 text-slate-800">{selectedDoc?.title}</h3>
-                <p className="text-slate-600 mb-6 text-center">{selectedDoc?.description}</p>
-                <p className="text-sm text-slate-500 mb-6">
-                  {isMobile ? 'Нажмите кнопку ниже, чтобы открыть или скачать документ' : 'Предпросмотр недоступен для этого типа файла'}
-                </p>
-                <Button onClick={() => selectedDoc && handleDownload(selectedDoc)} size="lg">
-                  <Icon name="Download" className="mr-2" size={20} />
-                  Открыть
-                </Button>
-              </div>
-            )}
-          </div>
-          <div className="flex gap-2 mt-4">
-            <Button 
-              onClick={() => selectedDoc && handleDownload(selectedDoc)}
-              className="flex-1"
-            >
-              <Icon name="Download" className="mr-2" size={16} />
-              Скачать
-            </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setPreviewOpen(false)}
-              className="flex-1"
-            >
-              Закрыть
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {previewOpen && selectedDoc && (
+        <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+          <DialogContent className="max-w-6xl w-[95vw] h-[95vh] flex flex-col p-6">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">{selectedDoc.title}</DialogTitle>
+              <p className="text-sm text-slate-600 mt-1">{selectedDoc.description}</p>
+            </DialogHeader>
+            <div className="flex-1 overflow-hidden rounded-lg bg-slate-100 mt-4 min-h-0">
+              {isPDF(selectedDoc.fileName) && !isMobile ? (
+                <iframe
+                  src={`${selectedDoc.fileUrl}#view=FitH`}
+                  className="w-full h-full border-0"
+                  title={selectedDoc.title}
+                />
+              ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center p-6">
+                  <Icon name="FileText" className="text-primary mb-4" size={80} />
+                  <h3 className="text-xl font-bold mb-2 text-slate-800">{selectedDoc.title}</h3>
+                  <p className="text-slate-600 mb-6 text-center">{selectedDoc.description}</p>
+                  <p className="text-sm text-slate-500 mb-6">
+                    {isMobile ? 'Нажмите кнопку ниже, чтобы открыть или скачать документ' : 'Предпросмотр недоступен для этого типа файла'}
+                  </p>
+                  <Button onClick={() => handleDownload(selectedDoc)} size="lg">
+                    <Icon name="Download" className="mr-2" size={20} />
+                    Открыть
+                  </Button>
+                </div>
+              )}
+            </div>
+            <div className="flex gap-2 mt-4">
+              <Button 
+                onClick={() => handleDownload(selectedDoc)}
+                className="flex-1"
+              >
+                <Icon name="Download" className="mr-2" size={16} />
+                Скачать
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setPreviewOpen(false)}
+                className="flex-1"
+              >
+                Закрыть
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </section>
   );
 }
