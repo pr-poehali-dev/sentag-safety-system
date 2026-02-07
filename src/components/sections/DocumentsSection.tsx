@@ -99,13 +99,20 @@ export default function DocumentsSection() {
             >
               <div className="relative h-80 bg-slate-100 overflow-hidden">
                 {isPDF(doc.fileName) ? (
-                  <div className="w-full h-full flex items-center justify-center p-4">
-                    <iframe
-                      src={`${doc.fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-                      className="w-full h-full pointer-events-none border-0"
-                      title={doc.title}
-                    />
-                  </div>
+                  <>
+                    {/* Превью PDF только на десктопе */}
+                    <div className="hidden md:flex w-full h-full items-center justify-center p-4">
+                      <iframe
+                        src={`${doc.fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+                        className="w-full h-full pointer-events-none border-0"
+                        title={doc.title}
+                      />
+                    </div>
+                    {/* Иконка на мобильных */}
+                    <div className="md:hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                      <Icon name="FileText" className="text-primary" size={80} />
+                    </div>
+                  </>
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                     <Icon name={doc.iconName} className="text-primary" size={80} />
