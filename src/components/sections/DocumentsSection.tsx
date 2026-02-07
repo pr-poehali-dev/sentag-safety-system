@@ -13,12 +13,6 @@ import { Button } from '@/components/ui/button';
 
 const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
 
-const DOCUMENT_THUMBNAILS: Record<number, string> = {
-  1: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/104dd831-a168-448a-b151-187baaecff0e.jpg',
-  2: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/4cb55f55-96c5-4a56-9270-ba2831d0a468.jpg',
-  5: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/8423c2e2-9170-4dfd-8efb-3726a6b8e1ab.jpg',
-};
-
 interface Document {
   id: number;
   title: string;
@@ -26,6 +20,7 @@ interface Document {
   iconName: string;
   fileUrl: string;
   fileName: string;
+  thumbnailUrl?: string;
 }
 
 export default function DocumentsSection() {
@@ -108,9 +103,9 @@ export default function DocumentsSection() {
               onClick={() => handleDocumentClick(doc)}
             >
               <div className="relative h-80 bg-slate-100 overflow-hidden">
-                {DOCUMENT_THUMBNAILS[doc.id] ? (
+                {doc.thumbnailUrl ? (
                   <img 
-                    src={DOCUMENT_THUMBNAILS[doc.id]} 
+                    src={doc.thumbnailUrl} 
                     alt={doc.title}
                     className="w-full h-full object-cover"
                     loading="lazy"

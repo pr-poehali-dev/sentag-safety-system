@@ -35,7 +35,7 @@ def handler(event: dict, context) -> dict:
         cur = conn.cursor()
         
         cur.execute("""
-            SELECT id, title, description, icon_name, file_url, file_name, file_type, file_size, created_at
+            SELECT id, title, description, icon_name, file_url, file_name, file_type, file_size, created_at, thumbnail_url
             FROM documents
             ORDER BY created_at DESC
         """)
@@ -53,7 +53,8 @@ def handler(event: dict, context) -> dict:
                 'fileName': row[5],
                 'fileType': row[6],
                 'fileSize': row[7],
-                'createdAt': row[8].isoformat() if row[8] else None
+                'createdAt': row[8].isoformat() if row[8] else None,
+                'thumbnailUrl': row[9]
             })
         
         cur.close()
