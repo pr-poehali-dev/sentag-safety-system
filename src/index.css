@@ -125,4 +125,38 @@
       transform: translateY(0);
     }
   }
+
+  .animate-call-attention {
+    animation: call-attention 2s ease-in-out infinite;
+  }
+
+  @keyframes call-attention {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.08);
+    }
+  }
+
+  .animate-shake {
+    animation: shake 3s ease-in-out infinite;
+  }
+
+  @keyframes shake {
+    0%,
+    90%,
+    100% {
+      transform: translateX(0) rotate(0deg);
+    }
+    92%,
+    96% {
+      transform: translateX(-2px) rotate(-1deg);
+    }
+    94%,
+    98% {
+      transform: translateX(2px) rotate(1deg);
+    }
+  }
 }

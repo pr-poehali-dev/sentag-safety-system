@@ -85,7 +85,7 @@ export default function Header({ scrollToSection }: HeaderProps) {
           <button onClick={() => handleNavClick('contacts', 'Контакты')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Контакты</button>
         </nav>
         <div className="flex items-center gap-2">
-          <Button onClick={() => handleRequestClick()} className="text-xs md:text-sm 2xl:text-base whitespace-nowrap shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700">
+          <Button onClick={() => handleRequestClick()} className="text-xs md:text-sm 2xl:text-base whitespace-nowrap shadow-lg hover:shadow-xl animate-call-attention hover:animate-none transition-shadow duration-300">
             Оставить заявку
           </Button>
           
