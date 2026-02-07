@@ -10,11 +10,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
 
@@ -108,29 +103,13 @@ export default function DocumentsSection() {
               onClick={() => handleDocumentClick(doc)}
             >
               <div className="relative h-80 bg-slate-100 overflow-hidden">
-                {!isMobile && isPDF(doc.fileName) ? (
-                  <div className="w-full h-full flex items-center justify-center bg-white">
-                    <Document
-                      file={doc.fileUrl}
-                      loading={
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50">
-                          <Icon name="FileText" className="text-primary" size={80} />
-                        </div>
-                      }
-                      error={
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50">
-                          <Icon name={doc.iconName} className="text-primary" size={80} />
-                        </div>
-                      }
-                    >
-                      <Page 
-                        pageNumber={1} 
-                        width={380}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                      />
-                    </Document>
-                  </div>
+                {doc.thumbnailUrl ? (
+                  <img 
+                    src={doc.thumbnailUrl} 
+                    alt={doc.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
                     <div className="relative">

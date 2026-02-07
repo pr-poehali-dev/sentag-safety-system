@@ -1,0 +1,3 @@
+UPDATE documents SET thumbnail_url = 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/104dd831-a168-448a-b151-187baaecff0e.jpg' WHERE id = 1;
+UPDATE documents SET thumbnail_url = 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/4cb55f55-96c5-4a56-9270-ba2831d0a468.jpg' WHERE id = 2;
+UPDATE documents SET thumbnail_url = 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/8423c2e2-9170-4dfd-8efb-3726a6b8e1ab.jpg' WHERE id = 5;
