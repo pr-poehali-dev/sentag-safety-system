@@ -60,7 +60,7 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(os.environ['DATABASE_URL'])
         cur = conn.cursor()
         
-        cur.execute("DELETE FROM documents WHERE id = %s", (doc_id,))
+        cur.execute(f"DELETE FROM documents WHERE id = {int(doc_id)}")
         
         deleted_count = cur.rowcount
         conn.commit()
