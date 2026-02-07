@@ -84,12 +84,12 @@ export default function Header({ scrollToSection }: HeaderProps) {
           )}
           <button onClick={() => handleNavClick('contacts', 'Контакты')} className="text-slate-600 hover:text-primary transition whitespace-nowrap">Контакты</button>
         </nav>
-        <Button onClick={() => handleRequestClick()} className="hidden xl:flex text-sm 2xl:text-base whitespace-nowrap">
+        <Button onClick={() => handleRequestClick()} className="hidden md:flex text-sm 2xl:text-base whitespace-nowrap animate-pulse hover:animate-none transition-all">
           Оставить заявку
         </Button>
         
         <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetTrigger asChild className="xl:hidden">
+          <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
               <Icon name="Menu" size={24} />
             </Button>
