@@ -102,12 +102,12 @@ export default function DocumentsSection() {
               className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group bg-white"
               onClick={() => handleDocumentClick(doc)}
             >
-              <div className="relative h-80 bg-slate-100 overflow-hidden">
+              <div className="relative h-80 bg-slate-100 overflow-hidden flex items-center justify-center p-4">
                 {doc.thumbnailUrl ? (
                   <img 
                     src={doc.thumbnailUrl} 
                     alt={doc.title}
-                    className="w-full h-full object-cover"
+                    className="max-w-full max-h-full object-contain rounded-lg"
                     loading="lazy"
                   />
                 ) : (
