@@ -1,0 +1,15 @@
+{
+  "tests": [
+    {
+      "name": "Notify search engines about sitemap update",
+      "method": "POST",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "sitemap_url": "https://sentag.ru/sitemap.xml"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

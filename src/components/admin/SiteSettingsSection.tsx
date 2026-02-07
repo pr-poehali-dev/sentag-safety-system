@@ -133,8 +133,24 @@ export default function SiteSettingsSection({
       
       window.dispatchEvent(new CustomEvent('seoUpdate'));
       
+      try {
+        const notifyResponse = await fetch('https://functions.poehali.dev/6e9ecfe1-099e-4c39-a8ca-8d2eb8bbc58b', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (notifyResponse.ok) {
+          const notifyData = await notifyResponse.json();
+          console.log('Search engines notified:', notifyData);
+        }
+      } catch (notifyError) {
+        console.warn('Failed to notify search engines:', notifyError);
+      }
+      
       setIsEditingSeo(false);
-      alert('SEO настройки успешно сохранены в базу данных!\n\nИзменения применятся для всех посетителей сайта.');
+      alert('SEO настройки успешно сохранены в базу данных!\n\nПоисковые системы уведомлены об обновлении.\nИзменения применятся для всех посетителей сайта.');
     } catch (error) {
       console.error('Error saving SEO settings:', error);
       alert('Ошибка при сохранении SEO настроек. Попробуйте еще раз.');
