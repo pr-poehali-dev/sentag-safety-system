@@ -14,9 +14,9 @@ import { Button } from '@/components/ui/button';
 const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
 
 const DOCUMENT_THUMBNAILS: Record<number, string> = {
-  1: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/d5547b9d-6b19-4115-867a-bd26c594c2e3.jpg',
-  2: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/1c3885bf-6c11-49d5-b815-2f4821866497.jpg',
-  5: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/2792ec20-1c84-4044-9dc4-c045271a7707.jpg',
+  1: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/104dd831-a168-448a-b151-187baaecff0e.jpg',
+  2: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/4cb55f55-96c5-4a56-9270-ba2831d0a468.jpg',
+  5: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/8423c2e2-9170-4dfd-8efb-3726a6b8e1ab.jpg',
 };
 
 interface Document {
