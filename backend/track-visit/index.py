@@ -53,10 +53,22 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(dsn)
         cursor = conn.cursor()
         
-        cursor.execute(
-            "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address) VALUES (%s, %s, %s)",
-            (visitor_id, user_agent, ip_address)
-        )
+        # Проверяем, есть ли уже запись о посещении этого visitor_id сегодня
+        cursor.execute("""
+            SELECT id FROM t_p28851569_sentag_safety_system.page_visits
+            WHERE visitor_id = %s 
+            AND DATE(visited_at) = CURRENT_DATE
+            LIMIT 1
+        """, (visitor_id,))
+        
+        existing_visit = cursor.fetchone()
+        
+        # Записываем посещение только если ещё не было сегодня
+        if not existing_visit:
+            cursor.execute(
+                "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address) VALUES (%s, %s, %s)",
+                (visitor_id, user_agent, ip_address)
+            )
         
         # Создаём или обновляем запись в таблице visitors для статистики
         cursor.execute("""

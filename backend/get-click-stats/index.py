@@ -87,13 +87,14 @@ def handler(event: dict, context) -> dict:
         ]
         
         # Получаем количество уникальных посетителей за месяц
-        # Уникальность определяется по visitor_id (генерируется на фронтенде при первом заходе)
-        # Один visitor_id = один уникальный браузер/устройство (localStorage)
-        # Если пользователь очистит cookies/localStorage или зайдёт с другого устройства - будет считаться новым посетителем
+        # Уникальность: каждое устройство (visitor_id) считается один раз в сутки
+        # Подсчет ведется по уникальным парам (visitor_id, дата посещения)
         cursor.execute("""
-            SELECT COUNT(DISTINCT visitor_id) 
-            FROM visitors 
-            WHERE first_visit >= NOW() - INTERVAL '30 days'
+            SELECT COUNT(*) FROM (
+                SELECT DISTINCT visitor_id, DATE(visited_at) as visit_date
+                FROM page_visits
+                WHERE visited_at >= NOW() - INTERVAL '30 days'
+            ) as unique_daily_visitors
         """)
         unique_visitors = cursor.fetchone()[0] or 0
         

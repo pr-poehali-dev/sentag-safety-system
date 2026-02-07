@@ -228,7 +228,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
           <p className="text-3xl font-bold text-slate-800">{clickStats?.unique_visitors || 0}</p>
           <p className="text-slate-600">Уникальных посетителей</p>
           <p className="text-xs text-slate-500 mt-1">За последние 30 дней</p>
-          <p className="text-xs text-slate-400 mt-2 italic">По visitor_id (браузер/устройство)</p>
+          <p className="text-xs text-slate-400 mt-2 italic">Каждое устройство учитывается 1 раз в сутки</p>
         </div>
         <div className="p-4 bg-orange-50 rounded-lg">
           <Icon name="FileText" className="text-orange-600 mb-2" size={32} />
