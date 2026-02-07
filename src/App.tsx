@@ -43,6 +43,7 @@ const App = () => {
         if (response.ok) {
           const data = await response.json();
           const faviconUrl = data.settings?.favicon_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
+          const ogImageUrl = data.settings?.og_image_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/og-image-1770456083663.png';
           
           let favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
           if (!favicon) {
@@ -52,6 +53,16 @@ const App = () => {
             document.head.appendChild(favicon);
           }
           favicon.href = faviconUrl;
+
+          const ogImage = document.querySelector('meta[property="og:image"]') as HTMLMetaElement;
+          if (ogImage) {
+            ogImage.content = ogImageUrl;
+          }
+
+          const twitterImage = document.querySelector('meta[name="twitter:image"]') as HTMLMetaElement;
+          if (twitterImage) {
+            twitterImage.content = ogImageUrl;
+          }
         }
       } catch (error) {
         console.error('Error loading favicon:', error);

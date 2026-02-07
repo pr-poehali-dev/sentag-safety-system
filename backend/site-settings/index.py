@@ -139,6 +139,13 @@ def handler(event: dict, context) -> dict:
                 DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
             """, (favicon_url,))
             
+            cur.execute("""
+                INSERT INTO site_settings (key, value, updated_at)
+                VALUES ('og_image_url', %s, NOW())
+                ON CONFLICT (key) 
+                DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
+            """, (favicon_url,))
+            
             conn.commit()
             
             return {

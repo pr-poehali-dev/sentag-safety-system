@@ -162,7 +162,7 @@ export default function SiteSettingsSection({
           setFaviconUrl(data.favicon_url);
           updateFavicon(data.favicon_url);
           window.dispatchEvent(new Event('faviconUpdate'));
-          alert('Фавикон успешно загружен');
+          alert('Фавикон и OG-изображение успешно загружены');
         } else {
           throw new Error('Ошибка загрузки на сервер');
         }
@@ -243,7 +243,8 @@ export default function SiteSettingsSection({
             </div>
 
             <div>
-              <Label htmlFor="faviconUpload">Фавикон (JPG или PNG, до 5 МБ)</Label>
+              <Label htmlFor="faviconUpload">Фавикон и OG-изображение (JPG или PNG, до 5 МБ)</Label>
+              <p className="text-xs text-slate-500 mt-1 mb-2">Это изображение будет использоваться как фавикон сайта и для превью в Telegram/соцсетях</p>
               <div className="mt-2">
                 <Input
                   id="faviconUpload"
