@@ -88,6 +88,17 @@ export default function SiteSettingsSection({
       document.head.appendChild(favicon);
     }
     favicon.href = url;
+
+    // Также обновляем OG-изображение
+    const ogImage = document.querySelector('meta[property="og:image"]') as HTMLMetaElement;
+    if (ogImage) {
+      ogImage.content = url;
+    }
+
+    const twitterImage = document.querySelector('meta[name="twitter:image"]') as HTMLMetaElement;
+    if (twitterImage) {
+      twitterImage.content = url;
+    }
   };
 
   const handleSaveSeo = () => {
