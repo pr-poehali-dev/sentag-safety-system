@@ -31,8 +31,13 @@ def handler(event: dict, context) -> dict:
         }
     
     try:
+        print(f"[DELETE] Received event: {json.dumps(event)}")
+        
         auth_header = event.get('headers', {}).get('X-Authorization', '')
+        print(f"[DELETE] Auth header: {auth_header[:20] if auth_header else 'None'}...")
+        
         if not auth_header or not auth_header.startswith('Bearer '):
+            print("[DELETE] Unauthorized - missing or invalid auth header")
             return {
                 'statusCode': 401,
                 'headers': {
@@ -44,9 +49,11 @@ def handler(event: dict, context) -> dict:
             }
         
         params = event.get('queryStringParameters', {})
-        doc_id = params.get('id')
+        doc_id = params.get('id') if params else None
+        print(f"[DELETE] Document ID: {doc_id}, Params: {params}")
         
         if not doc_id:
+            print("[DELETE] Missing document ID")
             return {
                 'statusCode': 400,
                 'headers': {
@@ -60,14 +67,19 @@ def handler(event: dict, context) -> dict:
         conn = psycopg2.connect(os.environ['DATABASE_URL'])
         cur = conn.cursor()
         
-        cur.execute(f"DELETE FROM documents WHERE id = {int(doc_id)}")
+        delete_query = f"DELETE FROM documents WHERE id = {int(doc_id)}"
+        print(f"[DELETE] Executing: {delete_query}")
+        cur.execute(delete_query)
         
         deleted_count = cur.rowcount
+        print(f"[DELETE] Deleted count: {deleted_count}")
+        
         conn.commit()
         cur.close()
         conn.close()
         
         if deleted_count == 0:
+            print(f"[DELETE] Document {doc_id} not found")
             return {
                 'statusCode': 404,
                 'headers': {
@@ -78,6 +90,7 @@ def handler(event: dict, context) -> dict:
                 'isBase64Encoded': False
             }
         
+        print(f"[DELETE] Successfully deleted document {doc_id}")
         return {
             'statusCode': 200,
             'headers': {
@@ -89,6 +102,7 @@ def handler(event: dict, context) -> dict:
         }
         
     except Exception as e:
+        print(f"[DELETE] Exception: {str(e)}")
         return {
             'statusCode': 500,
             'headers': {
