@@ -17,6 +17,13 @@ const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
+    // Редирект с www на основной домен
+    if (window.location.hostname.startsWith('www.')) {
+      const newUrl = window.location.href.replace('www.', '');
+      window.location.replace(newUrl);
+      return;
+    }
+
     trackEvent(TrackingEvent.PAGE_VIEW, EventCategory.ENGAGEMENT);
     initScrollTracking();
     initTimeTracking();
