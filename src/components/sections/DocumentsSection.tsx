@@ -13,6 +13,12 @@ import { Button } from '@/components/ui/button';
 
 const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
 
+const DOCUMENT_THUMBNAILS: Record<number, string> = {
+  1: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/d5547b9d-6b19-4115-867a-bd26c594c2e3.jpg',
+  2: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/1c3885bf-6c11-49d5-b815-2f4821866497.jpg',
+  5: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/2792ec20-1c84-4044-9dc4-c045271a7707.jpg',
+};
+
 interface Document {
   id: number;
   title: string;
@@ -101,24 +107,33 @@ export default function DocumentsSection() {
               className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group bg-white"
               onClick={() => handleDocumentClick(doc)}
             >
-              <div className="relative h-80 bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full"></div>
-                    <Icon 
-                      name={doc.iconName} 
-                      className="text-primary relative z-10" 
-                      size={120} 
-                      strokeWidth={1.5}
-                    />
+              <div className="relative h-80 bg-slate-100 overflow-hidden">
+                {DOCUMENT_THUMBNAILS[doc.id] ? (
+                  <img 
+                    src={DOCUMENT_THUMBNAILS[doc.id]} 
+                    alt={doc.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full"></div>
+                      <Icon 
+                        name={doc.iconName} 
+                        className="text-primary relative z-10" 
+                        size={120} 
+                        strokeWidth={1.5}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="absolute top-4 right-4">
-                  <div className="bg-primary/10 backdrop-blur-sm rounded-full px-3 py-1">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-sm">
                     <span className="text-xs font-medium text-primary">PDF</span>
                   </div>
                 </div>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:scale-110">
                     <div className="bg-white rounded-full p-4 shadow-xl">
                       <Icon name="Eye" className="text-primary" size={28} />
