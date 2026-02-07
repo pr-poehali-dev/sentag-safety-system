@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { trackClick } from '@/utils/trackVisit';
@@ -27,6 +27,10 @@ export default function DocumentsSection() {
   const [loading, setLoading] = useState(true);
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
+
+  const isMobile = useMemo(() => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }, []);
 
   useEffect(() => {
     loadDocuments();
@@ -142,19 +146,23 @@ export default function DocumentsSection() {
             <p className="text-sm text-slate-600 mt-1">{selectedDoc?.description}</p>
           </DialogHeader>
           <div className="flex-1 overflow-hidden rounded-lg bg-slate-100 mt-4 min-h-0">
-            {selectedDoc && isPDF(selectedDoc.fileName) ? (
+            {selectedDoc && isPDF(selectedDoc.fileName) && !isMobile ? (
               <iframe
                 src={`${selectedDoc.fileUrl}#view=FitH`}
                 className="w-full h-full border-0"
                 title={selectedDoc.title}
               />
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center">
-                <Icon name={selectedDoc?.iconName || 'File'} className="text-primary mb-4" size={80} />
-                <p className="text-slate-600 mb-6">Предпросмотр недоступен для этого типа файла</p>
-                <Button onClick={() => selectedDoc && handleDownload(selectedDoc)}>
-                  <Icon name="Download" className="mr-2" size={16} />
-                  Скачать документ
+              <div className="w-full h-full flex flex-col items-center justify-center p-6">
+                <Icon name="FileText" className="text-primary mb-4" size={80} />
+                <h3 className="text-xl font-bold mb-2 text-slate-800">{selectedDoc?.title}</h3>
+                <p className="text-slate-600 mb-6 text-center">{selectedDoc?.description}</p>
+                <p className="text-sm text-slate-500 mb-6">
+                  {isMobile ? 'Нажмите кнопку ниже, чтобы открыть или скачать документ' : 'Предпросмотр недоступен для этого типа файла'}
+                </p>
+                <Button onClick={() => selectedDoc && handleDownload(selectedDoc)} size="lg">
+                  <Icon name="Download" className="mr-2" size={20} />
+                  Открыть
                 </Button>
               </div>
             )}
