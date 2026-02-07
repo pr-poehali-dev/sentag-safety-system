@@ -102,26 +102,13 @@ export default function DocumentsSection() {
               onClick={() => handleDocumentClick(doc)}
             >
               <div className="relative h-80 bg-slate-100 overflow-hidden">
-                {isPDF(doc.fileName) ? (
-                  <>
-                    {/* Превью PDF только на десктопе */}
-                    <div className="hidden md:flex w-full h-full items-center justify-center p-4">
-                      <iframe
-                        src={`${doc.fileUrl}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
-                        className="w-full h-full pointer-events-none border-0"
-                        title={doc.title}
-                      />
-                    </div>
-                    {/* Иконка на мобильных */}
-                    <div className="md:hidden w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                      <Icon name="FileText" className="text-primary" size={80} />
-                    </div>
-                  </>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                    <Icon name={doc.iconName} className="text-primary" size={80} />
-                  </div>
-                )}
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                  <Icon 
+                    name={isPDF(doc.fileName) ? "FileText" : doc.iconName} 
+                    className="text-primary" 
+                    size={80} 
+                  />
+                </div>
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="bg-white rounded-full p-4 shadow-lg">
