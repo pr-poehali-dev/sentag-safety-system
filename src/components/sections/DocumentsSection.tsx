@@ -10,6 +10,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
 
@@ -102,13 +107,38 @@ export default function DocumentsSection() {
               onClick={() => handleDocumentClick(doc)}
             >
               <div className="relative h-80 bg-slate-100 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                  <Icon 
-                    name={isPDF(doc.fileName) ? "FileText" : doc.iconName} 
-                    className="text-primary" 
-                    size={80} 
-                  />
-                </div>
+                {isPDF(doc.fileName) ? (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Document
+                      file={doc.fileUrl}
+                      loading={
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                          <Icon name="FileText" className="text-primary" size={80} />
+                        </div>
+                      }
+                      error={
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                          <Icon name="FileText" className="text-primary" size={80} />
+                        </div>
+                      }
+                    >
+                      <Page 
+                        pageNumber={1} 
+                        width={380}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                      />
+                    </Document>
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+                    <Icon 
+                      name={doc.iconName} 
+                      className="text-primary" 
+                      size={80} 
+                    />
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="bg-white rounded-full p-4 shadow-lg">
