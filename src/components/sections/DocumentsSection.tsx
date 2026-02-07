@@ -10,11 +10,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
 
@@ -103,53 +98,37 @@ export default function DocumentsSection() {
           {documents.map((doc) => (
             <Card 
               key={doc.id} 
-              className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
+              className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group bg-white"
               onClick={() => handleDocumentClick(doc)}
             >
-              <div className="relative h-80 bg-slate-100 overflow-hidden">
-                {isPDF(doc.fileName) ? (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <Document
-                      file={doc.fileUrl}
-                      loading={
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                          <Icon name="FileText" className="text-primary" size={80} />
-                        </div>
-                      }
-                      error={
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
-                          <Icon name="FileText" className="text-primary" size={80} />
-                        </div>
-                      }
-                    >
-                      <Page 
-                        pageNumber={1} 
-                        width={380}
-                        renderTextLayer={false}
-                        renderAnnotationLayer={false}
-                      />
-                    </Document>
-                  </div>
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+              <div className="relative h-80 bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full"></div>
                     <Icon 
                       name={doc.iconName} 
-                      className="text-primary" 
-                      size={80} 
+                      className="text-primary relative z-10" 
+                      size={120} 
+                      strokeWidth={1.5}
                     />
                   </div>
-                )}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-white rounded-full p-4 shadow-lg">
-                      <Icon name="Eye" className="text-primary" size={32} />
+                </div>
+                <div className="absolute top-4 right-4">
+                  <div className="bg-primary/10 backdrop-blur-sm rounded-full px-3 py-1">
+                    <span className="text-xs font-medium text-primary">PDF</span>
+                  </div>
+                </div>
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:scale-110">
+                    <div className="bg-white rounded-full p-4 shadow-xl">
+                      <Icon name="Eye" className="text-primary" size={28} />
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold mb-2 text-slate-800">{doc.title}</h3>
-                <p className="text-sm text-slate-600">{doc.description}</p>
+              <div className="p-6 border-t border-slate-100">
+                <h3 className="text-lg font-bold mb-2 text-slate-800 line-clamp-2">{doc.title}</h3>
+                <p className="text-sm text-slate-600 line-clamp-3">{doc.description}</p>
               </div>
             </Card>
           ))}
