@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#3b82f6"/>
     
-    <!-- Google Analytics 4 -->
+    <!-- Google Analytics 4 - Global Site Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3WK84W0SM4"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-3WK84W0SM4');
+      gtag('config', 'G-3WK84W0SM4', {
+        'send_page_view': true,
+        'page_title': document.title,
+        'page_location': window.location.href
+      });
+      console.log('Google Analytics initialized: G-3WK84W0SM4');
     </script>
     
-    <meta name="theme-color" content="#3b82f6"/>
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com"/>
+    <link rel="preconnect" href="https://www.googletagmanager.com"/>
     <link rel="dns-prefetch" href="https://cdn.poehali.dev"/>
     <link rel="preconnect" href="https://cdn.poehali.dev"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
