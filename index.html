@@ -12,7 +12,10 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-3WK84W05MH');
+      // Не отслеживаем админ-панель
+      if (!window.location.pathname.startsWith('/admin')) {
+        gtag('config', 'G-3WK84W05MH');
+      }
     </script>
     
     <!-- Google Tag Manager -->
