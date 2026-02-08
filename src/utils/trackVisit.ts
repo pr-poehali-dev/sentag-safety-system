@@ -14,10 +14,17 @@ export const getVisitorId = (): string => {
 };
 
 /**
- * Проверка, что трекинг разрешен (только для основного домена sentag.ru)
+ * Проверка, что трекинг разрешен (только для основного домена sentag.ru, но не для админки)
  */
 const isTrackingAllowed = (): boolean => {
   const hostname = window.location.hostname;
+  const pathname = window.location.pathname;
+  
+  // Не трекаем админ-панель
+  if (pathname.startsWith('/admin')) {
+    return false;
+  }
+  
   return hostname === 'sentag.ru' || hostname === 'www.sentag.ru';
 };
 
