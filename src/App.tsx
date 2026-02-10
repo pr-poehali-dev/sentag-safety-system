@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import TelegramButton from "@/components/TelegramButton";
 import { trackEvent, TrackingEvent, EventCategory, initScrollTracking, initTimeTracking } from "@/utils/tracking";
 import { trackVisit, updateActivity } from "@/utils/trackVisit";
 
@@ -135,7 +134,6 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <TelegramButton />
         <BrowserRouter>
           <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div></div>}>
             <Routes>
