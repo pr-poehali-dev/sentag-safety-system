@@ -1,7 +1,7 @@
 /**
  * Генерация или получение уникального ID посетителя
  */
-export const getVisitorId = (): string => {
+const getVisitorId = (): string => {
   const VISITOR_ID_KEY = 'visitor_id';
   let visitorId = localStorage.getItem(VISITOR_ID_KEY);
   
@@ -63,35 +63,6 @@ export const trackVisit = async () => {
     localStorage.setItem(VISIT_TRACKED_KEY, today);
   } catch (error) {
     console.error('Error tracking visit:', error);
-  }
-};
-
-/**
- * Обновление активности пользователя (для онлайн-статистики)
- * Вызывается каждые 2 минуты пока пользователь на сайте
- */
-export const updateActivity = async () => {
-  // Трекинг только на основном домене
-  if (!isTrackingAllowed()) {
-    return;
-  }
-  
-  try {
-    const visitorId = getVisitorId();
-    
-    await fetch('https://functions.poehali.dev/fadc8ec7-13d7-4acb-86c2-762630630eef', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        visitor_id: visitorId,
-        domain: window.location.hostname,
-      }),
-      keepalive: true,
-    });
-  } catch (error) {
-    console.error('Error updating activity:', error);
   }
 };
 

@@ -10,7 +10,7 @@ import NotFound from "./pages/NotFound";
 import TelegramButton from "@/components/TelegramButton";
 import { SiteSettingsProvider } from "@/contexts/SiteSettingsContext";
 import { trackEvent, TrackingEvent, EventCategory, initScrollTracking, initTimeTracking } from "@/utils/tracking";
-import { trackVisit, updateActivity } from "@/utils/trackVisit";
+import { trackVisit } from "@/utils/trackVisit";
 
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
@@ -29,15 +29,6 @@ const App = () => {
     initScrollTracking();
     initTimeTracking();
     trackVisit();
-
-    updateActivity();
-    const activityInterval = setInterval(() => {
-      updateActivity();
-    }, 5 * 60 * 1000);
-
-    return () => {
-      clearInterval(activityInterval);
-    };
   }, []);
 
   return (
