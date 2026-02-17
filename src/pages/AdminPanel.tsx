@@ -65,6 +65,7 @@ export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([]);
   const [requests, setRequests] = useState<RequestForm[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const { settings, reload: reloadSettings } = useSiteSettings();
   const showDocuments = settings.showDocuments;
   const { toast } = useToast();
@@ -75,13 +76,23 @@ export default function AdminPanel() {
   useEffect(() => {
     verifySession();
     loadRequests();
-
-    const intervalId = setInterval(() => {
-      loadRequests();
-    }, 60000);
-
-    return () => clearInterval(intervalId);
   }, []);
+
+  const refreshAll = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([
+        loadRequests(),
+        currentUser?.role === 'admin' ? loadUsers() : Promise.resolve(),
+      ]);
+      reloadSettings();
+      toast({ title: 'Данные обновлены' });
+    } catch (_e) {
+      toast({ title: 'Ошибка', description: 'Не удалось обновить данные', variant: 'destructive' });
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const verifySession = async () => {
     const token = getToken();
@@ -349,6 +360,10 @@ export default function AdminPanel() {
             <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
               {currentUser?.role === 'admin' ? 'Администратор' : 'Менеджер'}
             </span>
+            <Button variant="outline" onClick={refreshAll} disabled={refreshing}>
+              <Icon name={refreshing ? "Loader2" : "RefreshCw"} className={`mr-2 ${refreshing ? 'animate-spin' : ''}`} size={16} />
+              {refreshing ? 'Обновление...' : 'Обновить'}
+            </Button>
             <Button variant="outline" onClick={logout}>
               <Icon name="LogOut" className="mr-2" size={16} />
               Выйти

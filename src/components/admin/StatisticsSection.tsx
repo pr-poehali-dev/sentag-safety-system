@@ -101,12 +101,6 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
   useEffect(() => {
     loadStats();
     loadOnlineVisitors();
-    
-    const intervalId = setInterval(() => {
-      loadOnlineVisitors();
-    }, 60000);
-    
-    return () => clearInterval(intervalId);
   }, []);
 
   const handleClearStats = async () => {
