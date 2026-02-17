@@ -77,7 +77,7 @@ export default function AdminPanel() {
 
     const intervalId = setInterval(() => {
       loadRequests();
-    }, 30000);
+    }, 60000);
 
     return () => clearInterval(intervalId);
   }, []);

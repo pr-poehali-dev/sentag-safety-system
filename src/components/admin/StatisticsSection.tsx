@@ -102,10 +102,9 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
     loadStats();
     loadOnlineVisitors();
     
-    // Обновляем онлайн-посетителей каждые 10 секунд
     const intervalId = setInterval(() => {
       loadOnlineVisitors();
-    }, 10000);
+    }, 60000);
     
     return () => clearInterval(intervalId);
   }, []);

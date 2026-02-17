@@ -12,6 +12,8 @@ import {
 import { Button } from '@/components/ui/button';
 
 const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
+const DOCS_CACHE_KEY = 'documents_cache';
+const DOCS_CACHE_TTL = 10 * 60 * 1000;
 
 interface Document {
   id: number;
@@ -39,10 +41,26 @@ export default function DocumentsSection() {
 
   const loadDocuments = async () => {
     try {
+      const raw = localStorage.getItem(DOCS_CACHE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Date.now() - parsed.timestamp < DOCS_CACHE_TTL) {
+          setDocuments(parsed.data);
+          setLoading(false);
+          return;
+        }
+      }
+    } catch (_e) { /* ignore */ }
+
+    try {
       const response = await fetch(DOCUMENTS_LIST_URL);
       if (response.ok) {
         const data = await response.json();
-        setDocuments(data.documents || []);
+        const docs = data.documents || [];
+        setDocuments(docs);
+        try {
+          localStorage.setItem(DOCS_CACHE_KEY, JSON.stringify({ data: docs, timestamp: Date.now() }));
+        } catch (_e) { /* ignore */ }
       }
     } catch (error) {
       console.error('Error loading documents:', error);
