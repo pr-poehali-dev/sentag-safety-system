@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 import UserManagementSection from '@/components/admin/UserManagementSection';
 import SiteSettingsSection from '@/components/admin/SiteSettingsSection';
 import RequestsSection from '@/components/admin/RequestsSection';
@@ -64,7 +65,8 @@ export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([]);
   const [requests, setRequests] = useState<RequestForm[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showDocuments, setShowDocuments] = useState(true);
+  const { settings, reload: reloadSettings } = useSiteSettings();
+  const showDocuments = settings.showDocuments;
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -73,7 +75,6 @@ export default function AdminPanel() {
   useEffect(() => {
     verifySession();
     loadRequests();
-    loadSiteSettings();
 
     const intervalId = setInterval(() => {
       loadRequests();
@@ -81,26 +82,6 @@ export default function AdminPanel() {
 
     return () => clearInterval(intervalId);
   }, []);
-
-  const loadSiteSettings = async () => {
-    try {
-      const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success && data.settings) {
-          const showDocs = data.settings.show_documents_section ?? true;
-          setShowDocuments(showDocs);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading site settings:', error);
-      // Fallback to localStorage
-      const savedState = localStorage.getItem('show_documents_section');
-      if (savedState !== null) {
-        setShowDocuments(savedState === 'true');
-      }
-    }
-  };
 
   const verifySession = async () => {
     const token = getToken();
@@ -298,7 +279,6 @@ export default function AdminPanel() {
     const newState = !showDocuments;
     
     try {
-      // Сохраняем настройку в базу данных
       const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e', {
         method: 'POST',
         headers: {
@@ -311,9 +291,9 @@ export default function AdminPanel() {
       });
 
       if (response.ok) {
-        setShowDocuments(newState);
-        // Также сохраняем локально для совместимости
         localStorage.setItem('show_documents_section', String(newState));
+        localStorage.removeItem('site_settings_cache');
+        reloadSettings();
         window.dispatchEvent(new Event('documentsToggle'));
         toast({ 
           title: 'Успешно', 
