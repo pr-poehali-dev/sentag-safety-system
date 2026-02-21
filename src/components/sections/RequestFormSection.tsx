@@ -45,7 +45,7 @@ export default function RequestFormSection() {
   });
   const [uploadProgress, setUploadProgress] = useState<string>('');
 
-  const handleFormChange = (field: string, value: any) => {
+  const handleFormChange = (field: string, value: string | boolean) => {
     setFormData({ ...formData, [field]: value });
     if (errors[field]) {
       setErrors({ ...errors, [field]: false });
@@ -292,15 +292,15 @@ export default function RequestFormSection() {
   };
 
   return (
-    <section id="request" className="py-20 bg-white">
+    <section id="request" className="py-12 md:py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-slate-800">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 text-slate-800">
             Запросить расчет
           </h2>
-          <p className="text-center text-slate-600 mb-12">Заполните форму, и наш специалист свяжется с вами</p>
+          <p className="text-center text-sm md:text-base text-slate-600 mb-8">Заполните форму, и наш специалист свяжется с вами</p>
           
-          <Card className="p-8">
+          <Card className="p-5 md:p-7">
             <div className="mb-8">
               <div className="flex items-center justify-center gap-4">
                 <div className={`flex items-center justify-center w-10 h-10 rounded-full ${formStep >= 1 ? 'bg-primary text-white' : 'bg-slate-200 text-slate-500'}`}>

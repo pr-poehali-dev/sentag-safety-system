@@ -14,31 +14,31 @@ export default function ComponentsSection() {
   };
 
   return (
-    <section id="components" className="py-20 bg-gradient-to-b from-slate-50 to-white">
+    <section id="components" className="py-12 md:py-16 bg-gradient-to-b from-slate-50 to-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-slate-800">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 text-slate-800">
           Система оповещения опасности утопления
         </h2>
-        <p className="text-center text-xl text-slate-600 mb-16">состоит из 6 основных компонентов</p>
+        <p className="text-center text-base md:text-lg text-slate-600 mb-8 md:mb-12">состоит из 6 основных компонентов</p>
         
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="p-8 hover:shadow-2xl transition-all">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Icon name="Watch" className="text-white" size={32} />
+        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
+          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Watch" className="text-white" size={24} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800">Браслет</h3>
+              <h3 className="text-lg md:text-xl font-bold text-slate-800">Браслет</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/9684c64f-f412-4dff-afb0-b0f554bd549f.png"
               alt="Браслет Sentag"
-              className="w-full h-auto rounded-xl shadow-lg mb-6"
+              className="w-full h-auto rounded-xl shadow mb-4"
             />
             
             {expandedComponent === 'bracelet' && (
-              <div className="mb-6 space-y-4 animate-fade-in">
-                <p className="text-lg text-slate-700 leading-relaxed">
+              <div className="mb-4 space-y-3 animate-fade-in">
+                <p className="text-sm md:text-base text-slate-700 leading-relaxed">
                   Браслет Sentag является <strong>сердцем СООУ</strong>. Он непрерывно контролирует пловца находящегося в воде. Если пловец слишком глубоко и долго пребывает под водой, система срабатывает и оповещает спасателя, что позволяет максимально быстро спасти человека в случае чрезвычайной ситуации.
                 </p>
                 
@@ -66,23 +66,23 @@ export default function ComponentsSection() {
             </Button>
           </Card>
 
-          <Card className="p-8 hover:shadow-2xl transition-all">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Icon name="Server" className="text-white" size={32} />
+          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Server" className="text-white" size={24} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800">Блок управления</h3>
+              <h3 className="text-lg md:text-xl font-bold text-slate-800">Блок управления</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/fcc91bdc-55fd-4ede-be87-db6857f5b894.jpg"
               alt="Блок управления"
-              className="w-full h-auto rounded-xl shadow-lg mb-6"
+              className="w-full h-auto rounded-xl shadow mb-4"
             />
             
             {expandedComponent === 'control' && (
-              <div className="mb-6 space-y-4 animate-fade-in">
-                <p className="text-lg text-slate-700 leading-relaxed">
+              <div className="mb-4 space-y-3 animate-fade-in">
+                <p className="text-sm md:text-base text-slate-700 leading-relaxed">
                   Система Sentag имеет возможность отслеживать случаи опасности утопления в <strong>нескольких бассейнах одновременно</strong>. Блок управления получает сигналы тревоги об опасности утопления от блоков датчиков в бассейнах и сигналы тревоги от кнопок, подключенных к блокам ввода-вывода или блокам датчиков.
                 </p>
                 
@@ -103,23 +103,23 @@ export default function ComponentsSection() {
             </Button>
           </Card>
 
-          <Card className="p-8 hover:shadow-2xl transition-all">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Icon name="Monitor" className="text-white" size={32} />
+          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Monitor" className="text-white" size={24} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800">Настенный модуль</h3>
+              <h3 className="text-lg md:text-xl font-bold text-slate-800">Настенный модуль</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/49682fb7-d208-408a-9df4-443eab580edf.jpg"
               alt="Настенный модуль Sentag"
-              className="w-full h-auto rounded-xl shadow-lg mb-6"
+              className="w-full h-auto rounded-xl shadow mb-4"
             />
             
             {expandedComponent === 'wall' && (
-              <div className="mb-6 space-y-4 animate-fade-in">
-                <p className="text-lg text-slate-700 leading-relaxed">
+              <div className="mb-4 space-y-3 animate-fade-in">
+                <p className="text-sm md:text-base text-slate-700 leading-relaxed">
                   Настенный модуль Sentag используется для отображения состояния и сигналов тревоги, а также для сброса и сброса сигналов тревоги. Он имеет <strong>водонепроницаемый сенсорный экран</strong> и только одно соединение для сети и питания (питание через Ethernet).
                 </p>
                 
@@ -141,23 +141,23 @@ export default function ComponentsSection() {
             </Button>
           </Card>
 
-          <Card className="p-8 hover:shadow-2xl transition-all">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Icon name="Radio" className="text-white" size={32} />
+          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Radio" className="text-white" size={24} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800">Сенсор для чаши бассейна</h3>
+              <h3 className="text-lg md:text-xl font-bold text-slate-800">Сенсор для чаши бассейна</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/8707c55e-51a1-4738-a4a2-6c3705340c3f.jpg"
               alt="Сенсор для чаши бассейна Sentag"
-              className="w-full h-auto rounded-xl shadow-lg mb-6"
+              className="w-full h-auto rounded-xl shadow mb-4"
             />
             
             {expandedComponent === 'sensor' && (
-              <div className="mb-6 space-y-4 animate-fade-in">
-                <p className="text-lg text-slate-700 leading-relaxed">
+              <div className="mb-4 space-y-3 animate-fade-in">
+                <p className="text-sm md:text-base text-slate-700 leading-relaxed">
                   Сенсор для чаши бассейнов непрерывно контролирует воду в бассейне на предмет сигналов тревоги от браслетов Sentag. Для снижения риска ложных срабатываний и преодоления помех в воде были приняты меры предосторожности, и все сигналы надежно улавливаются и анализируются блоком датчиков.
                 </p>
                 
@@ -179,23 +179,23 @@ export default function ComponentsSection() {
             </Button>
           </Card>
 
-          <Card className="p-8 hover:shadow-2xl transition-all">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Icon name="Cpu" className="text-white" size={32} />
+          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Cpu" className="text-white" size={24} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800">Блок ввода-вывода ioLogik</h3>
+              <h3 className="text-lg md:text-xl font-bold text-slate-800">Блок ввода-вывода ioLogik</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/077c0ea4-20b8-4d73-9561-5fae5849a976.jpg"
               alt="Блок ввода-вывода ioLogik"
-              className="w-full h-auto rounded-xl shadow-lg mb-6"
+              className="w-full h-auto rounded-xl shadow mb-4"
             />
             
             {expandedComponent === 'iologik' && (
-              <div className="mb-6 space-y-4 animate-fade-in">
-                <p className="text-lg text-slate-700 leading-relaxed">
+              <div className="mb-4 space-y-3 animate-fade-in">
+                <p className="text-sm md:text-base text-slate-700 leading-relaxed">
                   Блок ввода-вывода Sentag <strong>(Moxa ioLogik E1214)</strong> используется для устройств сигнализации, таких, как сирены, мигающие лампы, двусторонние радиостанции, а также для внешних входов, таких, как кнопки Help и Emergency.
                 </p>
                 
@@ -217,23 +217,23 @@ export default function ComponentsSection() {
             </Button>
           </Card>
 
-          <Card className="p-8 hover:shadow-2xl transition-all">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Icon name="Wrench" className="text-white" size={32} />
+          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Wrench" className="text-white" size={24} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800">Тестер-программатор браслетов</h3>
+              <h3 className="text-lg md:text-xl font-bold text-slate-800">Тестер-программатор браслетов</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/f0c3dc40-6715-466b-a3c0-24432523eb55.jpg"
               alt="Тестер-программатор браслетов Sentag"
-              className="w-full h-auto rounded-xl shadow-lg mb-6"
+              className="w-full h-auto rounded-xl shadow mb-4"
             />
             
             {expandedComponent === 'tester' && (
-              <div className="mb-6 space-y-4 animate-fade-in">
-                <p className="text-lg text-slate-700 leading-relaxed">
+              <div className="mb-4 space-y-3 animate-fade-in">
+                <p className="text-sm md:text-base text-slate-700 leading-relaxed">
                   Браслеты Sentag имеют ключевое значение для корректного обнаружения опасности утопления и должны быть всегда исправны, чтобы выполнять свою задачу. Для проверки функциональности Браслеты оснащены <strong>встроенной системой самопроверки</strong> и постоянно сообщают о своем состоянии на Sentag Tester.
                 </p>
                 

@@ -88,7 +88,7 @@ export default function DocumentsSection() {
 
   if (loading) {
     return (
-      <section id="documents" className="py-20 bg-gradient-to-b from-slate-50 to-white">
+      <section id="documents" className="py-12 md:py-16 bg-gradient-to-b from-slate-50 to-white">
         <div className="container mx-auto px-4 text-center">
           <p className="text-slate-600">Загрузка документов...</p>
         </div>
@@ -107,12 +107,12 @@ export default function DocumentsSection() {
     : 'grid md:grid-cols-3 gap-8 max-w-5xl mx-auto';
 
   return (
-    <section id="documents" className="py-20 bg-gradient-to-b from-slate-50 to-white">
+    <section id="documents" className="py-12 md:py-16 bg-gradient-to-b from-slate-50 to-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-8 text-slate-800">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 text-slate-800">
           Документы и сертификаты
         </h2>
-        <p className="text-center text-xl text-slate-600 mb-16">Полное соответствие требованиям ГОСТ и международным стандартам</p>
+        <p className="text-center text-sm md:text-base text-slate-600 mb-8 md:mb-10">Полное соответствие требованиям ГОСТ и международным стандартам</p>
         <div className={gridCols}>
           {documents.map((doc) => (
             <Card 
