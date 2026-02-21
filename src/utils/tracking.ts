@@ -116,41 +116,42 @@ let scrollTracked = {
   100: false,
 };
 
+let scrollHandler: (() => void) | null = null;
+let timeoutIds: ReturnType<typeof setTimeout>[] = [];
+
 export const initScrollTracking = () => {
+  if (scrollHandler) return;
   let ticking = false;
 
   const checkScrollDepth = () => {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    if (docHeight <= 0) return;
     const scrollPercent = (scrollTop / docHeight) * 100;
 
     if (scrollPercent >= 25 && !scrollTracked[25]) {
       scrollTracked[25] = true;
-      trackEvent(TrackingEvent.SCROLL_DEPTH_25, EventCategory.ENGAGEMENT, {
-        scroll_depth: 25,
-      });
+      trackEvent(TrackingEvent.SCROLL_DEPTH_25, EventCategory.ENGAGEMENT, { scroll_depth: 25 });
     }
     if (scrollPercent >= 50 && !scrollTracked[50]) {
       scrollTracked[50] = true;
-      trackEvent(TrackingEvent.SCROLL_DEPTH_50, EventCategory.ENGAGEMENT, {
-        scroll_depth: 50,
-      });
+      trackEvent(TrackingEvent.SCROLL_DEPTH_50, EventCategory.ENGAGEMENT, { scroll_depth: 50 });
     }
     if (scrollPercent >= 75 && !scrollTracked[75]) {
       scrollTracked[75] = true;
-      trackEvent(TrackingEvent.SCROLL_DEPTH_75, EventCategory.ENGAGEMENT, {
-        scroll_depth: 75,
-      });
+      trackEvent(TrackingEvent.SCROLL_DEPTH_75, EventCategory.ENGAGEMENT, { scroll_depth: 75 });
     }
     if (scrollPercent >= 100 && !scrollTracked[100]) {
       scrollTracked[100] = true;
-      trackEvent(TrackingEvent.SCROLL_DEPTH_100, EventCategory.ENGAGEMENT, {
-        scroll_depth: 100,
-      });
+      trackEvent(TrackingEvent.SCROLL_DEPTH_100, EventCategory.ENGAGEMENT, { scroll_depth: 100 });
+      if (scrollHandler) {
+        window.removeEventListener('scroll', scrollHandler);
+        scrollHandler = null;
+      }
     }
   };
 
-  const onScroll = () => {
+  scrollHandler = () => {
     if (!ticking) {
       window.requestAnimationFrame(() => {
         checkScrollDepth();
@@ -160,22 +161,23 @@ export const initScrollTracking = () => {
     }
   };
 
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', scrollHandler, { passive: true });
 };
 
 export const initTimeTracking = () => {
   const startTime = Date.now();
-  
-  const intervals = [30, 60, 120, 300];
-  
-  intervals.forEach(seconds => {
-    setTimeout(() => {
+  timeoutIds.forEach(id => clearTimeout(id));
+  timeoutIds = [];
+
+  [30, 60, 120, 300].forEach(seconds => {
+    const id = setTimeout(() => {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
       trackEvent(TrackingEvent.VIEW_CONTENT, EventCategory.ENGAGEMENT, {
         time_on_site: timeSpent,
         engagement_level: seconds >= 300 ? 'high' : seconds >= 60 ? 'medium' : 'low',
       });
     }, seconds * 1000);
+    timeoutIds.push(id);
   });
 };
 

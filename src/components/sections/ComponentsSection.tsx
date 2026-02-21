@@ -34,6 +34,7 @@ export default function ComponentsSection() {
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/9684c64f-f412-4dff-afb0-b0f554bd549f.png"
               alt="Браслет Sentag"
               className="w-1/2 mx-auto block h-auto rounded-xl shadow mb-4"
+              loading="lazy"
             />
             
             {expandedComponent === 'bracelet' && (
@@ -78,6 +79,7 @@ export default function ComponentsSection() {
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/fcc91bdc-55fd-4ede-be87-db6857f5b894.jpg"
               alt="Блок управления"
               className="w-1/2 mx-auto block h-auto rounded-xl shadow mb-4"
+              loading="lazy"
             />
             
             {expandedComponent === 'control' && (
@@ -115,6 +117,7 @@ export default function ComponentsSection() {
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/49682fb7-d208-408a-9df4-443eab580edf.jpg"
               alt="Настенный модуль Sentag"
               className="w-1/2 mx-auto block h-auto rounded-xl shadow mb-4"
+              loading="lazy"
             />
             
             {expandedComponent === 'wall' && (
@@ -153,6 +156,7 @@ export default function ComponentsSection() {
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/8707c55e-51a1-4738-a4a2-6c3705340c3f.jpg"
               alt="Сенсор для чаши бассейна Sentag"
               className="w-1/2 mx-auto block h-auto rounded-xl shadow mb-4"
+              loading="lazy"
             />
             
             {expandedComponent === 'sensor' && (
@@ -191,6 +195,7 @@ export default function ComponentsSection() {
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/077c0ea4-20b8-4d73-9561-5fae5849a976.jpg"
               alt="Блок ввода-вывода ioLogik"
               className="w-1/2 mx-auto block h-auto rounded-xl shadow mb-4"
+              loading="lazy"
             />
             
             {expandedComponent === 'iologik' && (
@@ -229,6 +234,7 @@ export default function ComponentsSection() {
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/f0c3dc40-6715-466b-a3c0-24432523eb55.jpg"
               alt="Тестер-программатор браслетов Sentag"
               className="w-1/2 mx-auto block h-auto rounded-xl shadow mb-4"
+              loading="lazy"
             />
             
             {expandedComponent === 'tester' && (
