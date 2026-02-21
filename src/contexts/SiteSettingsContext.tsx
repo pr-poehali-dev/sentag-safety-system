@@ -14,7 +14,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   seoTitle: 'Безопасность вашего бассейна под контролем',
   seoDescription: 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания.',
   seoKeywords: 'СООУ, система безопасности бассейнов, Sentag AB',
-  faviconUrl: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg',
+  faviconUrl: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/favicon/20260207_101407_%D0%9B%D0%BE%D0%B3%D0%BE%20Sentag%20(2).png?v=2',
   ogImageUrl: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/og-image-1770456083663.png',
 };
 
