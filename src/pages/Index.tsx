@@ -3,9 +3,14 @@ import HeroSection from '@/components/HeroSection';
 import ContentSections from '@/components/ContentSections';
 import Footer from '@/components/Footer';
 
+const HEADER_HEIGHT = 72;
+
 const Index = () => {
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_HEIGHT;
+    window.scrollTo({ top, behavior: 'smooth' });
   };
 
   return (
