@@ -8,7 +8,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ scrollToSection }: HeroSectionProps) {
   return (
-    <section className="relative min-h-[50vh] md:min-h-[50vh] flex items-center justify-center text-white overflow-hidden pt-16 md:pt-20">
+    <section className="relative min-h-[50vh] md:h-screen flex items-center justify-center text-white overflow-hidden pt-16 md:pt-20">
       <div className="absolute inset-0 z-0">
         <img
           src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/d181a7ed-76ac-4ddf-9e5f-071e5bb2a3d2.png"
