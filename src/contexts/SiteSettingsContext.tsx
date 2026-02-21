@@ -103,14 +103,18 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
     }
     metaKeywords.content = s.seoKeywords;
 
-    let favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
-    if (!favicon) {
-      favicon = document.createElement('link');
+    const faviconLinks = document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+    if (faviconLinks.length > 0) {
+      faviconLinks.forEach(el => {
+        (el as HTMLLinkElement).href = s.faviconUrl;
+      });
+    } else {
+      const favicon = document.createElement('link');
       favicon.rel = 'icon';
-      favicon.type = 'image/x-icon';
+      favicon.type = 'image/png';
+      favicon.href = s.faviconUrl;
       document.head.appendChild(favicon);
     }
-    favicon.href = s.faviconUrl;
   };
 
   useEffect(() => {
