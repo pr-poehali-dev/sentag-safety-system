@@ -13,11 +13,8 @@ export default function RequestFormSection() {
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [requestId, setRequestId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
   const [companyCardFile, setCompanyCardFile] = useState<File | null>(null);
   const [poolSchemeFiles, setPoolSchemeFiles] = useState<File[]>([]);
-  const [companyCardLoaded, setCompanyCardLoaded] = useState(false);
-  const [poolSchemesLoaded, setPoolSchemesLoaded] = useState<boolean[]>([]);
   const [step1StartTime, setStep1StartTime] = useState<string | null>(null);
   const [step2StartTime, setStep2StartTime] = useState<string | null>(null);
 
