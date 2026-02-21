@@ -20,7 +20,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
 
 const SETTINGS_URL = 'https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e';
 const CACHE_KEY = 'site_settings_cache';
-const CACHE_TTL = 5 * 60 * 1000;
+const CACHE_TTL = 24 * 60 * 60 * 1000;
 
 interface SiteSettingsContextType {
   settings: SiteSettings;

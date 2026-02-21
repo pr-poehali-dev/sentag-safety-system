@@ -7,7 +7,22 @@
       "body": {
         "visitor_id": "test-visitor-123"
       },
-      "expectedStatus": 200
+      "expectedStatus": 200,
+      "expectedBody": {"success": true},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Track click",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "visitor_id": "test-visitor-123",
+        "button_name": "Оставить заявку",
+        "button_location": "header"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {"success": true},
+      "bodyMatcher": "partial"
     }
   ]
 }
