@@ -21,19 +21,19 @@ export default function ComponentsSection() {
         </h2>
         <p className="text-center text-base md:text-lg text-slate-600 mb-8 md:mb-12">состоит из 6 основных компонентов</p>
         
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
-          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
-                <Icon name="Watch" className="text-white" size={24} />
+        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+          <Card className="p-3 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Watch" className="text-white" size={16} />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-slate-800">Браслет</h3>
+              <h3 className="text-sm font-bold text-slate-800">Браслет</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/9684c64f-f412-4dff-afb0-b0f554bd549f.png"
               alt="Браслет Sentag"
-              className="w-full h-auto rounded-xl shadow mb-4"
+              className="w-full h-32 object-contain rounded-lg mb-2"
             />
             
             {expandedComponent === 'bracelet' && (
@@ -60,24 +60,25 @@ export default function ComponentsSection() {
             <Button 
               onClick={() => toggleComponent('bracelet', 'Браслет')}
               variant="outline"
-              className="w-full"
+              size="sm"
+              className="w-full text-xs"
             >
               {expandedComponent === 'bracelet' ? 'Скрыть' : 'Подробнее'}
             </Button>
           </Card>
 
-          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
-                <Icon name="Server" className="text-white" size={24} />
+          <Card className="p-3 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Server" className="text-white" size={16} />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-slate-800">Блок управления</h3>
+              <h3 className="text-sm font-bold text-slate-800">Блок управления</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/fcc91bdc-55fd-4ede-be87-db6857f5b894.jpg"
               alt="Блок управления"
-              className="w-full h-auto rounded-xl shadow mb-4"
+              className="w-full h-32 object-contain rounded-lg mb-2"
             />
             
             {expandedComponent === 'control' && (
@@ -97,24 +98,25 @@ export default function ComponentsSection() {
             <Button 
               onClick={() => toggleComponent('control', 'Блок управления')}
               variant="outline"
-              className="w-full"
+              size="sm"
+              className="w-full text-xs"
             >
               {expandedComponent === 'control' ? 'Скрыть' : 'Подробнее'}
             </Button>
           </Card>
 
-          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
-                <Icon name="Monitor" className="text-white" size={24} />
+          <Card className="p-3 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Monitor" className="text-white" size={16} />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-slate-800">Настенный модуль</h3>
+              <h3 className="text-sm font-bold text-slate-800">Настенный модуль</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/49682fb7-d208-408a-9df4-443eab580edf.jpg"
               alt="Настенный модуль Sentag"
-              className="w-full h-auto rounded-xl shadow mb-4"
+              className="w-full h-32 object-contain rounded-lg mb-2"
             />
             
             {expandedComponent === 'wall' && (
@@ -135,24 +137,25 @@ export default function ComponentsSection() {
             <Button 
               onClick={() => toggleComponent('wall', 'Настенный модуль')}
               variant="outline"
-              className="w-full"
+              size="sm"
+              className="w-full text-xs"
             >
               {expandedComponent === 'wall' ? 'Скрыть' : 'Подробнее'}
             </Button>
           </Card>
 
-          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
-                <Icon name="Radio" className="text-white" size={24} />
+          <Card className="p-3 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Radio" className="text-white" size={16} />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-slate-800">Сенсор для чаши бассейна</h3>
+              <h3 className="text-sm font-bold text-slate-800">Сенсор для чаши бассейна</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/8707c55e-51a1-4738-a4a2-6c3705340c3f.jpg"
               alt="Сенсор для чаши бассейна Sentag"
-              className="w-full h-auto rounded-xl shadow mb-4"
+              className="w-full h-32 object-contain rounded-lg mb-2"
             />
             
             {expandedComponent === 'sensor' && (
@@ -173,24 +176,25 @@ export default function ComponentsSection() {
             <Button 
               onClick={() => toggleComponent('sensor', 'Сенсор для чаши бассейна')}
               variant="outline"
-              className="w-full"
+              size="sm"
+              className="w-full text-xs"
             >
               {expandedComponent === 'sensor' ? 'Скрыть' : 'Подробнее'}
             </Button>
           </Card>
 
-          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
-                <Icon name="Cpu" className="text-white" size={24} />
+          <Card className="p-3 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Cpu" className="text-white" size={16} />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-slate-800">Блок ввода-вывода ioLogik</h3>
+              <h3 className="text-sm font-bold text-slate-800">Блок ввода-вывода ioLogik</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/077c0ea4-20b8-4d73-9561-5fae5849a976.jpg"
               alt="Блок ввода-вывода ioLogik"
-              className="w-full h-auto rounded-xl shadow mb-4"
+              className="w-full h-32 object-contain rounded-lg mb-2"
             />
             
             {expandedComponent === 'iologik' && (
@@ -211,24 +215,25 @@ export default function ComponentsSection() {
             <Button 
               onClick={() => toggleComponent('iologik', 'Блок ввода-вывода')}
               variant="outline"
-              className="w-full"
+              size="sm"
+              className="w-full text-xs"
             >
               {expandedComponent === 'iologik' ? 'Скрыть' : 'Подробнее'}
             </Button>
           </Card>
 
-          <Card className="p-5 md:p-6 hover:shadow-xl transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow flex-shrink-0">
-                <Icon name="Wrench" className="text-white" size={24} />
+          <Card className="p-3 hover:shadow-xl transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow flex-shrink-0">
+                <Icon name="Wrench" className="text-white" size={16} />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-slate-800">Тестер-программатор браслетов</h3>
+              <h3 className="text-sm font-bold text-slate-800">Тестер-программатор браслетов</h3>
             </div>
             
             <img 
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/f0c3dc40-6715-466b-a3c0-24432523eb55.jpg"
               alt="Тестер-программатор браслетов Sentag"
-              className="w-full h-auto rounded-xl shadow mb-4"
+              className="w-full h-32 object-contain rounded-lg mb-2"
             />
             
             {expandedComponent === 'tester' && (
@@ -259,7 +264,8 @@ export default function ComponentsSection() {
             <Button 
               onClick={() => toggleComponent('tester', 'Тестер-программатор браслетов')}
               variant="outline"
-              className="w-full"
+              size="sm"
+              className="w-full text-xs"
             >
               {expandedComponent === 'tester' ? 'Скрыть' : 'Подробнее'}
             </Button>
