@@ -41,6 +41,9 @@ export default function RequestFormSection() {
     deadline: ''
   });
   const [uploadProgress, setUploadProgress] = useState<string>('');
+  const [companyCardLoaded, setCompanyCardLoaded] = useState(false);
+  const [poolSchemesLoaded, setPoolSchemesLoaded] = useState<boolean[]>([]);
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
   const handleFormChange = (field: string, value: string | boolean) => {
     setFormData({ ...formData, [field]: value });

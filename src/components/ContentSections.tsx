@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 
 const HowItWorksSection = lazy(() => import('@/components/sections/HowItWorksSection'));
