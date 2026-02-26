@@ -29,6 +29,9 @@ export default function Footer({ scrollToSection }: FooterProps) {
               src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/dfa50620-cca3-4ff7-8b8d-c83d81e84f12.png" 
               alt="Sentag" 
               className="h-10 md:h-12 w-auto mb-3 md:mb-4"
+              width="200"
+              height="48"
+              loading="lazy"
             />
             <p className="text-sm md:text-base text-slate-600">Безопасность вашего бассейна под контролем</p>
           </div>

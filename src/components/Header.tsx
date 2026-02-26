@@ -38,6 +38,9 @@ export default function Header({ scrollToSection }: HeaderProps) {
             src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/dfa50620-cca3-4ff7-8b8d-c83d81e84f12.png" 
             alt="Sentag" 
             className="h-8 md:h-12 w-auto"
+            width="200"
+            height="48"
+            fetchPriority="high"
           />
         </div>
         <nav className="hidden xl:flex gap-4 2xl:gap-6 text-sm 2xl:text-base">

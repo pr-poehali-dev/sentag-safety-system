@@ -8,17 +8,24 @@ interface HeroSectionProps {
 
 export default function HeroSection({ scrollToSection }: HeroSectionProps) {
   return (
-    <section className="relative min-h-[50vh] md:h-screen flex items-start justify-center text-white overflow-hidden pt-16 md:pt-20">
+    <section className="relative min-h-[50svh] md:min-h-screen flex items-start justify-center text-white overflow-hidden pt-16 md:pt-20" style={{backgroundColor: '#1a3a5c'}}>
       <div className="absolute inset-0 z-0">
         <img
           src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/d181a7ed-76ac-4ddf-9e5f-071e5bb2a3d2.png"
           alt="Система безопасности бассейнов Sentag AB - СООУ для предотвращения утопления"
           className="w-full h-full object-cover object-center brightness-[1.2]"
+          width="1920"
+          height="1080"
+          fetchPriority="high"
+          decoding="sync"
         />
         <img
           src="https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/db8a685c-ddf9-4f00-aad6-79bacfe19141.png"
           alt="Браслет безопасности Sentag СООУ для бассейна - система оповещения опасности утопления"
           className="absolute bottom-0 left-0 hidden md:block w-[120%] lg:w-[96%] xl:w-[84%] h-auto object-contain brightness-[1.2]"
+          width="1200"
+          height="800"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40 pointer-events-none" />
       </div>
