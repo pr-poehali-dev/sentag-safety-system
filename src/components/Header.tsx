@@ -40,7 +40,7 @@ export default function Header({ scrollToSection }: HeaderProps) {
             className="h-8 md:h-12 w-auto"
             width="200"
             height="48"
-            fetchPriority="high"
+            fetchpriority="high"
           />
         </div>
         <nav className="hidden xl:flex gap-4 2xl:gap-6 text-sm 2xl:text-base">
