@@ -5,6 +5,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 interface SiteSettingsSectionProps {
   showDocuments: boolean;
@@ -21,6 +28,8 @@ export default function SiteSettingsSection({
   const [faviconUrl, setFaviconUrl] = useState('');
   const [isEditingSeo, setIsEditingSeo] = useState(false);
   const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
+  const [syncCopied, setSyncCopied] = useState(false);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -181,6 +190,22 @@ export default function SiteSettingsSection({
     setIsEditingSeo(false);
   };
 
+  const getSyncSnippet = () => {
+    return `    <title>${seoTitle}</title>
+    <meta name="description" content="${seoDescription}">
+    <meta name="keywords" content="${seoKeywords}">
+    <meta property="og:title" content="${seoTitle}">
+    <meta property="og:description" content="${seoDescription}">
+    <meta name="twitter:title" content="${seoTitle}">
+    <meta name="twitter:description" content="${seoDescription}">`;
+  };
+
+  const handleCopySync = () => {
+    navigator.clipboard.writeText(getSyncSnippet());
+    setSyncCopied(true);
+    setTimeout(() => setSyncCopied(false), 3000);
+  };
+
   const handleFaviconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -251,10 +276,16 @@ export default function SiteSettingsSection({
             </div>
           </div>
           {!isEditingSeo && (
-            <Button variant="outline" onClick={() => setIsEditingSeo(true)}>
-              <Icon name="Edit" className="mr-2" size={16} />
-              Редактировать
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setShowSyncModal(true)}>
+                <Icon name="RefreshCw" className="mr-2" size={16} />
+                Синхронизировать с Google
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setIsEditingSeo(true)}>
+                <Icon name="Edit" className="mr-2" size={16} />
+                Редактировать
+              </Button>
+            </div>
           )}
         </div>
 
@@ -384,6 +415,48 @@ export default function SiteSettingsSection({
           )}
         </Button>
       </Card>
+
+      <Dialog open={showSyncModal} onOpenChange={setShowSyncModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Icon name="RefreshCw" size={20} className="text-blue-600" />
+              Синхронизация SEO с Google
+            </DialogTitle>
+            <DialogDescription>
+              Скопируй этот блок и отправь разработчику — он заменит соответствующие строки в исходном файле сайта. После этого Google будет видеть актуальные данные.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-lg p-4 overflow-auto">
+              <pre className="text-green-400 text-xs whitespace-pre-wrap font-mono leading-relaxed">
+                {getSyncSnippet()}
+              </pre>
+            </div>
+
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+              <p className="font-medium mb-1">Как применить:</p>
+              <ol className="list-decimal list-inside space-y-1 text-amber-700">
+                <li>Нажми «Скопировать» ниже</li>
+                <li>Отправь скопированный текст разработчику</li>
+                <li>Разработчик вставит его в файл <code className="bg-amber-100 px-1 rounded">index.html</code> и сделает деплой</li>
+                <li>После деплоя запроси переиндексацию в Google Search Console</li>
+              </ol>
+            </div>
+
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setShowSyncModal(false)}>
+                Закрыть
+              </Button>
+              <Button onClick={handleCopySync}>
+                <Icon name={syncCopied ? 'Check' : 'Copy'} className="mr-2" size={16} />
+                {syncCopied ? 'Скопировано!' : 'Скопировать'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
