@@ -81,6 +81,16 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 </a>
               </li>
               <li>
+                <a 
+                  href="tel:+79808544908" 
+                  onClick={() => trackClick('Телефон 2 (футер)', 'footer')}
+                  className="hover:text-primary transition flex items-center gap-1"
+                >
+                  <Icon name="Phone" size={14} />
+                  +7 (980) 854-49-08
+                </a>
+              </li>
+              <li>
                 <button 
                   onClick={handleEmailClick}
                   className="hover:text-primary transition break-all flex items-center gap-1 text-left"

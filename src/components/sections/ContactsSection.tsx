@@ -62,7 +62,7 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
               <Icon name="Phone" className="text-primary" size={22} />
             </div>
             <h3 className="font-bold text-sm md:text-base mb-2 text-slate-800">Телефон</h3>
-            <p className="text-slate-600">
+            <p className="text-slate-600 flex flex-col gap-1">
               <a 
                 href="tel:+73452568286" 
                 className="hover:text-primary transition"
@@ -74,6 +74,18 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
                 }}
               >
                 +7 (3452) 56-82-86
+              </a>
+              <a 
+                href="tel:+79808544908" 
+                className="hover:text-primary transition"
+                onClick={() => {
+                  trackClick('Клик по телефону 2', 'contacts');
+                  trackEvent(TrackingEvent.CLICK_PHONE, EventCategory.CONTACT, {
+                    contact_method: 'phone_direct',
+                  });
+                }}
+              >
+                +7 (980) 854-49-08
               </a>
             </p>
             <Button variant="link" className="mt-4" onClick={handleCallRequest}>
