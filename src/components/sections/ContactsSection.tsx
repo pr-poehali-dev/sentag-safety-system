@@ -26,7 +26,7 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
     trackEvent(TrackingEvent.CLICK_EMAIL, EventCategory.CONTACT, {
       contact_method: 'email',
     });
-    navigator.clipboard.writeText('info@meridian-t.ru');
+    navigator.clipboard.writeText('d.gusak@meridian-t.ru');
     alert('Email скопирован в буфер обмена');
   };
 
@@ -97,12 +97,18 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
               <Icon name="Mail" className="text-primary" size={22} />
             </div>
             <h3 className="font-bold text-sm md:text-base mb-2 text-slate-800">Email</h3>
-            <p className="text-slate-600">
+            <p className="text-slate-600 flex flex-col gap-1">
               <button 
                 onClick={handleCopyEmail}
                 className="hover:text-primary transition cursor-pointer"
               >
                 info@meridian-t.ru
+              </button>
+              <button 
+                onClick={handleCopyEmail}
+                className="hover:text-primary transition cursor-pointer"
+              >
+                d.gusak@meridian-t.ru
               </button>
             </p>
             <Button variant="link" className="mt-4" onClick={handleCopyEmail}>

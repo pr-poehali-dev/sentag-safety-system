@@ -16,7 +16,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
   const handleEmailClick = (e: React.MouseEvent) => {
     e.preventDefault();
     trackClick('Email (футер)', 'footer');
-    navigator.clipboard.writeText('info@meridian-t.ru');
+    navigator.clipboard.writeText('d.gusak@meridian-t.ru');
     alert('Email скопирован в буфер обмена');
   };
 
@@ -97,6 +97,15 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 >
                   <Icon name="Mail" size={14} />
                   info@meridian-t.ru
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={handleEmailClick}
+                  className="hover:text-primary transition break-all flex items-center gap-1 text-left"
+                >
+                  <Icon name="Mail" size={14} />
+                  d.gusak@meridian-t.ru
                 </button>
               </li>
             </ul>
