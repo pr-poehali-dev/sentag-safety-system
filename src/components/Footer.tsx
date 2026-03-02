@@ -13,6 +13,12 @@ export default function Footer({ scrollToSection }: FooterProps) {
   const showDocuments = settings.showDocuments;
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
+  const handlePhoneClick = () => {
+    trackClick('Телефон (футер)', 'footer');
+    navigator.clipboard.writeText('+79808544908');
+    alert('Телефон скопирован в буфер обмена');
+  };
+
   const handleEmailClick = (e: React.MouseEvent) => {
     e.preventDefault();
     trackClick('Email (футер)', 'footer');
@@ -71,24 +77,22 @@ export default function Footer({ scrollToSection }: FooterProps) {
                 </a>
               </li>
               <li>
-                <a 
-                  href="tel:+73452568286" 
-                  onClick={() => trackClick('Телефон (футер)', 'footer')}
-                  className="hover:text-primary transition flex items-center gap-1"
+                <button
+                  onClick={handlePhoneClick}
+                  className="hover:text-primary transition flex items-center gap-1 text-left"
                 >
                   <Icon name="Phone" size={14} />
                   +7 (3452) 56-82-86
-                </a>
+                </button>
               </li>
               <li>
-                <a 
-                  href="tel:+79808544908" 
-                  onClick={() => trackClick('Телефон 2 (футер)', 'footer')}
-                  className="hover:text-primary transition flex items-center gap-1"
+                <button
+                  onClick={handlePhoneClick}
+                  className="hover:text-primary transition flex items-center gap-1 text-left"
                 >
                   <Icon name="Phone" size={14} />
                   +7 (980) 854-49-08
-                </a>
+                </button>
               </li>
               <li>
                 <button 
