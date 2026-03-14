@@ -15,15 +15,20 @@ export default function Footer({ scrollToSection }: FooterProps) {
 
   const handlePhoneClick = () => {
     trackClick('Телефон (футер)', 'footer');
-    navigator.clipboard.writeText('+79808544908');
-    alert('Телефон скопирован в буфер обмена');
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = 'tel:+79808544908';
+    } else {
+      navigator.clipboard.writeText('+7 (980) 854-49-08');
+      alert('Номер телефона скопирован');
+    }
   };
 
   const handleEmailClick = (e: React.MouseEvent) => {
     e.preventDefault();
     trackClick('Email (футер)', 'footer');
     navigator.clipboard.writeText('d.gusak@meridian-t.ru');
-    alert('Email скопирован в буфер обмена');
+    alert('Email скопирован');
   };
 
   return (
@@ -82,25 +87,7 @@ export default function Footer({ scrollToSection }: FooterProps) {
                   className="hover:text-primary transition flex items-center gap-1 text-left"
                 >
                   <Icon name="Phone" size={14} />
-                  +7 (3452) 56-82-86
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={handlePhoneClick}
-                  className="hover:text-primary transition flex items-center gap-1 text-left"
-                >
-                  <Icon name="Phone" size={14} />
                   +7 (980) 854-49-08
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={handleEmailClick}
-                  className="hover:text-primary transition break-all flex items-center gap-1 text-left"
-                >
-                  <Icon name="Mail" size={14} />
-                  info@meridian-t.ru
                 </button>
               </li>
               <li>

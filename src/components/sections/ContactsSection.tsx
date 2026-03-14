@@ -21,13 +21,27 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
     }
   };
 
+  const handlePhoneClick = () => {
+    trackClick('Клик по телефону', 'contacts');
+    trackEvent(TrackingEvent.CLICK_PHONE, EventCategory.CONTACT, {
+      contact_method: 'phone',
+    });
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = 'tel:+79808544908';
+    } else {
+      navigator.clipboard.writeText('+7 (980) 854-49-08');
+      alert('Номер телефона скопирован');
+    }
+  };
+
   const handleCopyEmail = () => {
     trackClick('Написать письмо', 'contacts');
     trackEvent(TrackingEvent.CLICK_EMAIL, EventCategory.CONTACT, {
       contact_method: 'email',
     });
     navigator.clipboard.writeText('d.gusak@meridian-t.ru');
-    alert('Email скопирован в буфер обмена');
+    alert('Email скопирован');
   };
 
   return (
@@ -63,30 +77,12 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
             </div>
             <h3 className="font-bold text-sm md:text-base mb-2 text-slate-800">Телефон</h3>
             <p className="text-slate-600 flex flex-col gap-1">
-              <a 
-                href="tel:+73452568286" 
-                className="hover:text-primary transition"
-                onClick={() => {
-                  trackClick('Клик по телефону', 'contacts');
-                  trackEvent(TrackingEvent.CLICK_PHONE, EventCategory.CONTACT, {
-                    contact_method: 'phone_direct',
-                  });
-                }}
-              >
-                +7 (3452) 56-82-86
-              </a>
-              <a 
-                href="tel:+79808544908" 
-                className="hover:text-primary transition"
-                onClick={() => {
-                  trackClick('Клик по телефону 2', 'contacts');
-                  trackEvent(TrackingEvent.CLICK_PHONE, EventCategory.CONTACT, {
-                    contact_method: 'phone_direct',
-                  });
-                }}
+              <button
+                onClick={handlePhoneClick}
+                className="hover:text-primary transition cursor-pointer"
               >
                 +7 (980) 854-49-08
-              </a>
+              </button>
             </p>
             <Button variant="link" className="mt-4" onClick={handleCallRequest}>
               Заказать звонок
@@ -102,17 +98,11 @@ export default function ContactsSection({ scrollToSection }: ContactsSectionProp
                 onClick={handleCopyEmail}
                 className="hover:text-primary transition cursor-pointer"
               >
-                info@meridian-t.ru
-              </button>
-              <button 
-                onClick={handleCopyEmail}
-                className="hover:text-primary transition cursor-pointer"
-              >
                 d.gusak@meridian-t.ru
               </button>
             </p>
             <Button variant="link" className="mt-4" onClick={handleCopyEmail}>
-              Написать письмо
+              Скопировать email
             </Button>
           </Card>
         </div>
