@@ -10,12 +10,18 @@ export interface DeviceStat {
   count: number;
 }
 
+export interface ChartPoint {
+  date: string;
+  visitors: number;
+}
+
 export interface ClickStats {
   stats_by_day: Record<string, ClickStat[]>;
   total_stats: ClickStat[];
   unique_visitors: number;
   visits_by_day: Record<string, number>;
   devices_by_day: Record<string, DeviceStat[]>;
+  visits_chart: ChartPoint[];
   step1_count: number;
   step2_count: number;
   conversion_rate: number;

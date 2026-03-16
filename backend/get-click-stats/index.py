@@ -184,6 +184,23 @@ def handler(event: dict, context) -> dict:
         avg_step1_seconds = duration_stats[0] or 0
         avg_step2_seconds = duration_stats[1] or 0
         
+        # График посещаемости — данные за год по дням
+        cursor.execute("""
+            SELECT
+                DATE(visited_at) as visit_date,
+                COUNT(DISTINCT visitor_id) as visitors_count
+            FROM page_visits
+            WHERE visited_at >= NOW() - INTERVAL '365 days'
+            AND domain = 'sentag.ru'
+            GROUP BY DATE(visited_at)
+            ORDER BY visit_date ASC
+        """)
+        chart_rows = cursor.fetchall()
+        visits_chart = [
+            {'date': row[0].strftime('%Y-%m-%d'), 'visitors': row[1]}
+            for row in chart_rows
+        ]
+
         cursor.close()
         conn.close()
         
@@ -199,6 +216,7 @@ def handler(event: dict, context) -> dict:
                 'unique_visitors': unique_visitors,
                 'visits_by_day': visits_by_day,
                 'devices_by_day': devices_by_day,
+                'visits_chart': visits_chart,
                 'step1_count': step1_count,
                 'step2_count': step2_count,
                 'conversion_rate': conversion_rate,

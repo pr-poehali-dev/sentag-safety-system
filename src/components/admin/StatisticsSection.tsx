@@ -5,6 +5,7 @@ import { ClickStats } from './statistics/types';
 import OnlineVisitorsCard from './statistics/OnlineVisitorsCard';
 import StatsByDay from './statistics/StatsByDay';
 import TotalClickStats from './statistics/TotalClickStats';
+import VisitorsChart from './statistics/VisitorsChart';
 
 interface User {
   id: number;
@@ -233,6 +234,11 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
             </div>
           </div>
         </div>
+      )}
+
+      {/* График посещаемости */}
+      {clickStats && clickStats.visits_chart && (
+        <VisitorsChart data={clickStats.visits_chart} />
       )}
 
       {/* Детализация по дням */}
