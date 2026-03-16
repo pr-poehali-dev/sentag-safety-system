@@ -1,10 +1,12 @@
 {
   "tests": [
     {
-      "name": "Get click statistics",
+      "name": "Get click statistics with visits",
       "method": "GET",
       "path": "/",
-      "expectedStatus": 200
+      "expectedStatus": 200,
+      "expectedBody": {"visits_by_day": {}, "devices_by_day": {}},
+      "bodyMatcher": "partial"
     }
   ]
 }
