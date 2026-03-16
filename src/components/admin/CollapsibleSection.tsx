@@ -9,18 +9,29 @@ interface CollapsibleSectionProps {
   children: React.ReactNode;
 }
 
+const storageKey = (title: string) => `admin_section_${title}`;
+
 export default function CollapsibleSection({ 
   title, 
   icon = 'ChevronDown',
   defaultOpen = true,
   children 
 }: CollapsibleSectionProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [isOpen, setIsOpen] = useState(() => {
+    const saved = localStorage.getItem(storageKey(title));
+    return saved !== null ? saved === 'true' : defaultOpen;
+  });
+
+  const toggle = () => {
+    const next = !isOpen;
+    setIsOpen(next);
+    localStorage.setItem(storageKey(title), String(next));
+  };
 
   return (
     <Card className="overflow-hidden">
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className="w-full px-6 py-4 flex items-center justify-between bg-slate-50 hover:bg-slate-100 transition-colors"
       >
         <h2 className="text-2xl font-bold text-slate-800">{title}</h2>
