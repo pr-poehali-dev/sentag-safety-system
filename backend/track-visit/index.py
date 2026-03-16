@@ -43,7 +43,7 @@ def handler(event: dict, context) -> dict:
             'isBase64Encoded': False
         }
     
-    headers = event.get('headers', {})
+    headers = {k.lower(): v for k, v in (event.get('headers') or {}).items()}
     user_agent = headers.get('user-agent', '')
     ip_address = event.get('requestContext', {}).get('identity', {}).get('sourceIp', '')
     

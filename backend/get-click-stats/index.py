@@ -131,9 +131,12 @@ def handler(event: dict, context) -> dict:
                     WHEN referrer ILIKE '%2gis.%' OR referrer ILIKE '%2gis.ru%' THEN '2ГИС'
                     WHEN referrer ILIKE '%avito.%' THEN 'Авито'
                     WHEN referrer ILIKE '%whatsapp.%' THEN 'WhatsApp'
-                    ELSE REGEXP_REPLACE(
-                        REGEXP_REPLACE(referrer, '^https?://(www\.)?', ''),
-                        '/.*$', ''
+                    ELSE COALESCE(
+                        NULLIF(TRIM(REGEXP_REPLACE(
+                            REGEXP_REPLACE(referrer, '^https?://(www\.)?', ''),
+                            '/.*$', ''
+                        )), ''),
+                        'Другой сайт'
                     )
                 END as source,
                 COUNT(DISTINCT visitor_id) as count
