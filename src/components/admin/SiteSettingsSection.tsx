@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { useSiteSettings } from '@/contexts/SiteSettingsContext';
 
 interface SiteSettingsSectionProps {
   showDocuments: boolean;
@@ -22,6 +23,8 @@ export default function SiteSettingsSection({
   showDocuments, 
   onToggleDocuments 
 }: SiteSettingsSectionProps) {
+  const { settings, reload } = useSiteSettings();
+
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
   const [seoKeywords, setSeoKeywords] = useState('');
@@ -32,37 +35,11 @@ export default function SiteSettingsSection({
   const [syncCopied, setSyncCopied] = useState(false);
 
   useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
-        if (response.ok) {
-          const data = await response.json();
-          const settings = data.settings || {};
-          
-          const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
-          const defaultTitle = 'Безопасность вашего бассейна под контролем';
-          const defaultDescription = 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
-          
-          const seoTitle = settings.seo_title || defaultTitle;
-          const seoDescription = settings.seo_description || defaultDescription;
-          const seoKeywords = settings.seo_keywords || defaultKeywords;
-          const faviconFromSettings = settings.favicon_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
-          
-          setSeoTitle(seoTitle);
-          setSeoDescription(seoDescription);
-          setSeoKeywords(seoKeywords);
-          setFaviconUrl(faviconFromSettings);
-          
-          updateMetaTags(seoTitle, seoDescription, seoKeywords);
-          updateFavicon(faviconFromSettings);
-        }
-      } catch (error) {
-        console.error('Error loading settings:', error);
-      }
-    };
-    
-    loadSettings();
-  }, []);
+    setSeoTitle(settings.seoTitle);
+    setSeoDescription(settings.seoDescription);
+    setSeoKeywords(settings.seoKeywords);
+    setFaviconUrl(settings.faviconUrl);
+  }, [settings]);
 
   const updateMetaTags = (title: string, description: string, keywords: string) => {
     document.title = title;
@@ -101,7 +78,6 @@ export default function SiteSettingsSection({
     }
     favicon.href = url;
 
-    // Также обновляем OG-изображение
     const ogImage = document.querySelector('meta[property="og:image"]') as HTMLMetaElement;
     if (ogImage) {
       ogImage.content = url;
@@ -141,6 +117,7 @@ export default function SiteSettingsSection({
       updateMetaTags(seoTitle, seoDescription, seoKeywords);
       
       window.dispatchEvent(new CustomEvent('seoUpdate'));
+      reload();
       
       try {
         const notifyResponse = await fetch('https://functions.poehali.dev/6e9ecfe1-099e-4c39-a8ca-8d2eb8bbc58b', {
@@ -166,27 +143,11 @@ export default function SiteSettingsSection({
     }
   };
 
-  const handleCancelSeo = async () => {
-    try {
-      const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e');
-      if (response.ok) {
-        const data = await response.json();
-        const settings = data.settings || {};
-        
-        const defaultKeywords = 'СООУ, СРООУ, СОУ, УзСООУ, ВСООУ, ГОСТ Р 59219-2020, ГОСТ Р 58458-2020, бассейн гост, система оповещения опасности утопления, Ультразвуковая система оповещения опасности утопления, Видеосистема оповещения опасности утопления, система обнаружения утопающих, безопасность на воде, безопасность в бассейне, браслет безопасности, спасатели на воде, спасатели в бассейне, тонет, не утонуть, спасение на воде, утонул в бассейне, утонул в аквапарке, спасли в бассейне, захлебнулся в бассейне, не смогли спасти в аквапарке, система соответствует ГОСТ Р 59219-2020, сертифицированная СООУ, для бассейнов, для аквапарка, для безопасности на воде, для безопасности в воде, сентаг, сентаг аб, sentag ab, sentag, система утопленника, система тонущих, чтобы не утонуть, не захлебнуться, NFC метка на браслет, браслет ключ, браслетом открывать ящик';
-        const savedTitle = localStorage.getItem('seo_title') || 'Безопасность вашего бассейна под контролем';
-        const savedDescription = localStorage.getItem('seo_description') || 'Передовые системы защиты для посетителей бассейнов. Система оповещения опасности утопления производства компании «Sentag AB» − современное решение для обеспечения безопасности плавания. Ее внедрение будет актуально в бассейнах, аквапарках и на других объектах, где есть закрытая вода.';
-        const savedKeywords = localStorage.getItem('seo_keywords') || defaultKeywords;
-        const faviconFromSettings = settings.favicon_url || 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/bucket/de3e8201-e38d-47fd-aeee-269c5979fdeb.jpg';
-        
-        setSeoTitle(savedTitle);
-        setSeoDescription(savedDescription);
-        setSeoKeywords(savedKeywords);
-        setFaviconUrl(faviconFromSettings);
-      }
-    } catch (error) {
-      console.error('Error loading settings:', error);
-    }
+  const handleCancelSeo = () => {
+    setSeoTitle(settings.seoTitle);
+    setSeoDescription(settings.seoDescription);
+    setSeoKeywords(settings.seoKeywords);
+    setFaviconUrl(settings.faviconUrl);
     setIsEditingSeo(false);
   };
 
@@ -245,6 +206,7 @@ export default function SiteSettingsSection({
           setFaviconUrl(data.favicon_url);
           updateFavicon(data.favicon_url);
           window.dispatchEvent(new Event('faviconUpdate'));
+          reload();
           alert('Фавикон и OG-изображение успешно загружены!\n\n⚠️ Важно: Чтобы изменения отобразились в Telegram и соцсетях, нажмите "Опубликовать" в редакторе poehali.dev');
         } else {
           throw new Error('Ошибка загрузки на сервер');
@@ -394,78 +356,42 @@ export default function SiteSettingsSection({
           <div>
             <p className="font-semibold text-slate-800">Документы и сертификаты</p>
             <p className="text-sm text-slate-500">
-              {showDocuments ? 'Секция отображается на сайте' : 'Секция скрыта от посетителей'}
+              {showDocuments ? 'Раздел виден посетителям' : 'Раздел скрыт от посетителей'}
             </p>
           </div>
         </div>
         <Button
           variant={showDocuments ? 'outline' : 'default'}
+          size="sm"
           onClick={onToggleDocuments}
         >
-          {showDocuments ? (
-            <>
-              <Icon name="EyeOff" className="mr-2" size={16} />
-              Скрыть секцию
-            </>
-          ) : (
-            <>
-              <Icon name="Eye" className="mr-2" size={16} />
-              Показать секцию
-            </>
-          )}
+          <Icon name={showDocuments ? 'EyeOff' : 'Eye'} className="mr-2" size={16} />
+          {showDocuments ? 'Скрыть' : 'Показать'}
         </Button>
       </Card>
 
       <Dialog open={showSyncModal} onOpenChange={setShowSyncModal}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Icon name="RefreshCw" size={20} className="text-blue-600" />
-              Синхронизация SEO с поисковиками
-            </DialogTitle>
+            <DialogTitle>Синхронизировать с Google Search Console</DialogTitle>
             <DialogDescription>
-              Скопируй блок и отправь разработчику — он вставит его в исходный файл сайта и сделает деплой.
+              Скопируйте и вставьте эти мета-теги в ваш index.html для индексации поисковиками.
             </DialogDescription>
           </DialogHeader>
-
           <div className="space-y-4">
-            <div className="bg-slate-900 rounded-lg p-4 overflow-auto max-h-48">
-              <pre className="text-green-400 text-xs whitespace-pre-wrap font-mono leading-relaxed">
+            <div className="bg-slate-900 rounded-lg p-4">
+              <pre className="text-green-400 text-sm overflow-x-auto whitespace-pre-wrap">
                 {getSyncSnippet()}
               </pre>
             </div>
-
-            <div className="flex gap-2 justify-end">
+            <div className="flex gap-2">
+              <Button onClick={handleCopySync} className="flex-1">
+                <Icon name={syncCopied ? 'Check' : 'Copy'} className="mr-2" size={16} />
+                {syncCopied ? 'Скопировано!' : 'Скопировать'}
+              </Button>
               <Button variant="outline" onClick={() => setShowSyncModal(false)}>
                 Закрыть
               </Button>
-              <Button onClick={handleCopySync}>
-                <Icon name={syncCopied ? 'Check' : 'Copy'} className="mr-2" size={16} />
-                {syncCopied ? 'Скопировано!' : 'Скопировать код'}
-              </Button>
-            </div>
-
-            <div className="border-t pt-4 space-y-3">
-              <p className="text-sm font-medium text-slate-700">После деплоя — запроси переиндексацию:</p>
-
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <p className="text-sm font-medium text-blue-800 mb-1">Google Search Console</p>
-                <ol className="list-decimal list-inside space-y-1 text-xs text-blue-700">
-                  <li>Открой <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="underline font-medium">search.google.com/search-console</a></li>
-                  <li>Введи URL сайта <code className="bg-blue-100 px-1 rounded">https://sentag.ru</code> в строку сверху</li>
-                  <li>Нажми «Запросить индексирование»</li>
-                </ol>
-              </div>
-
-              <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                <p className="text-sm font-medium text-orange-800 mb-1">Яндекс Вебмастер</p>
-                <ol className="list-decimal list-inside space-y-1 text-xs text-orange-700">
-                  <li>Открой <a href="https://webmaster.yandex.ru" target="_blank" rel="noopener noreferrer" className="underline font-medium">webmaster.yandex.ru</a></li>
-                  <li>Выбери сайт <code className="bg-orange-100 px-1 rounded">sentag.ru</code></li>
-                  <li>Перейди в «Индексирование» → «Переобход страниц»</li>
-                  <li>Добавь <code className="bg-orange-100 px-1 rounded">https://sentag.ru</code> и нажми «Переобойти»</li>
-                </ol>
-              </div>
             </div>
           </div>
         </DialogContent>

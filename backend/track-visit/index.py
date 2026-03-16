@@ -33,6 +33,7 @@ def handler(event: dict, context) -> dict:
     button_name = body.get('button_name')
     button_location = body.get('button_location')
     referrer = body.get('referrer') or None
+    clicks_batch = body.get('clicks') or []
     
     if not visitor_id:
         return {
@@ -74,6 +75,16 @@ def handler(event: dict, context) -> dict:
         cursor.execute(
             "INSERT INTO button_clicks (button_name, button_location, user_agent, ip_address, visitor_id, domain) VALUES (%s, %s, %s, %s, %s, %s)",
             (button_name, button_location, user_agent, ip_address, visitor_id, domain)
+        )
+
+    if clicks_batch:
+        cursor.executemany(
+            "INSERT INTO button_clicks (button_name, button_location, user_agent, ip_address, visitor_id, domain) VALUES (%s, %s, %s, %s, %s, %s)",
+            [
+                (c.get('button_name', ''), c.get('button_location', ''), user_agent, ip_address, visitor_id, domain)
+                for c in clicks_batch
+                if c.get('button_name') and c.get('button_location')
+            ]
         )
     
     conn.commit()

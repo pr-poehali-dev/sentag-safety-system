@@ -1,94 +1,84 @@
-/**
- * Генерация или получение уникального ID посетителя
- */
+const TRACK_URL = 'https://functions.poehali.dev/fadc8ec7-13d7-4acb-86c2-762630630eef';
+const VISITOR_ID_KEY = 'visitor_id';
+const VISIT_TRACKED_KEY = 'visit_tracked_today';
+const BATCH_DELAY = 5000;
+
 const getVisitorId = (): string => {
-  const VISITOR_ID_KEY = 'visitor_id';
   let visitorId = localStorage.getItem(VISITOR_ID_KEY);
-  
   if (!visitorId) {
     visitorId = `visitor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     localStorage.setItem(VISITOR_ID_KEY, visitorId);
   }
-  
   return visitorId;
 };
 
-/**
- * Проверка, что трекинг разрешен (только для основного домена sentag.ru, но не для админки)
- */
 const isTrackingAllowed = (): boolean => {
   const hostname = window.location.hostname;
   const pathname = window.location.pathname;
-  
-  // Не трекаем админ-панель
-  if (pathname.startsWith('/admin')) {
-    return false;
-  }
-  
+  if (pathname.startsWith('/admin')) return false;
   return hostname === 'sentag.ru' || hostname === 'www.sentag.ru';
 };
 
-/**
- * Отслеживание посещения страницы (только для уникальных пользователей)
- */
+// Очередь кликов для батчинга
+interface ClickItem {
+  button_name: string;
+  button_location: string;
+}
+
+const clickQueue: ClickItem[] = [];
+let flushTimer: ReturnType<typeof setTimeout> | null = null;
+
+const flushClicks = () => {
+  if (clickQueue.length === 0) return;
+  const batch = clickQueue.splice(0);
+  flushTimer = null;
+
+  fetch(TRACK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      visitor_id: getVisitorId(),
+      domain: window.location.hostname,
+      clicks: batch,
+    }),
+    keepalive: true,
+  }).catch(() => {});
+};
+
+// Сбрасываем очередь при уходе со страницы
+if (typeof window !== 'undefined') {
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') flushClicks();
+  });
+}
+
 export const trackVisit = async () => {
-  // Трекинг только на основном домене
-  if (!isTrackingAllowed()) {
-    return;
-  }
-  
-  const VISIT_TRACKED_KEY = 'visit_tracked_today';
+  if (!isTrackingAllowed()) return;
+
   const today = new Date().toDateString();
-  const lastTracked = localStorage.getItem(VISIT_TRACKED_KEY);
-  
-  // Отслеживаем только один раз в день
-  if (lastTracked === today) {
-    return;
-  }
-  
+  if (localStorage.getItem(VISIT_TRACKED_KEY) === today) return;
+
   try {
-    const visitorId = getVisitorId();
-    
-    await fetch('https://functions.poehali.dev/fadc8ec7-13d7-4acb-86c2-762630630eef', {
+    await fetch(TRACK_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        visitor_id: visitorId,
+        visitor_id: getVisitorId(),
         domain: window.location.hostname,
         referrer: document.referrer || null,
       }),
     });
-    
     localStorage.setItem(VISIT_TRACKED_KEY, today);
-  } catch (error) {
-    console.error('Error tracking visit:', error);
+  } catch (e) {
+    console.error('trackVisit:', e);
   }
 };
 
-/**
- * Отслеживание клика по элементу на сайте
- */
 export const trackClick = (buttonName: string, location: string) => {
-  // Трекинг только на основном домене
-  if (!isTrackingAllowed()) {
-    return;
-  }
-  
-  const visitorId = getVisitorId();
-  
-  fetch('https://functions.poehali.dev/fadc8ec7-13d7-4acb-86c2-762630630eef', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      visitor_id: visitorId,
-      button_name: buttonName,
-      button_location: location,
-      domain: window.location.hostname,
-    }),
-    keepalive: true,
-  }).catch(() => {});
+  if (!isTrackingAllowed()) return;
+
+  clickQueue.push({ button_name: buttonName, button_location: location });
+
+  if (flushTimer) clearTimeout(flushTimer);
+  flushTimer = setTimeout(flushClicks, BATCH_DELAY);
 };
