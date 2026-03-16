@@ -57,6 +57,7 @@ export const trackVisit = async () => {
       body: JSON.stringify({
         visitor_id: visitorId,
         domain: window.location.hostname,
+        referrer: document.referrer || null,
       }),
     });
     

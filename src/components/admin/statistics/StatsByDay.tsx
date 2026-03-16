@@ -109,7 +109,7 @@ export default function StatsByDay({ clickStats }: StatsByDayProps) {
 
             {modalDevices && modalDevices.length > 0 ? (
               <div>
-                <p className="text-sm font-semibold text-slate-700 mb-3">Устройства и платформы:</p>
+                <p className="text-sm font-semibold text-slate-700 mb-3">Источники перехода:</p>
                 <div className="space-y-2">
                   {(() => {
                     const total = modalDevices.reduce((s, d) => s + d.count, 0);
@@ -118,12 +118,13 @@ export default function StatsByDay({ clickStats }: StatsByDayProps) {
                         <div className="w-6 text-center">
                           <Icon
                             name={
-                              d.source === 'iPhone' || d.source === 'Android' ? 'Smartphone' :
-                              d.source === 'iPad' ? 'Tablet' :
-                              d.source === 'Windows' || d.source === 'Mac' || d.source === 'Linux' ? 'Monitor' :
-                              d.source === 'Боты' ? 'Bot' : 'Globe'
+                              d.source === 'Прямой переход' ? 'Navigation' :
+                              d.source === 'Google' || d.source === 'Яндекс' || d.source === 'Bing' ? 'Search' :
+                              d.source === 'ВКонтакте' || d.source === 'Instagram / Facebook' ? 'Share2' :
+                              d.source === 'Telegram' || d.source === 'WhatsApp' ? 'MessageCircle' :
+                              'Link'
                             }
-                            fallback="Globe"
+                            fallback="Link"
                             size={16}
                             className="text-slate-500"
                           />
@@ -143,7 +144,7 @@ export default function StatsByDay({ clickStats }: StatsByDayProps) {
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-slate-500">Нет данных об устройствах</p>
+              <p className="text-sm text-slate-500">Нет данных об источниках</p>
             )}
           </Card>
         </div>

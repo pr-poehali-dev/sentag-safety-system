@@ -116,25 +116,31 @@ def handler(event: dict, context) -> dict:
             for row in visits_rows
         }
 
-        # Детализация по устройствам/браузерам за каждый день
+        # Детализация по источникам перехода за каждый день
         cursor.execute("""
             SELECT
                 DATE(visited_at) as visit_date,
                 CASE
-                    WHEN user_agent ILIKE '%bot%' OR user_agent ILIKE '%crawler%' OR user_agent ILIKE '%spider%' THEN 'Боты'
-                    WHEN user_agent ILIKE '%Mobile%' AND user_agent ILIKE '%iPhone%' THEN 'iPhone'
-                    WHEN user_agent ILIKE '%Mobile%' AND user_agent ILIKE '%Android%' THEN 'Android'
-                    WHEN user_agent ILIKE '%iPad%' THEN 'iPad'
-                    WHEN user_agent ILIKE '%Windows%' THEN 'Windows'
-                    WHEN user_agent ILIKE '%Macintosh%' OR user_agent ILIKE '%Mac OS%' THEN 'Mac'
-                    WHEN user_agent ILIKE '%Linux%' THEN 'Linux'
-                    ELSE 'Другое'
-                END as device_type,
+                    WHEN referrer IS NULL OR referrer = '' THEN 'Прямой переход'
+                    WHEN referrer ILIKE '%google.%' THEN 'Google'
+                    WHEN referrer ILIKE '%yandex.%' THEN 'Яндекс'
+                    WHEN referrer ILIKE '%bing.%' THEN 'Bing'
+                    WHEN referrer ILIKE '%vk.com%' OR referrer ILIKE '%vkontakte.ru%' THEN 'ВКонтакте'
+                    WHEN referrer ILIKE '%t.me%' OR referrer ILIKE '%telegram.%' THEN 'Telegram'
+                    WHEN referrer ILIKE '%instagram.%' OR referrer ILIKE '%facebook.%' THEN 'Instagram / Facebook'
+                    WHEN referrer ILIKE '%2gis.%' OR referrer ILIKE '%2gis.ru%' THEN '2ГИС'
+                    WHEN referrer ILIKE '%avito.%' THEN 'Авито'
+                    WHEN referrer ILIKE '%whatsapp.%' THEN 'WhatsApp'
+                    ELSE REGEXP_REPLACE(
+                        REGEXP_REPLACE(referrer, '^https?://(www\.)?', ''),
+                        '/.*$', ''
+                    )
+                END as source,
                 COUNT(DISTINCT visitor_id) as count
             FROM page_visits
             WHERE visited_at >= NOW() - INTERVAL '30 days'
             AND domain = 'sentag.ru'
-            GROUP BY DATE(visited_at), device_type
+            GROUP BY DATE(visited_at), source
             ORDER BY visit_date DESC, count DESC
         """)
         device_rows = cursor.fetchall()

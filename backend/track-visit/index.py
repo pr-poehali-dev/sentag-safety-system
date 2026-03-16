@@ -32,6 +32,7 @@ def handler(event: dict, context) -> dict:
     domain = body.get('domain', 'sentag.ru')
     button_name = body.get('button_name')
     button_location = body.get('button_location')
+    referrer = body.get('referrer') or None
     
     if not visitor_id:
         return {
@@ -58,8 +59,8 @@ def handler(event: dict, context) -> dict:
         
         if not cursor.fetchone():
             cursor.execute(
-                "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address, domain) VALUES (%s, %s, %s, %s)",
-                (visitor_id, user_agent, ip_address, domain)
+                "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address, domain, referrer) VALUES (%s, %s, %s, %s, %s)",
+                (visitor_id, user_agent, ip_address, domain, referrer)
             )
         
         cursor.execute("""
