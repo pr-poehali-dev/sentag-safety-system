@@ -33,6 +33,9 @@ def handler(event: dict, context) -> dict:
     button_name = body.get('button_name')
     button_location = body.get('button_location')
     referrer = body.get('referrer') or None
+    utm_source = body.get('utm_source') or None
+    utm_medium = body.get('utm_medium') or None
+    utm_campaign = body.get('utm_campaign') or None
     clicks_batch = body.get('clicks') or []
     
     if not visitor_id:
@@ -60,8 +63,10 @@ def handler(event: dict, context) -> dict:
         
         if not cursor.fetchone():
             cursor.execute(
-                "INSERT INTO t_p28851569_sentag_safety_system.page_visits (visitor_id, user_agent, ip_address, domain, referrer) VALUES (%s, %s, %s, %s, %s)",
-                (visitor_id, user_agent, ip_address, domain, referrer)
+                """INSERT INTO t_p28851569_sentag_safety_system.page_visits
+                   (visitor_id, user_agent, ip_address, domain, referrer, utm_source, utm_medium, utm_campaign)
+                   VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                (visitor_id, user_agent, ip_address, domain, referrer, utm_source, utm_medium, utm_campaign)
             )
         
         cursor.execute("""

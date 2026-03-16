@@ -13,6 +13,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
+import UtmBuilder from './UtmBuilder';
 
 interface SiteSettingsSectionProps {
   showDocuments: boolean;
@@ -369,6 +370,8 @@ export default function SiteSettingsSection({
           {showDocuments ? 'Скрыть' : 'Показать'}
         </Button>
       </Card>
+
+      <UtmBuilder />
 
       <Dialog open={showSyncModal} onOpenChange={setShowSyncModal}>
         <DialogContent className="max-w-2xl">

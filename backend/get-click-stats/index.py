@@ -116,11 +116,15 @@ def handler(event: dict, context) -> dict:
             for row in visits_rows
         }
 
-        # Детализация по источникам перехода за каждый день
+        # Детализация по источникам перехода за каждый день (UTM в приоритете)
         cursor.execute("""
             SELECT
                 DATE(visited_at) as visit_date,
                 CASE
+                    WHEN utm_source IS NOT NULL AND utm_source <> ''
+                        THEN CONCAT('🎯 ', utm_source,
+                            CASE WHEN utm_campaign IS NOT NULL AND utm_campaign <> ''
+                                 THEN CONCAT(' / ', utm_campaign) ELSE '' END)
                     WHEN referrer IS NULL OR referrer = '' THEN 'Прямой переход'
                     WHEN referrer ILIKE '%google.%' THEN 'Google'
                     WHEN referrer ILIKE '%yandex.%' THEN 'Яндекс'
