@@ -1,7 +1,10 @@
-import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+import { ClickStats } from './statistics/types';
+import OnlineVisitorsCard from './statistics/OnlineVisitorsCard';
+import StatsByDay from './statistics/StatsByDay';
+import TotalClickStats from './statistics/TotalClickStats';
 
 interface User {
   id: number;
@@ -31,31 +34,6 @@ interface RequestForm {
   created_at: string;
 }
 
-interface ClickStat {
-  button_name: string;
-  button_location: string;
-  count?: number;
-  total_clicks?: number;
-}
-
-interface DeviceStat {
-  source: string;
-  count: number;
-}
-
-interface ClickStats {
-  stats_by_day: Record<string, ClickStat[]>;
-  total_stats: ClickStat[];
-  unique_visitors: number;
-  visits_by_day: Record<string, number>;
-  devices_by_day: Record<string, DeviceStat[]>;
-  step1_count: number;
-  step2_count: number;
-  conversion_rate: number;
-  avg_step1_seconds: number;
-  avg_step2_seconds: number;
-}
-
 interface StatisticsSectionProps {
   users: User[];
   requests: RequestForm[];
@@ -68,17 +46,6 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
   const [loading, setLoading] = useState(true);
   const [isClearing, setIsClearing] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [visitModalDate, setVisitModalDate] = useState<string | null>(null);
-
-  const getBarColor = (index: number) => {
-    const colors = ['bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-orange-500', 'bg-pink-500', 'bg-cyan-500'];
-    return colors[index % colors.length];
-  };
-
-  const getBarWidth = (value: number, maxValue: number) => {
-    if (maxValue === 0) return 0;
-    return Math.round((value / maxValue) * 100);
-  };
 
   const loadStats = () => {
     setLoading(true);
@@ -122,7 +89,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
       const response = await fetch('https://functions.poehali.dev/fd0a1f7e-5e13-474c-a085-8fadf347d2c1', {
         method: 'DELETE',
       });
-      
+
       if (response.ok) {
         const result = await response.json();
         alert(`Успешно удалено: ${result.message}`);
@@ -144,7 +111,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
       const response = await fetch('https://functions.poehali.dev/2d1524af-6da7-4f95-aca5-ba7fcaa723ba', {
         method: 'POST',
       });
-      
+
       if (response.ok) {
         alert('Статистика успешно отправлена в Telegram!');
       } else {
@@ -158,19 +125,9 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
     }
   };
 
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleDateString('ru-RU', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-
-  const modalDevices = visitModalDate && clickStats?.devices_by_day?.[visitModalDate];
-  const modalVisits = visitModalDate && clickStats?.visits_by_day?.[visitModalDate];
-
   return (
     <div>
+      {/* Шапка с кнопками */}
       <div className="mb-6">
         <div className="flex justify-between items-start">
           <div>
@@ -207,52 +164,11 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
       </div>
 
       {/* Онлайн-посетители */}
-      <div className="mb-6">
-        <div className="p-5 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border-2 border-green-200 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Icon name="Users" className="text-green-600" size={40} />
-                {onlineVisitors !== null && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
-                  </span>
-                )}
-              </div>
-              <div>
-                {onlineVisitors !== null ? (
-                  <>
-                    <p className="text-4xl font-bold text-green-700">{onlineVisitors}</p>
-                    <p className="text-slate-700 font-medium">На сайте сейчас</p>
-                    <p className="text-xs text-slate-500 mt-1">Активность за последние 5 минут</p>
-                  </>
-                ) : (
-                  <p className="text-slate-500 font-medium">Нажмите кнопку для проверки</p>
-                )}
-              </div>
-            </div>
-            <div className="text-right flex flex-col items-end gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={loadOnlineVisitors}
-                disabled={onlineLoading}
-                className="border-green-300 text-green-700 hover:bg-green-100"
-              >
-                <Icon name={onlineLoading ? "Loader2" : "RefreshCw"} size={14} className={onlineLoading ? "animate-spin mr-1" : "mr-1"} />
-                Обновить
-              </Button>
-              {onlineVisitors !== null && (
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 rounded-full">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs font-semibold text-green-700">ОНЛАЙН</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      <OnlineVisitorsCard
+        onlineVisitors={onlineVisitors}
+        onlineLoading={onlineLoading}
+        onRefresh={loadOnlineVisitors}
+      />
 
       {/* Общая статистика */}
       <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
@@ -320,180 +236,10 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
       )}
 
       {/* Детализация по дням */}
-      {clickStats && Object.keys(clickStats.stats_by_day).length > 0 && (
-        <div className="mt-8">
-          <h3 className="text-xl font-bold text-slate-800 mb-4">Детализация по дням</h3>
-          <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
-            {Object.entries(clickStats.stats_by_day).map(([date, stats]) => {
-              const dayTotal = stats.reduce((sum, s) => sum + (s.count || 0), 0);
-              const maxDayClicks = Math.max(...stats.map(s => s.count || 0));
-              const dayVisits = clickStats.visits_by_day?.[date] ?? null;
-
-              return (
-                <div key={date} className="p-4 bg-white border border-slate-200 rounded-lg hover:shadow-md transition">
-                  <div className="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
-                    <div className="flex items-center gap-3">
-                      <Icon name="Calendar" className="text-primary" size={20} />
-                      <p className="font-semibold text-slate-800">{formatDate(date)}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {dayVisits !== null && (
-                        <button
-                          onClick={() => setVisitModalDate(date)}
-                          className="flex items-center gap-1.5 px-3 py-1 bg-cyan-50 hover:bg-cyan-100 text-cyan-700 font-semibold rounded-full text-sm transition cursor-pointer border border-cyan-200"
-                          title="Нажмите, чтобы увидеть источники посещений"
-                        >
-                          <Icon name="Eye" size={14} />
-                          {dayVisits} {dayVisits === 1 ? 'посетитель' : dayVisits < 5 ? 'посетителя' : 'посетителей'}
-                        </button>
-                      )}
-                      <div className="px-3 py-1 bg-primary/10 text-primary font-semibold rounded-full text-sm">
-                        {dayTotal} {dayTotal === 1 ? 'клик' : dayTotal < 5 ? 'клика' : 'кликов'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-3 mt-3">
-                    {stats.map((stat, idx) => (
-                      <div key={idx} className="space-y-1">
-                        <div className="flex justify-between items-center text-sm">
-                          <div className="flex items-center gap-2">
-                            <Icon name="MousePointerClick" className="text-slate-400" size={14} />
-                            <span className="text-slate-700 font-medium">{stat.button_name}</span>
-                            <span className="text-xs text-slate-500">• {stat.button_location}</span>
-                          </div>
-                          <span className="font-bold text-primary">{stat.count}</span>
-                        </div>
-                        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden ml-5">
-                          <div
-                            className={`h-full ${getBarColor(idx)} transition-all duration-300`}
-                            style={{ width: `${getBarWidth(stat.count || 0, maxDayClicks)}%` }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      {clickStats && <StatsByDay clickStats={clickStats} />}
 
       {/* Клики по кнопкам за месяц */}
-      <div className="mt-6">
-        <h3 className="text-xl font-bold text-slate-800 mb-4">Клики по кнопкам (за месяц)</h3>
-        {loading ? (
-          <p className="text-slate-600">Загрузка...</p>
-        ) : clickStats && clickStats.total_stats.length > 0 ? (
-          <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
-            {(() => {
-              const maxClicks = Math.max(...clickStats.total_stats.map(s => s.total_clicks || 0));
-              return clickStats.total_stats.map((stat, idx) => (
-                <div key={idx} className="p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
-                  <div className="flex justify-between items-center mb-3">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="font-semibold text-slate-800">{stat.button_name}</p>
-                        <span className="px-2 py-0.5 bg-slate-200 text-slate-600 text-xs rounded-full">{stat.button_location}</span>
-                      </div>
-                    </div>
-                    <p className="text-2xl font-bold text-primary ml-4">{stat.total_clicks}</p>
-                  </div>
-                  <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                    <div
-                      className={`h-full ${getBarColor(idx)} transition-all duration-500 flex items-center justify-end pr-2`}
-                      style={{ width: `${getBarWidth(stat.total_clicks || 0, maxClicks)}%` }}
-                    >
-                      {stat.total_clicks && stat.total_clicks > 0 && (
-                        <span className="text-[10px] font-bold text-white">
-                          {getBarWidth(stat.total_clicks, maxClicks)}%
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ));
-            })()}
-          </div>
-        ) : (
-          <p className="text-slate-600">Пока нет данных по кликам</p>
-        )}
-      </div>
-
-      {/* Модальное окно посещений */}
-      {visitModalDate && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={() => setVisitModalDate(null)}
-        >
-          <Card
-            className="w-full max-w-md mx-4 p-6"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-bold text-slate-800">Посещения за день</h3>
-                <p className="text-sm text-slate-500">{formatDate(visitModalDate)}</p>
-              </div>
-              <button
-                onClick={() => setVisitModalDate(null)}
-                className="text-slate-400 hover:text-slate-600 transition"
-              >
-                <Icon name="X" size={20} />
-              </button>
-            </div>
-
-            <div className="mb-4 p-3 bg-cyan-50 rounded-lg flex items-center gap-3">
-              <Icon name="Users" className="text-cyan-600" size={28} />
-              <div>
-                <p className="text-2xl font-bold text-cyan-700">{modalVisits}</p>
-                <p className="text-sm text-slate-600">
-                  {(modalVisits as number) === 1 ? 'уникальный посетитель' : (modalVisits as number) < 5 ? 'уникальных посетителя' : 'уникальных посетителей'}
-                </p>
-              </div>
-            </div>
-
-            {modalDevices && modalDevices.length > 0 ? (
-              <div>
-                <p className="text-sm font-semibold text-slate-700 mb-3">Устройства и платформы:</p>
-                <div className="space-y-2">
-                  {(() => {
-                    const total = modalDevices.reduce((s, d) => s + d.count, 0);
-                    return modalDevices.map((d, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                        <div className="w-6 text-center">
-                          <Icon
-                            name={
-                              d.source === 'iPhone' || d.source === 'Android' ? 'Smartphone' :
-                              d.source === 'iPad' ? 'Tablet' :
-                              d.source === 'Windows' || d.source === 'Mac' || d.source === 'Linux' ? 'Monitor' :
-                              d.source === 'Боты' ? 'Bot' : 'Globe'
-                            }
-                            fallback="Globe"
-                            size={16}
-                            className="text-slate-500"
-                          />
-                        </div>
-                        <span className="text-sm text-slate-700 flex-1">{d.source}</span>
-                        <span className="text-sm font-bold text-slate-800">{d.count}</span>
-                        <div className="w-24 bg-slate-100 rounded-full h-2 overflow-hidden">
-                          <div
-                            className={`h-full ${getBarColor(idx)}`}
-                            style={{ width: `${getBarWidth(d.count, total)}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-slate-500 w-8 text-right">{getBarWidth(d.count, total)}%</span>
-                      </div>
-                    ));
-                  })()}
-                </div>
-              </div>
-            ) : (
-              <p className="text-sm text-slate-500">Нет данных об устройствах</p>
-            )}
-          </Card>
-        </div>
-      )}
+      <TotalClickStats totalStats={clickStats?.total_stats ?? []} loading={loading} />
     </div>
   );
 }
