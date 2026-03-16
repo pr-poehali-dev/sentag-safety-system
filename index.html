@@ -6,7 +6,6 @@
     <meta name="theme-color" content="#3b82f6"/>
     
     <link rel="dns-prefetch" href="https://www.googletagmanager.com"/>
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin/>
     <link rel="dns-prefetch" href="https://cdn.poehali.dev"/>
     <link rel="preconnect" href="https://cdn.poehali.dev"/>
     <link rel="dns-prefetch" href="https://mc.yandex.ru"/>
@@ -209,67 +208,39 @@
   </head>
 
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PJ59Q3B2"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
 <div id="root"></div>
 <script type="module" src="/src/main.tsx"></script>
 
-<!-- Google tag (gtag.js) — defer для скорости загрузки -->
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3WK84W05MH"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   if (!window.location.pathname.startsWith('/admin')) {
-    gtag('config', 'G-3WK84W05MH');
+    gtag('config', 'G-3WK84W05MH', { send_page_view: true });
   }
 </script>
-<script defer src="https://www.googletagmanager.com/gtag/js?id=G-3WK84W05MH"></script>
 
-<!-- Google Tag Manager — defer -->
-<script defer src="https://www.googletagmanager.com/gtm.js?id=GTM-PJ59Q3B2"></script>
-
-<!-- Yandex.Metrika counter — defer -->
-<script defer src="https://mc.yandex.ru/metrika/tag.js"></script>
-<script>
-  window.addEventListener('load', function() {
-    if (!window.location.pathname.startsWith('/admin')) {
-      ym(106704636, 'init', {webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
-    }
-  });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/106704636" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-
-<!-- Yandex.Metrika counter -->
+<!-- Yandex.Metrika -->
 <script type="text/javascript">
-    (function (m, e, t, r, i, k, a) {
-        m[i] = m[i] || function () {
-            (m[i].a = m[i].a || []).push(arguments)
-        };
-        m[i].l = 1 * new Date();
-        for (var j = 0; j < document.scripts.length; j++) {
-            if (document.scripts[j].src === r) {
-                return;
-            }
-        }
-        k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
-    })
-    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-    ym(101026698, "init", {
-        trustedDomains: ["poehali.dev"],
-        clickmap: true,
-        trackLinks: true,
-        accurateTrackBounce: true,
-        webvisor: true,
-        trackHash: true
+  (function(m,e,t,r,i,k,a){
+    m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+  })(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+  if (!window.location.pathname.startsWith('/admin')) {
+    ym(106704636, 'init', {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true,
+      trackHash: true
     });
+  }
 </script>
-<noscript>
-    <div><img src="https://mc.yandex.ru/watch/101026698" style="position:absolute; left:-9999px;" alt=""/></div>
-</noscript>
-<!-- /Yandex.Metrika counter -->
+<noscript><div><img src="https://mc.yandex.ru/watch/106704636" style="position:absolute; left:-9999px;" alt=""/></div></noscript>
+<!-- /Yandex.Metrika -->
 </body>
 </html>

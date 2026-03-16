@@ -48,7 +48,7 @@ export enum EventCategory {
 const sendToYandexMetrika = (event: string, params?: Record<string, any>) => {
   if (typeof window.ym !== 'undefined') {
     try {
-      window.ym(101026698, 'reachGoal', event, params);
+      window.ym(106704636, 'reachGoal', event, params);
     } catch (error) {}
   }
 };
