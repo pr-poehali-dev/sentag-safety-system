@@ -5,6 +5,7 @@ import psycopg2.extras
 import boto3
 import base64
 import uuid
+import threading
 import requests as http_requests
 from datetime import datetime, timezone, timedelta
 
@@ -188,12 +189,22 @@ def handler(event: dict, context) -> dict:
                 except Exception as e:
                     print(f"Could not load user activity: {e}")
 
-            message_id = _send_telegram_step1(request_id, body, user_activity)
-            if message_id:
-                cur.execute("UPDATE request_forms SET telegram_step1_message_id = %s WHERE id = %s", (message_id, request_id))
-                conn.commit()
             cur.close()
             conn.close()
+            # Отправляем Telegram в фоне — не блокируем ответ пользователю
+            def send_tg_step1():
+                msg_id = _send_telegram_step1(request_id, body, user_activity)
+                if msg_id:
+                    try:
+                        c = psycopg2.connect(dsn)
+                        cu = c.cursor()
+                        cu.execute("UPDATE request_forms SET telegram_step1_message_id = %s WHERE id = %s", (msg_id, request_id))
+                        c.commit()
+                        cu.close()
+                        c.close()
+                    except Exception as e:
+                        print(f"TG step1 db update error: {e}")
+            threading.Thread(target=send_tg_step1, daemon=True).start()
             return resp(200, {'success': True, 'requestId': request_id, 'message': 'Шаг 1 сохранен'})
 
         elif step == 2:
@@ -239,7 +250,7 @@ def handler(event: dict, context) -> dict:
                     user_activity = {'time_on_site': time_on_site, 'clicks': clicks}
                 except Exception as e:
                     print(f"Could not load user activity step2: {e}")
-            _send_telegram_step2(request_id, {
+            tg_data = {
                 'phone': row[0], 'email': row[1], 'company': row[2], 'role': row[3], 'fullName': row[4],
                 'objectName': row[5], 'objectAddress': row[6],
                 'step1_started_at': row[7], 'step1_completed_at': row[8],
@@ -248,9 +259,11 @@ def handler(event: dict, context) -> dict:
                 'visitorsInfo': body.get('visitorsInfo'), 'poolSize': body.get('poolSize'), 'deadline': body.get('deadline'),
                 'companyCardUrl': body.get('companyCardUrl'), 'poolSchemeUrls': body.get('poolSchemeUrls', []),
                 'user_activity': user_activity, 'telegram_step1_message_id': row[13]
-            })
+            }
             cur.close()
             conn.close()
+            # Отправляем Telegram в фоне — не блокируем ответ пользователю
+            threading.Thread(target=_send_telegram_step2, args=(request_id, tg_data), daemon=True).start()
             return resp(200, {'success': True, 'message': 'Заявка полностью сохранена'})
 
         cur.close()

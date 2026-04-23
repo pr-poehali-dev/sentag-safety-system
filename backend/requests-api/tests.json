@@ -7,6 +7,27 @@
       "expectedStatus": 200,
       "expectedBody": {"success": true},
       "bodyMatcher": "partial"
+    },
+    {
+      "name": "POST step 1 - save request",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "step": 1,
+        "phone": "+79991234567",
+        "email": "test@test.ru",
+        "company": "ООО Тест",
+        "role": "customer",
+        "fullName": "Иван Тестов",
+        "objectName": "Бассейн Тест",
+        "objectAddress": "г. Тест, ул. Тестовая, 1",
+        "consent": true,
+        "marketingConsent": false,
+        "visitorId": "test_visitor_123"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {"success": true},
+      "bodyMatcher": "partial"
     }
   ]
 }
