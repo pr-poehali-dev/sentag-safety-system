@@ -61,10 +61,11 @@ export default function RequestsSection({
     }
   };
 
-  const formatDuration = (startTime: string | null, endTime: string) => {
-    if (!startTime) return 'н/д';
+  const formatDuration = (startTime: string | null, endTime: string | null) => {
+    if (!startTime || !endTime) return 'н/д';
     const start = new Date(startTime).getTime();
     const end = new Date(endTime).getTime();
+    if (isNaN(start) || isNaN(end)) return 'н/д';
     const durationSeconds = Math.floor((end - start) / 1000);
     const minutes = Math.floor(durationSeconds / 60);
     const seconds = durationSeconds % 60;
@@ -151,14 +152,24 @@ export default function RequestsSection({
                     </p>
                     <p className="text-xs text-slate-400">
                       <Icon name="Calendar" className="inline mr-1 flex-shrink-0" size={12} />
-                      {new Date(request.step1_completed_at).toLocaleString('ru-RU', {
-                        day: '2-digit',
-                        month: 'long',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        timeZone: 'Asia/Yekaterinburg'
-                      })}
+                      {request.step1_completed_at
+                        ? new Date(request.step1_completed_at).toLocaleString('ru-RU', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            timeZone: 'Asia/Yekaterinburg'
+                          })
+                        : new Date(request.created_at).toLocaleString('ru-RU', {
+                            day: '2-digit',
+                            month: 'long',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            timeZone: 'Asia/Yekaterinburg'
+                          })
+                      }
                     </p>
                     <div className="flex gap-3 mt-2">
                       <p className="text-xs text-slate-500 flex items-center gap-1">
@@ -230,10 +241,6 @@ export default function RequestsSection({
               </div>
 
               {/* Активность пользователя на сайте */}
-              {(() => {
-                console.log(`Request ${request.id} user_activity:`, request.user_activity);
-                return null;
-              })()}
               {request.user_activity && request.user_activity.clicks && request.user_activity.clicks.length > 0 && (
                 <div className="border-t pt-4 mb-4">
                   <p className="text-xs font-semibold text-slate-500 uppercase mb-3 flex items-center gap-2">
@@ -246,7 +253,7 @@ export default function RequestsSection({
                         <Icon name="Clock" className="text-purple-600" size={16} />
                         <span className="text-slate-700">
                           Время на сайте: <span className="font-semibold text-purple-700">
-                            {Math.floor(request.user_activity.time_on_site / 60)}:{String(request.user_activity.time_on_site % 60).padStart(2, '0')}
+                            {Math.floor((request.user_activity.time_on_site || 0) / 60)}:{String((request.user_activity.time_on_site || 0) % 60).padStart(2, '0')}
                           </span>
                         </span>
                       </div>

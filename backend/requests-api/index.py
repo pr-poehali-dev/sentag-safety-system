@@ -199,19 +199,7 @@ def handler(event: dict, context) -> dict:
             cur.close()
             conn.close()
             # Отправляем Telegram в фоне — не блокируем ответ пользователю
-            def send_tg_step1():
-                msg_id = _send_telegram_step1(request_id, body, user_activity)
-                if msg_id:
-                    try:
-                        c = psycopg2.connect(dsn, options=f'-c search_path={schema}')
-                        cu = c.cursor()
-                        cu.execute("UPDATE request_forms SET telegram_step1_message_id = %s WHERE id = %s", (msg_id, request_id))
-                        c.commit()
-                        cu.close()
-                        c.close()
-                    except Exception as e:
-                        print(f"TG step1 db update error: {e}")
-            threading.Thread(target=send_tg_step1, daemon=True).start()
+            threading.Thread(target=_send_email_step1, args=(request_id, body, user_activity), daemon=True).start()
             return resp(200, {'success': True, 'requestId': request_id, 'message': 'Шаг 1 сохранен'})
 
         elif step == 2:
@@ -269,8 +257,8 @@ def handler(event: dict, context) -> dict:
             }
             cur.close()
             conn.close()
-            # Отправляем Telegram в фоне — не блокируем ответ пользователю
-            threading.Thread(target=_send_telegram_step2, args=(request_id, tg_data), daemon=True).start()
+            # Отправляем email в фоне — не блокируем ответ пользователю
+            threading.Thread(target=_send_email_step2, args=(request_id, tg_data), daemon=True).start()
             return resp(200, {'success': True, 'message': 'Заявка полностью сохранена'})
 
         cur.close()
@@ -280,72 +268,59 @@ def handler(event: dict, context) -> dict:
     return resp(405, {'error': 'Method not allowed'})
 
 
-def _send_telegram_step1(request_id, data, user_activity=None):
-    bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
-    chat_id = os.environ.get('TELEGRAM_CHAT_ID')
-    if not bot_token or not chat_id:
-        return None
-    role_names = {'contractor': 'Монтажная организация', 'customer': 'Собственник объекта', 'design': 'Проектная организация'}
-    marketing_consent_text = "✅ Да" if data.get('marketingConsent', False) else "❌ Нет"
-    message = f"""🔔 <b>Новая заявка #{request_id}</b>
-<b>Шаг 1/2: Контактные данные</b>
-
-👤 <b>Контактное лицо:</b> {data.get('fullName')}
-📞 <b>Телефон:</b> {data.get('phone')}
-✉️ <b>Email:</b> {data.get('email')}
-
-🏢 <b>Предприятие:</b> {data.get('company')}
-👔 <b>Роль:</b> {role_names.get(data.get('role'), data.get('role'))}
-
-🏊 <b>Объект:</b> {data.get('objectName')}
-📍 <b>Адрес:</b> {data.get('objectAddress')}
-
-📬 <b>Согласие на рекламу:</b> {marketing_consent_text}
-"""
-    if user_activity:
-        time_on_site = user_activity.get('time_on_site', 0)
-        clicks = user_activity.get('clicks', [])
-        message += f"\n🎯 <b>Активность на сайте:</b>"
-        message += f"\n⏱ Время на сайте до заявки: {time_on_site // 60}:{str(time_on_site % 60).zfill(2)}"
-        if clicks:
-            total_clicks = len(clicks)
-            message += f"\n🖱 Кликов: {total_clicks}"
-            display_clicks = clicks[-15:] if total_clicks > 15 else clicks
-            message += f"\n\n<b>История кликов{' (последние 15 из ' + str(total_clicks) + ')' if total_clicks > 15 else ''}:</b>"
-            for i, click in enumerate(display_clicks, 1):
-                clicked_time = click['clicked_at']
-                if isinstance(clicked_time, str):
-                    clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
-                ekb_tz = timezone(timedelta(hours=5))
-                ct = clicked_time.astimezone(ekb_tz)
-                months_ru = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
-                date_str = f"{ct.strftime('%H:%M')}, {ct.day} {months_ru[ct.month - 1]}"
-                message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {date_str}"
-    message += "\n\n⏳ <i>Ожидается заполнение шага 2...</i>"
+def _send_email(subject, html_body):
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    smtp_user = 'dimanadym@yandex.ru'
+    smtp_password = 'cxathnqrmwmidbxr'
+    to_email = 'd.gusak@meridian-t.ru'
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = subject
+    msg['From'] = smtp_user
+    msg['To'] = to_email
+    msg.attach(MIMEText(html_body, 'html', 'utf-8'))
     try:
-        r = http_requests.post(f'https://api.telegram.org/bot{bot_token}/sendMessage',
-            json={'chat_id': chat_id, 'text': message, 'parse_mode': 'HTML'}, timeout=10)
-        if r.status_code == 200:
-            return r.json().get('result', {}).get('message_id')
+        server = smtplib.SMTP_SSL('smtp.yandex.ru', 465, timeout=15)
+        server.login(smtp_user, smtp_password)
+        server.send_message(msg)
+        server.quit()
+        print(f'Email sent: {subject}')
     except Exception as e:
-        print(f'Telegram step1 error: {e}')
+        print(f'Email send error: {e}')
+
+
+def _send_email_step1(request_id, data, user_activity=None):
+    role_names = {'contractor': 'Монтажная организация', 'customer': 'Собственник объекта', 'design': 'Проектная организация'}
+    marketing = 'Да' if data.get('marketingConsent', False) else 'Нет'
+    html = f"""
+<html><body style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b;">
+<h2 style="color:#0ea5e9;">🔔 Новая заявка #{request_id} — Шаг 1/2</h2>
+<table style="border-collapse:collapse; width:100%; max-width:600px;">
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Контактное лицо</td><td style="padding:8px;">{data.get('fullName')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Телефон</td><td style="padding:8px;">{data.get('phone')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Email</td><td style="padding:8px;">{data.get('email')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Предприятие</td><td style="padding:8px;">{data.get('company')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Роль</td><td style="padding:8px;">{role_names.get(data.get('role'), data.get('role'))}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Объект</td><td style="padding:8px;">{data.get('objectName')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Адрес</td><td style="padding:8px;">{data.get('objectAddress')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Согласие на рекламу</td><td style="padding:8px;">{marketing}</td></tr>
+</table>"""
+    if user_activity:
+        t = user_activity.get('time_on_site', 0)
+        clicks = user_activity.get('clicks', [])
+        html += f"<p><b>Время на сайте:</b> {t // 60}:{str(t % 60).zfill(2)}, кликов: {len(clicks)}</p>"
+        if clicks:
+            html += "<p><b>История кликов:</b></p><ol>"
+            for c in clicks[-15:]:
+                html += f"<li>{c['button_name']} ({c['button_location']})</li>"
+            html += "</ol>"
+    html += "<p style='color:#64748b; margin-top:20px;'>⏳ Ожидается заполнение шага 2...</p></body></html>"
+    _send_email(f'Новая заявка #{request_id} — Шаг 1', html)
     return None
 
 
-def _send_telegram_step2(request_id, data):
-    bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
-    chat_id = os.environ.get('TELEGRAM_CHAT_ID')
-    if not bot_token or not chat_id:
-        return
-    # Удаляем сообщение шага 1
-    msg_id = data.get('telegram_step1_message_id')
-    if msg_id:
-        try:
-            http_requests.post(f'https://api.telegram.org/bot{bot_token}/deleteMessage',
-                json={'chat_id': chat_id, 'message_id': msg_id}, timeout=10)
-        except Exception:
-            pass
-
+def _send_email_step2(request_id, data):
     def calc_time(start, end):
         if not start or not end:
             return "н/д"
@@ -357,63 +332,37 @@ def _send_telegram_step2(request_id, data):
         return f"{d // 60}:{str(d % 60).zfill(2)}"
 
     role_names = {'contractor': 'Монтажная организация', 'customer': 'Собственник объекта', 'design': 'Проектная организация'}
-    marketing_consent_text = "✅ Да" if data.get('marketingConsent', False) else "❌ Нет"
-    message = f"""✅ <b>Заявка #{request_id} завершена</b>
-
-👤 <b>Контактное лицо:</b> {data.get('fullName')}
-📞 <b>Телефон:</b> {data.get('phone')}
-✉️ <b>Email:</b> {data.get('email')}
-
-🏢 <b>Предприятие:</b> {data.get('company')}
-👔 <b>Роль:</b> {role_names.get(data.get('role'), data.get('role'))}
-
-🏊 <b>Объект:</b> {data.get('objectName')}
-📍 <b>Адрес:</b> {data.get('objectAddress')}
-
-📬 <b>Согласие на рекламу:</b> {marketing_consent_text}
-
-⏱ <b>Время заполнения:</b>
-• Шаг 1: {calc_time(data.get('step1_started_at'), data.get('step1_completed_at'))}
-• Шаг 2: {calc_time(data.get('step2_started_at'), data.get('step2_completed_at'))}
-
-📊 <b>Информация о посетителях:</b>
-{data.get('visitorsInfo') or 'Не указано'}
-
-📏 <b>Параметры бассейна:</b>
-{data.get('poolSize') or 'Не указано'}
-
-📅 <b>Сроки поставки:</b>
-{data.get('deadline') or 'Не указано'}
-"""
+    marketing = 'Да' if data.get('marketingConsent', False) else 'Нет'
+    html = f"""
+<html><body style="font-family: Arial, sans-serif; padding: 20px; color: #1e293b;">
+<h2 style="color:#22c55e;">✅ Заявка #{request_id} завершена</h2>
+<table style="border-collapse:collapse; width:100%; max-width:600px;">
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Контактное лицо</td><td style="padding:8px;">{data.get('fullName')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Телефон</td><td style="padding:8px;">{data.get('phone')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Email</td><td style="padding:8px;">{data.get('email')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Предприятие</td><td style="padding:8px;">{data.get('company')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Роль</td><td style="padding:8px;">{role_names.get(data.get('role'), data.get('role'))}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Объект</td><td style="padding:8px;">{data.get('objectName')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Адрес</td><td style="padding:8px;">{data.get('objectAddress')}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Согласие на рекламу</td><td style="padding:8px;">{marketing}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Шаг 1</td><td style="padding:8px;">{calc_time(data.get('step1_started_at'), data.get('step1_completed_at'))}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Шаг 2</td><td style="padding:8px;">{calc_time(data.get('step2_started_at'), data.get('step2_completed_at'))}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Посетители</td><td style="padding:8px;">{data.get('visitorsInfo') or 'Не указано'}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Параметры бассейна</td><td style="padding:8px;">{data.get('poolSize') or 'Не указано'}</td></tr>
+  <tr><td style="padding:8px; background:#f1f5f9; font-weight:bold;">Срок поставки</td><td style="padding:8px;">{data.get('deadline') or 'Не указано'}</td></tr>
+</table>"""
+    if data.get('companyCardUrl'):
+        html += f'<p><b>Карточка предприятия:</b> <a href="{data.get("companyCardUrl")}">Скачать</a></p>'
+    pool_schemes = data.get('poolSchemeUrls') or []
+    if pool_schemes:
+        html += f'<p><b>Схемы бассейна ({len(pool_schemes)}):</b></p><ul>'
+        for i, url in enumerate(pool_schemes, 1):
+            html += f'<li><a href="{url}">Схема {i}</a></li>'
+        html += '</ul>'
     user_activity = data.get('user_activity')
     if user_activity:
-        time_on_site = user_activity.get('time_on_site', 0)
+        t = user_activity.get('time_on_site', 0)
         clicks = user_activity.get('clicks', [])
-        message += f"\n\n🎯 <b>Активность на сайте:</b>"
-        message += f"\n⏱ Время на сайте до заявки: {time_on_site // 60}:{str(time_on_site % 60).zfill(2)}"
-        if clicks:
-            total_clicks = len(clicks)
-            message += f"\n🖱 Кликов: {total_clicks}"
-            display_clicks = clicks[-15:] if total_clicks > 15 else clicks
-            message += f"\n\n<b>История кликов{' (последние 15 из ' + str(total_clicks) + ')' if total_clicks > 15 else ''}:</b>"
-            for i, click in enumerate(display_clicks, 1):
-                clicked_time = click['clicked_at']
-                if isinstance(clicked_time, str):
-                    clicked_time = datetime.fromisoformat(clicked_time.replace('Z', '+00:00'))
-                ekb_tz = timezone(timedelta(hours=5))
-                ct = clicked_time.astimezone(ekb_tz)
-                months_ru = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
-                date_str = f"{ct.strftime('%H:%M')}, {ct.day} {months_ru[ct.month - 1]}"
-                message += f"\n{i}. {click['button_name']} ({click['button_location']}) — {date_str}"
-    if data.get('companyCardUrl'):
-        message += f"\n\n📎 <b>Карточка предприятия:</b> <a href=\"{data.get('companyCardUrl')}\">Скачать</a>"
-    pool_schemes = data.get('poolSchemeUrls', [])
-    if pool_schemes:
-        message += f"\n📐 <b>Схемы бассейна ({len(pool_schemes)}):</b>"
-        for i, url in enumerate(pool_schemes, 1):
-            message += f"\n  • <a href=\"{url}\">Схема {i}</a>"
-    try:
-        http_requests.post(f'https://api.telegram.org/bot{bot_token}/sendMessage',
-            json={'chat_id': chat_id, 'text': message, 'parse_mode': 'HTML', 'disable_web_page_preview': True}, timeout=10)
-    except Exception as e:
-        print(f'Telegram step2 error: {e}')
+        html += f"<p><b>Время на сайте:</b> {t // 60}:{str(t % 60).zfill(2)}, кликов: {len(clicks)}</p>"
+    html += "</body></html>"
+    _send_email(f'Заявка #{request_id} завершена', html)
