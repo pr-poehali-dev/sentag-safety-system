@@ -139,19 +139,20 @@ def handler(event: dict, context) -> dict:
         cursor.close()
         conn.close()
 
+        avg_step1 = float(duration_stats[0]) if duration_stats and duration_stats[0] else 0
+        avg_step2 = float(duration_stats[1]) if duration_stats and duration_stats[1] else 0
+
         return resp(200, {
             'stats_by_day': stats_by_day,
             'total_stats': total_stats,
             'unique_visitors': unique_visitors,
             'visits_by_day': visits_by_day,
             'devices_by_day': devices_by_day,
-            'form_stats': {
-                'step1_count': step1_count,
-                'step2_count': step2_count,
-                'conversion_rate': conversion_rate,
-                'avg_step1_seconds': duration_stats[0] or 0 if duration_stats else 0,
-                'avg_step2_seconds': duration_stats[1] or 0 if duration_stats else 0,
-            },
+            'step1_count': step1_count,
+            'step2_count': step2_count,
+            'conversion_rate': conversion_rate,
+            'avg_step1_seconds': avg_step1,
+            'avg_step2_seconds': avg_step2,
             'visits_chart': visits_chart,
         })
 

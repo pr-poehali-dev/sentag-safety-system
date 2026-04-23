@@ -135,21 +135,6 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
             <p className="text-sm text-slate-500 mt-1">Данные о посетителях и активности на сайте</p>
           </div>
           <div className="flex gap-2">
-            <div className="flex flex-col items-end gap-2">
-              <Button
-                variant="default"
-                size="sm"
-                onClick={handleSendToTelegram}
-                disabled={isSending || loading}
-                className="gap-2"
-              >
-                <Icon name="Send" size={16} />
-                {isSending ? 'Отправка...' : 'Отправить в Telegram'}
-              </Button>
-              <p className="text-xs text-slate-500 max-w-xs text-right">
-                Отправит сводку за последние 7 дней: заявки, конверсию, время заполнения и клики по кнопкам
-              </p>
-            </div>
             <Button
               variant="destructive"
               size="sm"
@@ -200,7 +185,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
         <div className="p-4 bg-blue-50 rounded-lg">
           <Icon name="MousePointerClick" className="text-primary mb-2" size={32} />
           <p className="text-3xl font-bold text-slate-800">
-            {clickStats?.total_stats.reduce((sum, stat) => sum + (stat.total_clicks || 0), 0) || 0}
+            {clickStats?.total_stats?.reduce((sum, stat) => sum + (stat.total_clicks || 0), 0) || 0}
           </p>
           <p className="text-slate-600">Кликов за месяц</p>
           <p className="text-xs text-slate-500 mt-1">Все кнопки на сайте</p>
