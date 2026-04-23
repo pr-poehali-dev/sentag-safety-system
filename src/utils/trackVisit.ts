@@ -1,4 +1,4 @@
-const TRACK_URL = 'https://functions.poehali.dev/fadc8ec7-13d7-4acb-86c2-762630630eef';
+const TRACK_URL = 'https://functions.poehali.dev/5fe6dd8e-69e7-4342-9fb3-b760347c0a07?action=track';
 const VISITOR_ID_KEY = 'visitor_id';
 const VISIT_TRACKED_KEY = 'visit_tracked_today';
 const UTM_STORAGE_KEY = 'utm_params';

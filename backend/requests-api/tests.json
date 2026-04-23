@@ -1,14 +1,11 @@
 {
   "tests": [
     {
-      "name": "Get site settings",
+      "name": "GET requests list",
       "method": "GET",
       "path": "/",
       "expectedStatus": 200,
-      "expectedBody": {
-        "success": true,
-        "settings": {}
-      },
+      "expectedBody": {"success": true},
       "bodyMatcher": "partial"
     }
   ]

@@ -215,7 +215,7 @@ export default function AdminPanel() {
 
   const loadRequests = async () => {
     try {
-      const response = await fetch('https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c');
+      const response = await fetch('https://functions.poehali.dev/b9542cd5-9706-49e1-88ae-9c7899288352');
       if (response.ok) {
         const data = await response.json();
         setRequests(data.requests || []);
@@ -243,7 +243,7 @@ export default function AdminPanel() {
     }
 
     try {
-      const response = await fetch(`https://functions.poehali.dev/083d3fc1-3983-4501-8686-0e63931b991e?id=${requestId}`, {
+      const response = await fetch(`https://functions.poehali.dev/b9542cd5-9706-49e1-88ae-9c7899288352?id=${requestId}`, {
         method: 'DELETE'
       });
 
@@ -272,7 +272,7 @@ export default function AdminPanel() {
 
     try {
       const deletePromises = requests.map(request =>
-        fetch(`https://functions.poehali.dev/083d3fc1-3983-4501-8686-0e63931b991e?id=${request.id}`, {
+        fetch(`https://functions.poehali.dev/b9542cd5-9706-49e1-88ae-9c7899288352?id=${request.id}`, {
           method: 'DELETE'
         })
       );
@@ -290,7 +290,7 @@ export default function AdminPanel() {
     const newState = !showDocuments;
     
     try {
-      const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e', {
+      const response = await fetch('https://functions.poehali.dev/1e3f4ec9-f868-4469-a847-6eb53c784111', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

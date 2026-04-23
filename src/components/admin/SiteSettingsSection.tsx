@@ -99,7 +99,7 @@ export default function SiteSettingsSection({
       ];
 
       for (const setting of settingsToSave) {
-        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e', {
+        const response = await fetch('https://functions.poehali.dev/1e3f4ec9-f868-4469-a847-6eb53c784111', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -121,11 +121,12 @@ export default function SiteSettingsSection({
       reload();
       
       try {
-        const notifyResponse = await fetch('https://functions.poehali.dev/6e9ecfe1-099e-4c39-a8ca-8d2eb8bbc58b', {
+        const notifyResponse = await fetch('https://functions.poehali.dev/1e3f4ec9-f868-4469-a847-6eb53c784111', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({ action: 'notify_search_engines' })
         });
         
         if (notifyResponse.ok) {
@@ -190,7 +191,7 @@ export default function SiteSettingsSection({
         const base64String = reader.result as string;
         const base64Content = base64String.split(',')[1];
         
-        const response = await fetch('https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e', {
+        const response = await fetch('https://functions.poehali.dev/1e3f4ec9-f868-4469-a847-6eb53c784111', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',

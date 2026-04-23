@@ -1,19 +1,7 @@
 {
-  "update-index-html": "https://functions.poehali.dev/77c7fcb2-4e19-4c0a-a947-2df23506adb8",
-  "notify-search-engines": "https://functions.poehali.dev/6e9ecfe1-099e-4c39-a8ca-8d2eb8bbc58b",
-  "documents-delete": "https://functions.poehali.dev/ed8b5498-3e46-4bd6-b0b8-8cd49df60a3d",
-  "documents-upload": "https://functions.poehali.dev/3a50767d-8e84-4ec4-aa31-c0c115ada27d",
-  "documents-list": "https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b",
-  "site-settings": "https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e",
-  "get-online-visitors": "https://functions.poehali.dev/e68367dd-bf35-454c-bee2-9625e5a28fe4",
-  "track-visit": "https://functions.poehali.dev/fadc8ec7-13d7-4acb-86c2-762630630eef",
-  "send-stats-telegram": "https://functions.poehali.dev/2d1524af-6da7-4f95-aca5-ba7fcaa723ba",
-  "clear-click-stats": "https://functions.poehali.dev/fd0a1f7e-5e13-474c-a085-8fadf347d2c1",
-  "get-click-stats": "https://functions.poehali.dev/49b6c391-335d-4b83-a4e4-02430a757ab9",
-  "track-click": "https://functions.poehali.dev/ddc0d90d-3227-4104-ad7f-5a5b8c1374a7",
-  "upload-file": "https://functions.poehali.dev/55e8594b-4257-4cbf-a5c4-ef2f2a03342b",
-  "delete-request": "https://functions.poehali.dev/083d3fc1-3983-4501-8686-0e63931b991e",
-  "get-requests": "https://functions.poehali.dev/ecba8763-872e-4b4c-8977-d9ef08098e7c",
-  "save-request": "https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6",
+  "documents": "https://functions.poehali.dev/e9f38517-fbfc-4fb7-95b2-fdba619687a1",
+  "settings": "https://functions.poehali.dev/1e3f4ec9-f868-4469-a847-6eb53c784111",
+  "analytics": "https://functions.poehali.dev/5fe6dd8e-69e7-4342-9fb3-b760347c0a07",
+  "requests-api": "https://functions.poehali.dev/b9542cd5-9706-49e1-88ae-9c7899288352",
   "admin-auth": "https://functions.poehali.dev/cfaa29d5-c049-499c-b21d-9d21762b09c1"
 }

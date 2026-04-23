@@ -1,14 +1,11 @@
 {
   "tests": [
     {
-      "name": "Get all requests",
+      "name": "GET documents list",
       "method": "GET",
       "path": "/",
       "expectedStatus": 200,
-      "expectedBody": {
-        "success": true,
-        "requests": "array"
-      },
+      "expectedBody": {"success": true},
       "bodyMatcher": "partial"
     }
   ]

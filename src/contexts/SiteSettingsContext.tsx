@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
   ogImageUrl: 'https://cdn.poehali.dev/projects/375d2671-595f-4267-b13e-3a5fb218b045/files/og-image-1770456083663.png',
 };
 
-const SETTINGS_URL = 'https://functions.poehali.dev/4c5eb463-eeb0-41c1-89da-753f8043246e';
+const SETTINGS_URL = 'https://functions.poehali.dev/1e3f4ec9-f868-4469-a847-6eb53c784111';
 const CACHE_KEY = 'site_settings_cache';
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 

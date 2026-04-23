@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "name": "GET online visitors",
+      "method": "GET",
+      "path": "/?action=online",
+      "expectedStatus": 200,
+      "expectedBody": {"online_visitors": 0},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

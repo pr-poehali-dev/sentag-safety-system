@@ -50,7 +50,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
 
   const loadStats = () => {
     setLoading(true);
-    fetch('https://functions.poehali.dev/49b6c391-335d-4b83-a4e4-02430a757ab9')
+    fetch('https://functions.poehali.dev/5fe6dd8e-69e7-4342-9fb3-b760347c0a07?action=stats')
       .then(res => res.json())
       .then(data => {
         setClickStats(data);
@@ -64,7 +64,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
 
   const loadOnlineVisitors = () => {
     setOnlineLoading(true);
-    fetch('https://functions.poehali.dev/e68367dd-bf35-454c-bee2-9625e5a28fe4')
+    fetch('https://functions.poehali.dev/5fe6dd8e-69e7-4342-9fb3-b760347c0a07?action=online')
       .then(res => res.json())
       .then(data => {
         setOnlineVisitors(data.online_visitors || 0);
@@ -87,7 +87,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
 
     setIsClearing(true);
     try {
-      const response = await fetch('https://functions.poehali.dev/fd0a1f7e-5e13-474c-a085-8fadf347d2c1', {
+      const response = await fetch('https://functions.poehali.dev/5fe6dd8e-69e7-4342-9fb3-b760347c0a07?action=clear', {
         method: 'DELETE',
       });
 
@@ -109,7 +109,7 @@ export default function StatisticsSection({ users, requests }: StatisticsSection
   const handleSendToTelegram = async () => {
     setIsSending(true);
     try {
-      const response = await fetch('https://functions.poehali.dev/2d1524af-6da7-4f95-aca5-ba7fcaa723ba', {
+      const response = await fetch('https://functions.poehali.dev/5fe6dd8e-69e7-4342-9fb3-b760347c0a07?action=send_telegram', {
         method: 'POST',
       });
 

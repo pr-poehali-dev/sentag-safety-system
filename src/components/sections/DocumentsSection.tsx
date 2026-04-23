@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
-const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/0c6aa7f0-6f84-4a44-938f-3e2ba7024f4b';
+const DOCUMENTS_LIST_URL = 'https://functions.poehali.dev/e9f38517-fbfc-4fb7-95b2-fdba619687a1';
 const DOCS_CACHE_KEY = 'documents_cache';
 const DOCS_CACHE_TTL = 10 * 60 * 1000;
 

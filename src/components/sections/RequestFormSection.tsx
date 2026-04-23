@@ -81,7 +81,7 @@ export default function RequestFormSection() {
         localStorage.setItem('visitor_id', visitorId);
       }
       
-      const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
+      const response = await fetch('https://functions.poehali.dev/b9542cd5-9706-49e1-88ae-9c7899288352', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -129,7 +129,7 @@ export default function RequestFormSection() {
   const uploadFile = async (file: File, category: string): Promise<string> => {
     const content = await fileToBase64(file);
     
-    const response = await fetch('https://functions.poehali.dev/55e8594b-4257-4cbf-a5c4-ef2f2a03342b', {
+    const response = await fetch('https://functions.poehali.dev/b9542cd5-9706-49e1-88ae-9c7899288352?action=upload_file', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -186,7 +186,7 @@ export default function RequestFormSection() {
       
       setUploadProgress('Все файлы загружены! Сохранение заявки...');
       
-      const response = await fetch('https://functions.poehali.dev/1958e610-cb1f-4259-aafb-53cbe89451b6', {
+      const response = await fetch('https://functions.poehali.dev/b9542cd5-9706-49e1-88ae-9c7899288352', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
