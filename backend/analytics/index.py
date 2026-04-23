@@ -35,10 +35,16 @@ def handler(event: dict, context) -> dict:
     action = params.get('action', '')
 
     dsn = os.environ.get('DATABASE_URL')
+    schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
+
+    def get_conn():
+        c = psycopg2.connect(dsn, options=f'-c search_path={schema}')
+        c.autocommit = False
+        return c
 
     # GET stats
     if method == 'GET' and action == 'stats':
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cursor = conn.cursor()
 
         cursor.execute("""
@@ -151,7 +157,7 @@ def handler(event: dict, context) -> dict:
 
     # GET online
     if method == 'GET' and action == 'online':
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute("""
             SELECT COUNT(DISTINCT visitor_id) FROM visitors
@@ -179,7 +185,7 @@ def handler(event: dict, context) -> dict:
         headers = {k.lower(): v for k, v in (event.get('headers') or {}).items()}
         user_agent = headers.get('user-agent', '')
         ip_address = event.get('requestContext', {}).get('identity', {}).get('sourceIp', '')
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cursor = conn.cursor()
         if not button_name:
             cursor.execute("""
@@ -218,7 +224,7 @@ def handler(event: dict, context) -> dict:
         chat_id = os.environ.get('TELEGRAM_CHAT_ID')
         if not bot_token or not chat_id:
             return resp(500, {'error': 'Telegram credentials not configured'})
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cursor = conn.cursor()
         week_ago = datetime.now() - timedelta(days=7)
         cursor.execute("""
@@ -286,7 +292,7 @@ def handler(event: dict, context) -> dict:
 
     # DELETE clear
     if method == 'DELETE' and action == 'clear':
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM button_clicks")
         clicks_deleted = cursor.rowcount

@@ -42,10 +42,16 @@ def handler(event: dict, context) -> dict:
         }
 
     dsn = os.environ.get('DATABASE_URL')
+    schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
+
+    def get_conn():
+        c = psycopg2.connect(dsn, options=f'-c search_path={schema}')
+        c.autocommit = False
+        return c
 
     # GET — получение всех настроек
     if method == 'GET':
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute("SELECT key, value FROM site_settings")
         rows = cur.fetchall()
@@ -89,7 +95,7 @@ def handler(event: dict, context) -> dict:
             value = 'true' if value else 'false'
         else:
             value = str(value)
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute("""
             INSERT INTO site_settings (key, value, updated_at) VALUES (%s, %s, NOW())
@@ -106,7 +112,7 @@ def handler(event: dict, context) -> dict:
 
         # Обновление index.html в S3
         if action == 'update_index_html':
-            conn = psycopg2.connect(dsn)
+            conn = get_conn()
             cur = conn.cursor()
             cur.execute("SELECT key, value FROM site_settings WHERE key IN ('seo_title', 'seo_description', 'seo_keywords', 'og_image_url')")
             settings = {r[0]: r[1] for r in cur.fetchall()}
@@ -147,7 +153,7 @@ def handler(event: dict, context) -> dict:
         content_type = 'image/png' if favicon_file_name.lower().endswith('.png') else 'image/jpeg'
         s3.put_object(Bucket='files', Key=favicon_key, Body=favicon_data, ContentType=content_type)
         favicon_url = f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{favicon_key}"
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute("INSERT INTO site_settings (key, value, updated_at) VALUES ('favicon_url', %s, NOW()) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()", (favicon_url,))
         cur.execute("INSERT INTO site_settings (key, value, updated_at) VALUES ('og_image_url', %s, NOW()) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()", (favicon_url,))

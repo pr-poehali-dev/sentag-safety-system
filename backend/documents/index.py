@@ -41,8 +41,16 @@ def handler(event: dict, context) -> dict:
             'isBase64Encoded': False
         }
 
+    dsn = os.environ['DATABASE_URL']
+    schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
+
+    def get_conn():
+        c = psycopg2.connect(dsn, options=f'-c search_path={schema}')
+        c.autocommit = False
+        return c
+
     if method == 'GET':
-        conn = psycopg2.connect(os.environ['DATABASE_URL'])
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute("""
             SELECT id, title, description, icon_name, file_url, file_name, file_type, file_size, created_at, thumbnail_url
@@ -70,7 +78,7 @@ def handler(event: dict, context) -> dict:
             title = body.get('title', '').strip()
             if not doc_id or not title:
                 return resp(400, {'error': 'id and title are required'})
-            conn = psycopg2.connect(os.environ['DATABASE_URL'])
+            conn = get_conn()
             cur = conn.cursor()
             thumbnail_url = None
             thumbnail_content = body.get('thumbnailContent')
@@ -104,7 +112,7 @@ def handler(event: dict, context) -> dict:
         thumbnail_url = None
         if body.get('thumbnailContent') and body.get('thumbnailFileName'):
             thumbnail_url = upload_thumbnail(s3, body['thumbnailContent'], body['thumbnailFileName'])
-        conn = psycopg2.connect(os.environ['DATABASE_URL'])
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO documents (title, description, icon_name, file_url, file_name, file_type, file_size, thumbnail_url) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id",
@@ -124,7 +132,7 @@ def handler(event: dict, context) -> dict:
         doc_id = params.get('id')
         if not doc_id:
             return resp(400, {'error': 'Missing document ID'})
-        conn = psycopg2.connect(os.environ['DATABASE_URL'])
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute(f"DELETE FROM documents WHERE id = {int(doc_id)}")
         deleted = cur.rowcount

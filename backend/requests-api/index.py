@@ -37,12 +37,19 @@ def handler(event: dict, context) -> dict:
         }
 
     dsn = os.environ.get('DATABASE_URL')
+    schema = os.environ.get('MAIN_DB_SCHEMA', 'public')
+
+    def get_conn(dict_cursor=False):
+        c = psycopg2.connect(dsn, options=f'-c search_path={schema}')
+        c.autocommit = False
+        return c
+
     params = event.get('queryStringParameters') or {}
     action = params.get('action', '')
 
     # GET — список заявок
     if method == 'GET':
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cur.execute("DELETE FROM request_forms WHERE created_at < NOW() - INTERVAL '7 days'")
         conn.commit()
@@ -98,7 +105,7 @@ def handler(event: dict, context) -> dict:
         request_id = params.get('id')
         if not request_id:
             return resp(400, {'error': 'ID заявки не указан'})
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute("DELETE FROM request_forms WHERE id = %s RETURNING id", (request_id,))
         if cur.rowcount == 0:
@@ -138,7 +145,7 @@ def handler(event: dict, context) -> dict:
         body_str = event.get('body', '{}')
         body = json.loads(body_str)
         step = body.get('step')
-        conn = psycopg2.connect(dsn)
+        conn = get_conn()
         cur = conn.cursor()
         cur.execute("DELETE FROM request_forms WHERE created_at < NOW() - INTERVAL '7 days'")
         conn.commit()
@@ -196,7 +203,7 @@ def handler(event: dict, context) -> dict:
                 msg_id = _send_telegram_step1(request_id, body, user_activity)
                 if msg_id:
                     try:
-                        c = psycopg2.connect(dsn)
+                        c = psycopg2.connect(dsn, options=f'-c search_path={schema}')
                         cu = c.cursor()
                         cu.execute("UPDATE request_forms SET telegram_step1_message_id = %s WHERE id = %s", (msg_id, request_id))
                         c.commit()
